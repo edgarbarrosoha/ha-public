@@ -1,0 +1,1855 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Reading the Past Forward — UPU Decision Traces, 1874–2012</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500;8..60,700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --ink: #0a0a0a;
+                --ink-2: #2a2a2a;
+                --ink-3: #555;
+                --rule: #cfcfcf;
+                --rule-2: #888;
+                --paper: #fafaf7;
+                --paper-2: #f1f1ec;
+                --accent: #000;
+                --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+                --sans: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+                --mono:
+                    "Roboto Mono", "JetBrains Mono", ui-monospace, monospace;
+            }
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: var(--paper);
+                color: var(--ink);
+                font-family: var(--sans);
+                -webkit-font-smoothing: antialiased;
+                overflow: hidden;
+                height: 100vh;
+            }
+            /* Deck container */
+            .deck {
+                display: flex;
+                flex-direction: row;
+                height: 100vh;
+                width: 100vw;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scroll-snap-type: x mandatory;
+                scroll-behavior: smooth;
+            }
+            .deck::-webkit-scrollbar {
+                display: none;
+            }
+            .deck {
+                scrollbar-width: none;
+            }
+            /* Slide */
+            .slide {
+                flex: 0 0 100vw;
+                height: 100vh;
+                scroll-snap-align: start;
+                padding: 64px 88px 72px 88px;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                background: var(--paper);
+            }
+            .slide.alt {
+                background: var(--paper-2);
+            }
+            /* Slide chrome */
+            .chrome {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                padding-bottom: 28px;
+                border-bottom: 1px solid var(--rule);
+                margin-bottom: 36px;
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--ink-3);
+            }
+            .chrome .left {
+                display: flex;
+                gap: 32px;
+                align-items: baseline;
+            }
+            .chrome .badge {
+                border: 1px solid var(--ink);
+                color: var(--ink);
+                padding: 4px 10px;
+                letter-spacing: 0.18em;
+            }
+            .chrome .right {
+                font-feature-settings: "tnum";
+            }
+            /* Cover */
+            .cover {
+                justify-content: center;
+                padding: 0 120px;
+            }
+            .cover .meta {
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ink-3);
+                margin-bottom: 36px;
+            }
+            .cover h1 {
+                font-family: var(--serif);
+                font-weight: 300;
+                font-size: clamp(48px, 6.4vw, 96px);
+                line-height: 1.04;
+                letter-spacing: -0.02em;
+                margin: 0 0 28px 0;
+                max-width: 22ch;
+            }
+            .cover h1 em {
+                font-style: italic;
+                font-weight: 400;
+            }
+            .cover .sub {
+                font-family: var(--sans);
+                font-weight: 300;
+                font-size: clamp(20px, 1.6vw, 26px);
+                color: var(--ink-2);
+                line-height: 1.5;
+                max-width: 64ch;
+                margin: 0;
+            }
+            .cover .signature {
+                margin-top: 96px;
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--ink-3);
+            }
+            /* Method slide */
+            h2.section {
+                font-family: var(--serif);
+                font-weight: 300;
+                font-size: clamp(40px, 4.4vw, 64px);
+                letter-spacing: -0.015em;
+                line-height: 1.06;
+                margin: 0 0 28px 0;
+                max-width: 24ch;
+            }
+            .lede {
+                font-family: var(--serif);
+                font-weight: 300;
+                font-size: clamp(22px, 1.8vw, 28px);
+                line-height: 1.5;
+                color: var(--ink-2);
+                max-width: 68ch;
+                margin: 0 0 32px 0;
+            }
+            .principles {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 32px;
+                margin-top: 40px;
+                max-width: 1280px;
+            }
+            .principle {
+                border-top: 2px solid var(--ink);
+                padding-top: 18px;
+            }
+            .principle .num {
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.22em;
+                color: var(--ink-3);
+                text-transform: uppercase;
+                margin-bottom: 12px;
+            }
+            .principle h3 {
+                font-family: var(--sans);
+                font-weight: 600;
+                font-size: 22px;
+                margin: 0 0 10px 0;
+                line-height: 1.2;
+            }
+            .principle p {
+                font-family: var(--serif);
+                font-size: 17px;
+                color: var(--ink-2);
+                line-height: 1.55;
+                margin: 0;
+            }
+            /* Topic slides */
+            .topic-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                margin-bottom: 28px;
+            }
+            .topic-title {
+                font-family: var(--serif);
+                font-weight: 300;
+                font-size: clamp(40px, 4.2vw, 60px);
+                letter-spacing: -0.015em;
+                line-height: 1.04;
+                margin: 0;
+            }
+            .topic-meta {
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: var(--ink-3);
+                text-align: right;
+                line-height: 1.6;
+            }
+            .topic-anchor {
+                font-family: var(--serif);
+                font-style: italic;
+                font-size: 19px;
+                color: var(--ink-2);
+                margin: 0 0 28px 0;
+                max-width: 72ch;
+                line-height: 1.55;
+            }
+            /* Decision row */
+            .decisions {
+                flex: 1;
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 22px;
+                overflow: hidden;
+            }
+            .decision {
+                border-top: 2px solid var(--ink);
+                padding-top: 14px;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+            .decision .year {
+                font-family: var(--serif);
+                font-weight: 300;
+                font-size: 44px;
+                line-height: 1;
+                letter-spacing: -0.02em;
+                margin-bottom: 4px;
+            }
+            .decision .place {
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--ink-3);
+                margin-bottom: 12px;
+            }
+            .decision .citation {
+                font-family: var(--mono);
+                font-size: 11px;
+                line-height: 1.55;
+                color: var(--ink-2);
+                background: rgba(0, 0, 0, 0.04);
+                border-left: 2px solid var(--ink);
+                padding: 8px 10px;
+                margin-bottom: 14px;
+                word-wrap: break-word;
+            }
+            .decision .what {
+                font-family: var(--sans);
+                font-weight: 600;
+                font-size: 14px;
+                line-height: 1.4;
+                margin-bottom: 12px;
+                color: var(--ink);
+            }
+            .decision .lesson-label {
+                font-family: var(--mono);
+                font-size: 9.5px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ink-3);
+                margin-bottom: 6px;
+            }
+            .decision .lesson {
+                font-family: var(--serif);
+                font-size: 14px;
+                line-height: 1.5;
+                color: var(--ink-2);
+                flex: 1;
+            }
+            /* Systems slide */
+            .systems-grid {
+                flex: 1;
+                display: grid;
+                grid-template-columns: 1fr 1.4fr;
+                gap: 56px;
+                align-items: stretch;
+            }
+            .systems-text h3 {
+                font-family: var(--sans);
+                font-weight: 600;
+                font-size: 14px;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--ink-3);
+                margin: 0 0 8px 0;
+            }
+            .systems-text p {
+                font-family: var(--serif);
+                font-size: 19px;
+                line-height: 1.55;
+                color: var(--ink);
+                margin: 0 0 24px 0;
+            }
+            .legend {
+                margin-top: 18px;
+            }
+            .legend ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .legend li {
+                display: grid;
+                grid-template-columns: 14px 1fr;
+                gap: 12px;
+                align-items: baseline;
+                padding: 10px 0;
+                border-top: 1px solid var(--rule);
+                font-family: var(--mono);
+                font-size: 12px;
+                letter-spacing: 0.05em;
+                color: var(--ink-2);
+            }
+            .legend .swatch {
+                width: 14px;
+                height: 14px;
+                background: var(--ink);
+            }
+            .legend .swatch.dashed {
+                background: repeating-linear-gradient(
+                    45deg,
+                    #000 0,
+                    #000 3px,
+                    transparent 3px,
+                    transparent 6px
+                );
+            }
+            .legend .swatch.balance {
+                background: #2a2a2a;
+            }
+            .legend .swatch.open {
+                background: repeating-linear-gradient(
+                    90deg,
+                    #000 0,
+                    #000 4px,
+                    transparent 4px,
+                    transparent 7px
+                );
+            }
+            .legend strong {
+                font-family: var(--sans);
+                font-weight: 600;
+                color: var(--ink);
+            }
+            .legend em {
+                font-style: normal;
+                color: var(--ink-3);
+                display: block;
+                font-size: 11px;
+                line-height: 1.45;
+                margin-top: 2px;
+            }
+            .systems-svg-wrap {
+                border: 1px solid var(--ink);
+                background: var(--paper);
+                padding: 24px;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            /* Lessons slide — full quotes, presented as a typographic page */
+            .lessons-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                margin-bottom: 18px;
+            }
+            .lessons-title {
+                font-family: var(--serif);
+                font-weight: 300;
+                font-size: clamp(40px, 4.2vw, 60px);
+                letter-spacing: -0.018em;
+                line-height: 1.04;
+                margin: 0;
+            }
+            .lessons-title em {
+                font-style: italic;
+            }
+            .lessons-eyebrow {
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ink-3);
+                text-align: right;
+                line-height: 1.6;
+            }
+            /* Single distilled paragraph per axis */
+            .lesson-paragraph {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                padding: 20px 0 60px 0;
+                border-top: 1.5px solid var(--ink);
+            }
+            .lesson-paragraph p {
+                margin: 0;
+                font-family: var(--serif);
+                font-weight: 400;
+                font-size: clamp(22px, 1.85vw, 28px);
+                line-height: 1.42;
+                color: var(--ink);
+                letter-spacing: -0.006em;
+                max-width: 62ch;
+                text-wrap: pretty;
+            }
+            .lesson-paragraph p em {
+                font-style: italic;
+                color: var(--ink-2);
+            }
+            .lesson-paragraph p .salutation {
+                font-style: italic;
+                font-weight: 400;
+                color: var(--ink-3);
+                display: block;
+                margin-bottom: 0.85em;
+                font-size: 0.86em;
+                letter-spacing: 0.01em;
+            }
+            .lesson-paragraph p .signoff {
+                display: block;
+                margin-top: 1.1em;
+                font-style: italic;
+                font-weight: 400;
+                color: var(--ink-3);
+                font-size: 0.86em;
+                letter-spacing: 0.01em;
+            }
+            .slide.closing .lesson-paragraph p {
+                font-size: clamp(17px, 1.35vw, 21px);
+                max-width: 72ch;
+                line-height: 1.5;
+            }
+            .slide.closing .lesson-paragraph p br + br {
+                display: none;
+            }
+            .slide.closing .lesson-paragraph p br {
+                content: "";
+                display: block;
+                margin-bottom: 0.85em;
+            }
+
+            /* Meta-conclusion */
+            .meta-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 32px 56px;
+                margin-top: 28px;
+                max-width: 1280px;
+            }
+            .meta-item {
+                border-top: 2px solid var(--ink);
+                padding-top: 16px;
+            }
+            .meta-item .label {
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--ink-3);
+                margin-bottom: 8px;
+            }
+            .meta-item h3 {
+                font-family: var(--serif);
+                font-weight: 400;
+                font-size: 24px;
+                line-height: 1.25;
+                margin: 0 0 10px 0;
+            }
+            .meta-item p {
+                font-family: var(--sans);
+                font-weight: 300;
+                font-size: 15px;
+                line-height: 1.55;
+                color: var(--ink-2);
+                margin: 0;
+            }
+            /* Navigation */
+            .nav {
+                position: fixed;
+                bottom: 24px;
+                right: 32px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-family: var(--mono);
+                font-size: 11px;
+                letter-spacing: 0.18em;
+                color: var(--ink-3);
+                z-index: 100;
+            }
+            .nav button {
+                appearance: none;
+                border: 1px solid var(--ink);
+                background: var(--paper);
+                color: var(--ink);
+                width: 40px;
+                height: 40px;
+                cursor: pointer;
+                font-family: var(--mono);
+                font-size: 16px;
+                line-height: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.12s;
+            }
+            .nav button:hover {
+                background: var(--ink);
+                color: var(--paper);
+            }
+            .nav .counter {
+                font-feature-settings: "tnum";
+                min-width: 5ch;
+                text-align: center;
+            }
+            .progress {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                height: 3px;
+                background: var(--ink);
+                width: 0%;
+                z-index: 99;
+                transition: width 0.25s ease-out;
+            }
+            /* Print friendliness (optional) */
+            @media print {
+                .nav,
+                .progress {
+                    display: none;
+                }
+                .deck {
+                    overflow: visible;
+                    height: auto;
+                    flex-direction: column;
+                }
+                .slide {
+                    page-break-after: always;
+                    height: 100vh;
+                }
+            }
+            /* Smaller screens */
+            @media (max-width: 1100px) {
+                .decisions {
+                    grid-template-columns: repeat(5, minmax(0, 1fr));
+                    gap: 12px;
+                }
+                .decision .year {
+                    font-size: 32px;
+                }
+                .slide {
+                    padding: 48px 56px;
+                }
+                .principles {
+                    grid-template-columns: 1fr;
+                }
+                .systems-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="deck" id="deck">
+            <!-- 1. COVER -->
+            <section class="slide cover">
+                <div class="meta">
+                    UPU Innovation Challenge · Köln · 2026 · Team 06
+                </div>
+                <h1>Reading the past PRUEBA <em>forward</em>.</h1>
+                <p class="sub">
+                    A retrospective reading of UPU Congress decisions,
+                    1874–2012, anchored on five axes — freedom of transit,
+                    terminal dues, customs, postal financial services, quality
+                    of service — drawn entirely from the UPU Historical Archives
+                    at
+                    <span style="font-family: var(--mono); font-size: 0.9em"
+                        >s3://challenge-02-team-06/Data/upu-archives/</span
+                    >. We try to extract the meta-knowledge: what the
+                    institution can now learn that was harder to see at the
+                    moment of decision.
+                </p>
+                <div class="signature">
+                    Horizons Architecture × Universal Postal Union · 2026
+                </div>
+            </section>
+
+            <!-- 2. METHOD -->
+            <section class="slide alt">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Method</span>
+                        <span>How we read the archive</span>
+                    </div>
+                    <div class="right">02 / 14</div>
+                </div>
+                <h2 class="section">Reading the past as a working library.</h2>
+                <p class="lede">
+                    We ask what the decisions teach — once we are standing in
+                    the present and they are standing in the past. Hindsight is
+                    a privilege the original drafters did not have. The
+                    discipline is to use it carefully, to name what is visible
+                    from here, and to design forward-looking mechanisms the next
+                    generation can adopt without rediscovering them the slow
+                    way.
+                </p>
+                <div class="principles">
+                    <div class="principle">
+                        <div class="num">01 · Citation discipline</div>
+                        <h3>Cite vehemently. Cite precisely.</h3>
+                        <p>
+                            Every claim references a Resolution, a Convention
+                            article, or a Compendium location with year,
+                            Congress, and corpus path. <em>[documented]</em> is
+                            the only mark we use.
+                        </p>
+                    </div>
+                    <div class="principle">
+                        <div class="num">02 · Retrospective voice</div>
+                        <h3>Past decisions in present tense.</h3>
+                        <p>
+                            We rate four axes — timing, specificity, execution,
+                            equity — as <em>ahead</em>, <em>in step</em>, or
+                            <em>behind</em> in retrospect. Not as judgement. As
+                            the calibration our successors will need.
+                        </p>
+                    </div>
+                    <div class="principle">
+                        <div class="num">03 · Meta-knowledge</div>
+                        <h3>What the corpus shows beyond what it states.</h3>
+                        <p>
+                            Patterns across cycles — reissued mandates, deferred
+                            corrections, latent infrastructure — become visible
+                            only at archive scale. Naming them is the work.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. AXIS 1 — FREEDOM OF TRANSIT -->
+            <section class="slide">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Axis 01 / 05</span>
+                        <span>Freedom of transit</span>
+                    </div>
+                    <div class="right">03 / 14</div>
+                </div>
+                <div class="topic-header">
+                    <h2 class="topic-title">Freedom of transit</h2>
+                    <div class="topic-meta">
+                        1874 → 2012 · 138 years<br />
+                        Anchor · Bolivia (landlocked, PDI 0.015)<br />
+                        Pattern · founding clarity, defended &amp; extended
+                    </div>
+                </div>
+                <p class="topic-anchor">
+                    A constitutional principle articulated at the founding
+                    moment, placed at the highest treaty hierarchy, reaffirmed
+                    at Vienna 1964, extended to hijacking and narcotics, and
+                    backed by a sanction provision at Doha 2012. Across 138
+                    years the principle held its level and grew its scope
+                    through extension.
+                </p>
+                <div class="decisions">
+                    <div class="decision">
+                        <div class="year">1874</div>
+                        <div class="place">Berne · founding</div>
+                        <div class="citation">
+                            Constitution Art. 1 + Convention Art. 1<br />Congres1874Berne-FR-OCR.pdf<br />(referenced
+                            via Vienna 1964 C 23)
+                        </div>
+                        <div class="what">
+                            Freedom of transit placed in the Constitution at
+                            founding — highest treaty level the Union offers.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Founding moments offer an opening to set principles
+                            at constitutional level before bilateral interests
+                            harden. The 1874 placement decision protected the
+                            principle through later geopolitical shifts. The
+                            contemporary parallel: AI-mediated cross-border
+                            postal flows are still in their 1874 moment.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1964</div>
+                        <div class="place">Vienna · reaffirmation</div>
+                        <div class="citation">
+                            Resolution C 23/Vienna 1964<br />Compendium Hamburg
+                            1984 p. 30<br />"essential and fundamental
+                            principle"
+                        </div>
+                        <div class="what">
+                            Reaffirmed in appeal-to-good-faith form at a Cold
+                            War moment. Set the rhetorical framing for the
+                            Congresses that followed.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Periodic reaffirmation of constitutional principles,
+                            in moments when geopolitics could erode them, is
+                            itself an instrument of multilateral governance.
+                            Future-aware governance would identify principles
+                            whose reaffirmation is overdue — including freedom
+                            of transit applied to digital postal services.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1974</div>
+                        <div class="place">Lausanne · extension</div>
+                        <div class="citation">
+                            Resolution C 60/Lausanne 1974<br />Decisions Other —
+                            Lausanne 1974, body<br />"isolated from non-postal
+                            political dispute"
+                        </div>
+                        <div class="what">
+                            Principle extended to aircraft hijacking. Single
+                            load-bearing phrase isolated the postal principle
+                            from political contamination.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            When extending a constitutional principle to a new
+                            threat category, the ideal language
+                            <em>isolates</em> the principle from the surrounding
+                            political context the new threat introduces. Apply
+                            the same architectural move to AI-mediated and
+                            platform-mediated postal flows.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1984</div>
+                        <div class="place">Hamburg · procedural design</div>
+                        <div class="citation">
+                            Decisions Other — Hamburg 1984<br />narcotics-context
+                            invitation, body<br />invokes Constitution Art. 1
+                        </div>
+                        <div class="what">
+                            Bags suspected of narcotics "are not opened" in
+                            transit. Advisory mechanism routes enforcement to
+                            origin/destination — principle preserved, procedure
+                            enriched.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Constitutional principles can absorb new policy
+                            domains through procedural redesign rather than
+                            principle modification. When adapting freedom of
+                            transit to AI-mediated security screening or
+                            platform interoperability, design the procedural
+                            enrichment, not the carved-out exception.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">2012</div>
+                        <div class="place">Doha · enforcement</div>
+                        <div class="citation">
+                            Convention 2012 Doha · Article 4<br />act2012DecisionsDohaEn.pdf<br />Art
+                            4.5: discontinuation provision
+                        </div>
+                        <div class="what">
+                            Quality-of-forwarding obligation + missent-items
+                            extension + sanction provision. Principle moves from
+                            appeal-to-good-faith to
+                            enforceable-with-collective-sanction.
+                            <strong>138-year trajectory.</strong>
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Constitutional principles that begin as
+                            appeal-to-good-faith can, with sufficient
+                            institutional development, evolve into enforceable
+                            provisions. When articulating new principles for the
+                            AI era, set the appeal-to-good-faith form initially
+                            and design the institutional pathway through which
+                            the principle can later acquire enforcement.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. AXIS 1 — LESSONS FROM FREEDOM OF TRANSIT -->
+            <section class="slide alt">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Lessons · Axis 01</span>
+                    </div>
+                    <div class="right">04 / 14</div>
+                </div>
+                <div class="lessons-header">
+                    <h2 class="lessons-title">Freedom of <em>transit</em>.</h2>
+                    <div class="lessons-eyebrow">
+                        1874 → 2012<br />letter to the next UPU community
+                    </div>
+                </div>
+                <div class="lesson-paragraph">
+                    <p>
+                        <span class="salutation"
+                            >To the future UPU community —</span
+                        >
+                        The principle has held for a hundred and thirty-eight
+                        years because the people at Berne in 1874 understood
+                        that founding moments are short. They placed freedom of
+                        transit at the Constitution, where amendment requires
+                        the heaviest revision the Union offers, and the
+                        placement held through two world wars, decolonisation,
+                        the Cold War and the air age. Their successors extended
+                        the principle — to hijacking at Lausanne, to narcotics
+                        at Hamburg, to the sanction provision at Doha — by
+                        analogy. The questions in front of you have the same
+                        constitutional shape. When an autonomous agent posts on
+                        behalf of a person, what does freedom of transit cover?
+                        When the intermediary is a corporate platform rather
+                        than a designated operator, who is bound by Article 4?
+                        When the item is a stream of machine-generated
+                        correspondence rather than a parcel, where does the
+                        principle apply? Place the principle high while you can.
+                        Later Congresses can extend it by analogy, as ours did.
+                        <span class="signoff">— from the archive, 2012</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- 5. AXIS 2 — TERMINAL DUES -->
+            <section class="slide">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Axis 02 / 05</span>
+                        <span
+                            >Terminal dues &amp; international
+                            remuneration</span
+                        >
+                    </div>
+                    <div class="right">05 / 14</div>
+                </div>
+                <div class="topic-header">
+                    <h2 class="topic-title">Terminal dues</h2>
+                    <div class="topic-meta">
+                        1947 → 2012 · 65 years<br />
+                        Anchor · Dominica (Group 2, PDI 0.104)<br />
+                        Pattern · 38-year mandate-to-architecture lag
+                    </div>
+                </div>
+                <p class="topic-anchor">
+                    A founding mandate at Lausanne 1974 reissued verbatim at Rio
+                    1979 and again at Hamburg 1984; the cost-based architecture
+                    instructed in 1974 only arrives at Doha 2012. The chain
+                    shows the institution's diagnostic clarity and its
+                    sensing-to-action lag in the same documents.
+                </p>
+                <div class="decisions">
+                    <div class="decision">
+                        <div class="year">1947</div>
+                        <div class="place">Paris · baseline</div>
+                        <div class="citation">
+                            Decisions C 1, 2, 3/Paris 1947<br />Compendium
+                            Hamburg 1984 p. 100<br />Berne 1874 reciprocity
+                            logic retained
+                        </div>
+                        <div class="what">
+                            Postwar reconstruction reinstates the Berne 1874
+                            working assumption that flows balance reciprocally —
+                            without retesting it.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Founding settlements outlive their authors. When a
+                            multilateral framework is reconstructed after a
+                            major rupture, that moment is also the natural one
+                            to revisit operating assumptions. A future-aware
+                            reconstruction protocol — including in the present
+                            post-AI context — should include explicit
+                            assumption-testing as a step before treaty
+                            restoration.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1974</div>
+                        <div class="place">Lausanne · founding</div>
+                        <div class="citation">
+                            Resolution C 53/Lausanne 1974<br />Convention Art.
+                            49 §2<br />Decisions Other — Lausanne 1974
+                        </div>
+                        <div class="what">
+                            Terminal dues born as a discrete UPU category.
+                            Five-point cost-formula study mandate assigned to
+                            the Executive Council.
+                            <strong>No delivery deadline.</strong>
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Founding mandates can be lucid and remain unexecuted
+                            for a generation. The diagnosis was correct; what
+                            was missing was a sunset clause or enforceable
+                            delivery date. A future-aware Lausanne instruction
+                            would specify that, in absence of a Council-proposed
+                            formula by 1979, a default formula would apply
+                            automatically. Automatic defaults reframe the
+                            political incentives around delivery.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1979</div>
+                        <div class="place">Rio · self-diagnosis</div>
+                        <div class="citation">
+                            Resolutions C 28, C 35, C 36, C 62/Rio 1979<br />Decisions
+                            Other — Rio de Janeiro 1979<br />"a method which may
+                            easily produce disparate results"
+                        </div>
+                        <div class="what">
+                            Same study mandate reissued (C 35).
+                            Triennial-sampling defect named explicitly (C 36).
+                            Statistics methodology unchanged since 1929 (C 62).
+                            <strong>Diagnosis without correction.</strong>
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Self-diagnosis names the problem; closing it asks
+                            more of the institution. A future-aware governance
+                            protocol would treat self-diagnosed defects as
+                            <em>institutional debt with carrying cost</em> — at
+                            each Congress where a previously diagnosed defect
+                            remains unresolved, the proceedings would record it
+                            explicitly. Visibility creates pressure that
+                            consensus politics can otherwise diffuse.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1984</div>
+                        <div class="place">Hamburg · third reissue</div>
+                        <div class="citation">
+                            Resolutions C 41, C 42, C 50, C 80/Hamburg 1984<br />DecisionsOther1984_Hamburg.pdf<br />weighted-world-average
+                            methodology retained
+                        </div>
+                        <div class="what">
+                            Same cost-formula mandate reissued a third time (C
+                            42). Triennial sampling — diagnosed as defective
+                            five years earlier — kept in place (C 80).
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Methodologies carry distributional consequences that
+                            can be hard to see at adoption. Hamburg 1984 chose a
+                            method technically defensible and structurally
+                            regressive. Future remuneration-system methodology
+                            adoptions should be paired with mandatory
+                            <em>distributional impact assessments</em> — naming
+                            which classes of operators the methodology favours
+                            and disfavours, conducted before adoption.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">2012</div>
+                        <div class="place">Doha · architecture</div>
+                        <div class="citation">
+                            Convention Arts. 29, 30, 31, 32 / Doha 2012<br />Resolutions
+                            C 57, C 77/Doha 2012<br />act2012DecisionsDohaEn.pdf
+                            · Annex 2
+                        </div>
+                        <div class="what">
+                            Country-specific cost-based architecture finally
+                            arrives. Annex 2 places members in five tiers.
+                            <strong
+                                >The 1974 mandate closes — 38 years
+                                late.</strong
+                            >
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Architectural arrival lands unevenly across members.
+                            Whether the architecture carries value to a given
+                            member depends on tier classification. Pair the
+                            introduction of a new architecture with a back-stop
+                            mechanism for countries near tier thresholds —
+                            temporary downward reclassification triggers,
+                            automatic SIDS/LDC overrides, phased entry
+                            preserving QSF beneficiary status during transition.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. AXIS 2 — LESSONS FROM TERMINAL DUES -->
+            <section class="slide alt">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Lessons · Axis 02</span>
+                    </div>
+                    <div class="right">06 / 14</div>
+                </div>
+                <div class="lessons-header">
+                    <h2 class="lessons-title">Terminal <em>dues</em>.</h2>
+                    <div class="lessons-eyebrow">
+                        1947 → 2012<br />letter to the next UPU community
+                    </div>
+                </div>
+                <div class="lesson-paragraph">
+                    <p>
+                        <span class="salutation"
+                            >To the future UPU community —</span
+                        >
+                        We took thirty-eight years to deliver the architecture
+                        instructed at Lausanne in 1974. The instruction was
+                        correct; the geopolitics were difficult — decolonisation
+                        had brought dozens of net-receiver members into the
+                        Union, and the old reciprocity assumption could no
+                        longer hold — and the procedure we had built was honest.
+                        What we did not yet understand was that consensus
+                        politics, on a five-year cycle, can absorb a mandate
+                        that lacks its own delivery clock. The questions in
+                        front of you will not wait that long. When agents
+                        dispatch correspondence continuously on behalf of
+                        humans, when the unit of postal exchange becomes a
+                        stream rather than an item, when the work of the post is
+                        shared between humans and agentic systems — what is a
+                        terminal due for a continuous flow, and how often should
+                        the rate that pays for it be revisited? Set the deadline
+                        inside the instrument. Write the default that applies if
+                        the work has not arrived in time. The discipline asks
+                        little at adoption.
+                        <span class="signoff">— from the archive, 2012</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- 7. AXIS 3 — CUSTOMS DIGITALISATION -->
+            <section class="slide">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Axis 03 / 05</span>
+                        <span>Customs digitalisation</span>
+                    </div>
+                    <div class="right">07 / 14</div>
+                </div>
+                <div class="topic-header">
+                    <h2 class="topic-title">Customs</h2>
+                    <div class="topic-meta">
+                        1957 → 2012 · 55 years<br />
+                        Anchor · Pacific island states (capacity-constrained)<br />
+                        Pattern · liaison without integration
+                    </div>
+                </div>
+                <p class="topic-anchor">
+                    Forty-seven years of management through a recurring
+                    temporary committee. Deference to the WCO Kyoto Convention.
+                    Cultural framing precedes commercial framing by fifty-five
+                    years. The Doha 2012 instruments are the first to name
+                    capacity asymmetry directly in operative language.
+                </p>
+                <div class="decisions">
+                    <div class="decision">
+                        <div class="year">1957</div>
+                        <div class="place">Ottawa · cultural framing</div>
+                        <div class="citation">
+                            Recommendation C 4/Ottawa 1957<br />Compendium
+                            Hamburg 1984<br />cultural items: books, periodicals
+                        </div>
+                        <div class="what">
+                            Customs duty exemption framed around cultural value,
+                            accurate to 1957 mail flows. Commercial mail framing
+                            not in scope.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Founding instruments naturalise the absence of
+                            categories that did not yet exist at drafting. When
+                            a multilateral instrument is introduced for a domain
+                            plausibly expanding, leave room for category
+                            extension. A 1957 clause inviting a study on
+                            commercial items would have cost nothing and would
+                            have meant a different starting line for the
+                            e-commerce era.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1969</div>
+                        <div class="place">Tokyo · contact committee</div>
+                        <div class="citation">
+                            Resolution C 43/Tokyo 1969<br />DecisionsOther1969Tokyo.pdf<br />CCC-UPU
+                            Contact Committee reconstituted
+                        </div>
+                        <div class="what">
+                            Cooperation with the Customs Co-operation Council
+                            managed through a temporary committee — first of
+                            four renewal cycles.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            When inter-institutional cooperation is managed
+                            through periodically reconstituted temporary bodies,
+                            each reconstitution is a moment to ask whether
+                            temporary status is still appropriate. The pattern
+                            of recurring renewal masks a choice being made by
+                            default, not by deliberation.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1984</div>
+                        <div class="place">Hamburg · ratification gap</div>
+                        <div class="citation">
+                            Resolution C 49 · Formal Opinion C 40/Hamburg
+                            1984<br />DecisionsOther1984_Hamburg.pdf<br />"11 of
+                            95 CCC members" had ratified Annex F.4
+                        </div>
+                        <div class="what">
+                            Third Committee renewal. Formal Opinion C 40
+                            documents the Kyoto ratification gap: eleven years
+                            after Kyoto adoption, only 11/95 ratifications.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            When a multilateral institution lacks direct
+                            authority over a critical adjacent domain,
+                            lobbying-by-proxy is the available instrument and
+                            naturally limited in reach. Pair the lobbying
+                            instrument with a UPU-funded capacity-building line
+                            for member states whose customs coordination is
+                            constrained by resource gaps. The capacity line
+                            transforms a request into an enabler.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">
+                            1989<span style="font-size: 0.45em">–2008</span>
+                        </div>
+                        <div class="place">
+                            Washington → Geneva · interregnum
+                        </div>
+                        <div class="citation">
+                            Revised Kyoto Convention enters force 2006<br />POC
+                            Customs Group reconstituted Geneva 2008<br />UPU
+                            operative engagement waits until 2012
+                        </div>
+                        <div class="what">
+                            Internalisation of customs work into POC Customs
+                            Group; underlying authority gap unchanged. Six-year
+                            lag from Revised Kyoto entry-into-force to UPU
+                            engagement.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Internalising adjacent-domain work is a step toward
+                            integration, not a substitute for it. Future-aware
+                            integration would require either binding UPU
+                            Convention language on customs procedures or a
+                            formal UPU-WCO joint instrument with binding force
+                            on both sets of member states.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">2012</div>
+                        <div class="place">Doha · capacity named</div>
+                        <div class="citation">
+                            Resolutions C 49 · C 55/Doha 2012<br />act2012DecisionsDohaEn.pdf<br />"disparate
+                            levels of resources, expertise, hardware and
+                            manpower"
+                        </div>
+                        <div class="what">
+                            First explicit operational naming of capacity
+                            asymmetry. Commercial framing finally enters the
+                            customs work programme.
+                            <strong>55 years after Ottawa 1957.</strong>
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            The pairing — operational acknowledgement of
+                            resource disparity + explicit capacity-building line
+                            in the work programme — should be the default at the
+                            moment of any new technology requirement, not an
+                            addition introduced after compliance gaps appear.
+                            Build the capacity-funding line into the founding
+                            instrument, not into the work programme that
+                            follows.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. AXIS 3 — LESSONS FROM CUSTOMS -->
+            <section class="slide alt">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Lessons · Axis 03</span>
+                    </div>
+                    <div class="right">08 / 14</div>
+                </div>
+                <div class="lessons-header">
+                    <h2 class="lessons-title">
+                        Customs <em>digitalisation</em>.
+                    </h2>
+                    <div class="lessons-eyebrow">
+                        1957 → 2012<br />letter to the next UPU community
+                    </div>
+                </div>
+                <div class="lesson-paragraph">
+                    <p>
+                        <span class="salutation"
+                            >To the future UPU community —</span
+                        >
+                        Customs has long been the boundary case for us. The
+                        instruments that bind member states on customs procedure
+                        live with the World Customs Organization, and the
+                        Contact Committee we maintained from Tokyo to Hamburg
+                        was the form available given the constraint. It carried
+                        real work; we are grateful for the colleagues on both
+                        sides who staffed it. The constraint has held; the
+                        surface has shifted. When agents pre-clear millions of
+                        low-value items per minute, when identity attestation is
+                        generated by machine and audited by another machine,
+                        when the categories the customs world relies on
+                        (cultural item, commercial item, parcel) are decided by
+                        classifiers rather than declarers — who authors the
+                        categories, and where do the institutional boundaries
+                        fall? Pair each new requirement with the resources to
+                        meet it, in the same instrument. A request without means
+                        travels slowly across institutional boundaries; slower
+                        still when the boundaries themselves are moving.
+                        <span class="signoff">— from the archive, 2012</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- 9. AXIS 4 — POSTAL FINANCIAL SERVICES -->
+            <section class="slide">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Axis 04 / 05</span>
+                        <span>Postal financial services</span>
+                    </div>
+                    <div class="right">09 / 14</div>
+                </div>
+                <div class="topic-header">
+                    <h2 class="topic-title">Postal financial services</h2>
+                    <div class="topic-meta">
+                        1947 → 2012 · 65 years<br />
+                        Pattern · deep architecture, narrow channel
+                    </div>
+                </div>
+                <p class="topic-anchor">
+                    A multi-Agreement architecture, procedurally complete and
+                    operationally bounded to one channel: postal counters and
+                    postal-operator settlement. The development case is
+                    repeatedly named, without being made binding. The 2012
+                    architecture is sound — and arrives after the channel has
+                    lost ground to mobile money, banking apps and payment
+                    platforms.
+                </p>
+                <div class="decisions">
+                    <div class="decision">
+                        <div class="year">1947</div>
+                        <div class="place">Paris · architecture</div>
+                        <div class="citation">
+                            Decisions C 1, C 15/Paris 1947<br />Compendium
+                            Hamburg 1984 p. 70<br />Money Orders · Giro · COD
+                            Agreements
+                        </div>
+                        <div class="what">
+                            Multi-Agreement architecture inherited from the
+                            early Union. Designed for a world where postal and
+                            bank counters were the only retail financial points.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Architectures inherited at founding moments tend to
+                            outlast the conditions that shaped them. A
+                            future-aware reconstruction protocol should
+                            distinguish between the
+                            <em>function</em> (international low-cost retail
+                            financial transfer) and the <em>channel</em> (postal
+                            counters), so future architectures can adapt the
+                            channel without losing the function.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1979</div>
+                        <div class="place">Rio · development named</div>
+                        <div class="citation">
+                            Resolutions C 12, C 19/Rio 1979<br />Decisions Other
+                            — Rio de Janeiro 1979<br />cooperation with ISBI on
+                            savings banks
+                        </div>
+                        <div class="what">
+                            PFS named as development priority. Channelled
+                            through external partnership and project-based
+                            technical cooperation rather than Convention or
+                            Agreement language.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Naming a development priority and assigning it to
+                            the technical-cooperation budget carries different
+                            reach than embedding it in binding architecture.
+                            When a development priority is identified, consider
+                            whether it warrants binding architectural treatment
+                            — even at the cost of slower negotiation — or
+                            whether technical cooperation is the appropriate
+                            vehicle.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1984</div>
+                        <div class="place">Hamburg · POSTFIN</div>
+                        <div class="citation">
+                            Resolutions C 10, C 11 · Recommendation C 13<br />Decision
+                            C 28/Hamburg 1984<br />three classes of
+                            administrations · CCITT cooperation
+                        </div>
+                        <div class="what">
+                            Three classes of administrations named. POSTFIN
+                            initiative with CCITT. Recommendations to national
+                            authorities, not binding obligations.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Recommendations that ask member-state institutions
+                            to lobby their own national authorities have a
+                            different reach from resolutions that bind. The
+                            choice was procedurally honest. Its retrospective
+                            consequence: PFS development through the 1980s and
+                            1990s remained largely a national affair, leaving
+                            adjacent innovation space comparatively open.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">
+                            1989<span style="font-size: 0.45em">–2008</span>
+                        </div>
+                        <div class="place">
+                            Washington → Geneva · electronic turn
+                        </div>
+                        <div class="citation">
+                            Resolution C 74/Geneva 2008<br />act2008DecisionsGeneveEn.pdf<br />electronic
+                            postal payment services network
+                        </div>
+                        <div class="what">
+                            Digitisation of the postal channel.
+                            <strong>No interoperability strategy</strong> with
+                            adjacent payment rails (mobile money, banking apps,
+                            fintech) emerges from the read corpus.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            When an institution modernises a legacy service, the
+                            design question covers both the digitisation of the
+                            existing channel and the interfaces to adjacent
+                            channels. The archive documents the first. It does
+                            not document a broader interoperability strategy.
+                            Future governance should make that choice explicit.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">2012</div>
+                        <div class="place">Doha · architectural completion</div>
+                        <div class="citation">
+                            Resolutions C 20, C 21, C 23/Doha 2012<br />act2012DecisionsDohaEn.pdf<br />UN
+                            MDG vehicle framing
+                        </div>
+                        <div class="what">
+                            Clearing system, managed network, MDG framework.
+                            Architecture sound — arriving after market share has
+                            shifted to adjacent channels.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Architectural completion in a channel that has
+                            already lost market share to an adjacent channel is
+                            a smaller win than the same completion delivered
+                            before the share shift. When contemplating
+                            multi-Congress modernisation of an existing service,
+                            weigh the cost of incrementalism against the risk
+                            that the service surface will shift to an adjacent
+                            domain in the interim.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. AXIS 4 — LESSONS FROM PFS -->
+            <section class="slide alt">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Lessons · Axis 04</span>
+                    </div>
+                    <div class="right">10 / 14</div>
+                </div>
+                <div class="lessons-header">
+                    <h2 class="lessons-title">
+                        Postal financial <em>services</em>.
+                    </h2>
+                    <div class="lessons-eyebrow">
+                        1947 → 2012<br />letter to the next UPU community
+                    </div>
+                </div>
+                <div class="lesson-paragraph">
+                    <p>
+                        <span class="salutation"
+                            >To the future UPU community —</span
+                        >
+                        The architecture we built in 1947 served a
+                        postal-counter-and-bank-counter world for forty good
+                        years, and the people who built it had reason to be
+                        proud of it. What we did not do, in those forty years or
+                        in the modernisation cycles that followed, was hold the
+                        function and the channel as separate objects in our own
+                        language. By the time mobile money, banking apps and
+                        payment platforms had moved retail finance elsewhere,
+                        the channel had carried the function with it. The
+                        AI-mediated payment surface is the next channel shift,
+                        and it is already in motion. Write the function first —
+                        international low-cost retail financial transfer — and
+                        let the channel come second, free to change as the world
+                        changes. The function is what should outlast us.
+                        <span class="signoff">— from the archive, 2012</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- 11. AXIS 5 — QUALITY OF SERVICE -->
+            <section class="slide">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Axis 05 / 05</span>
+                        <span>Quality of service</span>
+                    </div>
+                    <div class="right">11 / 14</div>
+                </div>
+                <div class="topic-header">
+                    <h2 class="topic-title">Quality of service</h2>
+                    <div class="topic-meta">
+                        1969 → 2012 · 43 years<br />
+                        Pattern · emergence + measurement asymmetry
+                    </div>
+                </div>
+                <p class="topic-anchor">
+                    Where freedom of transit was articulated at the founding,
+                    quality of service emerged as an institutional concern at
+                    Hamburg 1984, in response to competitive pressure from
+                    technology and private operators. The framing as response
+                    carried forward. By 2012 the architecture conditions
+                    remuneration on measurement; the measurement infrastructure
+                    costs fall unevenly.
+                </p>
+                <div class="decisions">
+                    <div class="decision">
+                        <div class="year">1969</div>
+                        <div class="place">Tokyo · latent infrastructure</div>
+                        <div class="citation">
+                            Resolutions C 41 · C 42 · Suggestion C 66<br />DecisionsOther1969Tokyo.pdf<br />postal
+                            codes · automation
+                        </div>
+                        <div class="what">
+                            Postal-code automation built for operational
+                            reasons. Becomes the substrate that makes Hamburg
+                            1984's measurable QoS possible.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Infrastructure built for one purpose often becomes a
+                            precondition for a later institutional concern.
+                            Future-aware design recognises that infrastructure
+                            investments have downstream measurement-frame
+                            consequences and should plan for late-adopter
+                            capacity gaps at the moment the infrastructure is
+                            being introduced — not at the later moment when the
+                            measurement frame names the absence as a deficit.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1979</div>
+                        <div class="place">Rio · framing</div>
+                        <div class="citation">
+                            Resolution C 82/Rio 1979<br />Decisions Other — Rio
+                            1979<br />"future of postal services" study
+                        </div>
+                        <div class="what">
+                            Quality framed as response to
+                            <em>competitive pressure</em> from technological
+                            developments and parallel private operators. Framing
+                            carries forward.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            The framing of an emerging institutional concern
+                            shapes the instruments that follow. The framing
+                            moment is itself an equity decision. A future-aware
+                            governance protocol would commission deliberate
+                            framing analysis at the moment when an emerging
+                            concern first enters Congress study programmes.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">1984</div>
+                        <div class="place">Hamburg · founding</div>
+                        <div class="citation">
+                            Resolution C 30/Hamburg 1984<br />DecisionsOther1984_Hamburg.pdf<br />"precarious
+                            position of the postal business"
+                        </div>
+                        <div class="what">
+                            Founding QoS instrument. Asks administrations to
+                            act, does not yet build the architecture. The
+                            architecture would arrive 28 years later.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            When an institution names a new concern, the choice
+                            between "ask administrations to act" and "build the
+                            institutional architecture" is defining. Hamburg
+                            1984 chose the first; the architecture arrived 28
+                            years later. When first naming a concern, specify
+                            the architectural commitment alongside the
+                            operational ask, with explicit attention to which
+                            administrations the architecture should support to
+                            be effective.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">
+                            1999<span style="font-size: 0.45em">–2008</span>
+                        </div>
+                        <div class="place">Beijing → Geneva · measurement</div>
+                        <div class="citation">
+                            QoS-to-terminal-dues link · Beijing 1999<br />Bucharest
+                            2004 implementation<br />PDI methodology · Geneva
+                            2008
+                        </div>
+                        <div class="what">
+                            Measurement turns from advisory to
+                            <strong>remuneration-conditional</strong>. The
+                            structural consequence: operators with limited
+                            measurement infrastructure absorb the cost
+                            asymmetrically.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            When a discretionary measurement framework becomes a
+                            remuneration-conditional measurement framework, the
+                            decision is structural and asymmetric. Pair the
+                            conditionality with capacity-funding flows that
+                            <em>precede</em> the conditionality, not follow it.
+                        </div>
+                    </div>
+
+                    <div class="decision">
+                        <div class="year">2012</div>
+                        <div class="place">Doha · gap admitted</div>
+                        <div class="citation">
+                            Convention Art. 22 · Resolutions C 37, C 40, C 41, C
+                            67/Doha 2012<br />act2012DecisionsDohaEn.pdf<br />Art
+                            22.2 anti-discrimination · QSF for LDCs
+                        </div>
+                        <div class="what">
+                            Anti-discrimination rule (Art 22.2).
+                            <strong>C 67/2012 admits</strong> QSF revenues "do
+                            not adequately address" service-quality investment
+                            costs of LDCs.
+                        </div>
+                        <div class="lesson-label">Lesson</div>
+                        <div class="lesson">
+                            Architectural completeness moves separately from
+                            adequate resource flow. Naming a gap is an
+                            institutional act of accountability; closing the gap
+                            is a further act. When an architecture reaches
+                            operational maturity, pair architectural completion
+                            with explicit resource-flow review against the
+                            equity gap the architecture's own framing
+                            acknowledges.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12. AXIS 5 — LESSONS FROM QoS -->
+            <section class="slide alt">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Lessons · Axis 05</span>
+                    </div>
+                    <div class="right">12 / 14</div>
+                </div>
+                <div class="lessons-header">
+                    <h2 class="lessons-title">Quality of <em>service</em>.</h2>
+                    <div class="lessons-eyebrow">
+                        1969 → 2012<br />letter to the next UPU community
+                    </div>
+                </div>
+                <div class="lesson-paragraph">
+                    <p>
+                        <span class="salutation"
+                            >To the future UPU community —</span
+                        >
+                        We named quality of service at Hamburg in 1984 because
+                        private operators were growing and the postal world
+                        needed a measure it could speak in. The framework was
+                        serious, and the colleagues who carried it through
+                        Beijing, Bucharest and Geneva were doing honest work. By
+                        Doha 2012, in our own operative language, we had also
+                        named the cost: conditioning remuneration on measurement
+                        is also conditioning it on the capacity to measure, and
+                        that capacity sits unevenly across the membership. In
+                        the AI era, measurement is becoming continuous and
+                        ambient. Before you condition anything on it, route
+                        capacity flows to the operators who must invest the
+                        most. A framework lifts what it can reach.
+                        <span class="signoff">— from the archive, 2012</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- 13. CLOSING LETTER TO THE AUDIENCE -->
+            <section class="slide alt closing">
+                <div class="chrome">
+                    <div class="left">
+                        <span class="badge">Closing</span>
+                    </div>
+                    <div class="right">13 / 14</div>
+                </div>
+                <div class="lessons-header">
+                    <h2 class="lessons-title">
+                        On reading the <em>archive</em>.
+                    </h2>
+                    <div class="lessons-eyebrow">
+                        Köln · May 2026<br />letter to the audience
+                    </div>
+                </div>
+                <div class="lesson-paragraph">
+                    <p>
+                        <span class="salutation"
+                            >To the participants of the 34th Conference on
+                            Postal and Delivery Economics and Policy, and to the
+                            colleagues of the UPU Innovation Challenge —</span
+                        >
+                        We came to the archive looking for data, and we found
+                        something else: an institution thinking out loud, across
+                        a hundred and thirty-eight years, about the world it was
+                        trying to serve. The lessons belong to that institution.
+                        We have only tried to read them carefully, and to ask
+                        what they make available to those of us who must now
+                        think about the next century of postal work.
+                        <br /><br />
+                        The moment in front of us — AI-mediated flows, platform
+                        interoperability, digital identity, continuous
+                        measurement — is the kind of moment the corpus is most
+                        useful for. Not because the past prescribes the future,
+                        but because the Union has been here before. Founding
+                        moments. Mandate gaps. Channel shifts. Equity questions
+                        disguised as technical ones. The shape is familiar; only
+                        the content is new.
+                        <br /><br />
+                        If there is a single thing we hope you take from this
+                        reading, it is that the corpus reads as a working
+                        library, and that the next chapter is yours to write —
+                        sooner, we suspect, than the cycles we inherited would
+                        suggest.
+                        <br /><br />
+                        Thank you, on behalf of Team 06, for the privilege of
+                        reading alongside you.
+                        <span class="signoff">— Köln, May 2026</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- 14. THANK YOU -->
+            <section class="slide cover">
+                <div class="meta">
+                    UPU Innovation Challenge · Köln · 2026 · Team 06
+                </div>
+                <h1>Thank <em>you</em>.</h1>
+                <div
+                    style="
+                        margin-top: 72px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                    "
+                >
+                    <div
+                        style="
+                            font-family: var(--mono);
+                            font-size: 11px;
+                            letter-spacing: 0.22em;
+                            text-transform: uppercase;
+                            color: var(--ink-3);
+                        "
+                    >
+                        Contact
+                    </div>
+                    <div
+                        style="
+                            font-family: var(--sans);
+                            font-weight: 400;
+                            font-size: 15px;
+                            color: var(--ink-2);
+                            letter-spacing: 0.01em;
+                        "
+                    >
+                        Edgar Barroso
+                    </div>
+                    <a
+                        href="mailto:edgar@horizonsarchitecture.ai"
+                        style="
+                            font-family: var(--mono);
+                            font-size: clamp(15px, 1vw, 18px);
+                            letter-spacing: 0.04em;
+                            color: var(--ink);
+                            text-decoration: none;
+                            border-bottom: 1px solid var(--ink);
+                            padding-bottom: 2px;
+                            align-self: flex-start;
+                        "
+                        >edgar@horizonsarchitecture.ai</a
+                    >
+                </div>
+            </section>
+        </div>
+
+        <div class="progress" id="progress"></div>
+        <div class="nav">
+            <span class="counter" id="counter">01 / 14</span>
+            <button id="prev" aria-label="Previous slide">‹</button>
+            <button id="next" aria-label="Next slide">›</button>
+        </div>
+
+        <script>
+            (function () {
+                const deck = document.getElementById("deck");
+                const slides = deck.querySelectorAll(".slide");
+                const prevBtn = document.getElementById("prev");
+                const nextBtn = document.getElementById("next");
+                const counter = document.getElementById("counter");
+                const progress = document.getElementById("progress");
+                const total = slides.length;
+                let current = 0;
+
+                function pad(n) {
+                    return n < 10 ? "0" + n : "" + n;
+                }
+
+                function update() {
+                    const w = deck.clientWidth;
+                    current = Math.round(deck.scrollLeft / w);
+                    if (current < 0) current = 0;
+                    if (current >= total) current = total - 1;
+                    counter.textContent = pad(current + 1) + " / " + pad(total);
+                    progress.style.width = ((current + 1) / total) * 100 + "%";
+                }
+
+                function go(idx) {
+                    if (idx < 0 || idx >= total) return;
+                    deck.scrollTo({
+                        left: idx * deck.clientWidth,
+                        behavior: "smooth",
+                    });
+                }
+
+                deck.addEventListener("scroll", update, { passive: true });
+                prevBtn.addEventListener("click", () => go(current - 1));
+                nextBtn.addEventListener("click", () => go(current + 1));
+
+                document.addEventListener("keydown", (e) => {
+                    if (
+                        e.key === "ArrowRight" ||
+                        e.key === " " ||
+                        e.key === "PageDown"
+                    ) {
+                        e.preventDefault();
+                        go(current + 1);
+                    }
+                    if (e.key === "ArrowLeft" || e.key === "PageUp") {
+                        e.preventDefault();
+                        go(current - 1);
+                    }
+                    if (e.key === "Home") {
+                        e.preventDefault();
+                        go(0);
+                    }
+                    if (e.key === "End") {
+                        e.preventDefault();
+                        go(total - 1);
+                    }
+                });
+
+                // Click-to-advance: clicking the slide goes forward, shift-click goes back.
+                deck.addEventListener("click", (e) => {
+                    if (
+                        e.target.closest(".nav") ||
+                        e.target.closest("a") ||
+                        e.target.closest("button")
+                    )
+                        return;
+                    if (e.shiftKey) go(current - 1);
+                    else go(current + 1);
+                });
+
+                window.addEventListener("resize", () => {
+                    deck.scrollTo({
+                        left: current * deck.clientWidth,
+                        behavior: "auto",
+                    });
+                });
+
+                update();
+            })();
+        </script>
+    </body>
+</html>
