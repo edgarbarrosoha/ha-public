@@ -497,14 +497,23 @@ Emítelo SIEMPRE (la interfaz lo oculta al participante y lo usa para iluminar e
 <script>
 (function(){
 'use strict';
-var API='https://api.anthropic.com/v1/messages';
+var ANTHROPIC='https://api.anthropic.com/v1/messages';
 var MODELO='claude-opus-4-8';
 var MODELO_PING='claude-haiku-4-5';
 var SYS=document.getElementById('sys').textContent.trim();
-var LS_CLAVE='mha_clave', LS_CONV='mha_conv', LS_MAPA='mha_mapa';
+var LS_CLAVE='mha_clave', LS_CONV='mha_conv', LS_MAPA='mha_mapa', LS_PROXY='mha_proxy';
+
+/* ---------- modo: proxy (la key vive en el servidor) o clave (pegar key) ---------- */
+var PROXY_BAKED='';   /* se hornea al construir; vacío/placeholder = modo clave */
+var proxyOverride=(function(){var m=location.search.match(/[?&]proxy=([^&]+)/);return m?decodeURIComponent(m[1]):'';})();
+if(proxyOverride){try{localStorage.setItem(LS_PROXY,proxyOverride);}catch(e){}}
+var PROXY=(PROXY_BAKED&&PROXY_BAKED.indexOf('__')!==0)?PROXY_BAKED
+        :(proxyOverride||(function(){try{return localStorage.getItem(LS_PROXY)||'';}catch(e){return '';}})());
+var MODO=PROXY?'proxy':'clave';
+var API=PROXY||ANTHROPIC;
 var SALUDO='Hola — soy el **Maestro HA**, tu guía para el trabajo práctico de hoy. Te acompaño paso a paso mientras montas tu entorno y trabajas tu proyecto con tu propio asistente de IA.\n\nPara arrancar, cuéntame tres cosas:\n1. Tu nombre y a qué se dedica tu empresa (con el giro basta — sin datos confidenciales).\n2. Qué herramienta de IA vas a usar hoy (Claude, ChatGPT, Copilot, otra).\n3. El proyecto o reto que definiste ayer, en una frase.\n\nSi algo de ayer quedó volando, también dímelo y lo aterrizamos antes de empezar.';
 
-var estado={clave:localStorage.getItem(LS_CLAVE)||'', msgs:[], mapa:{bloque:1,dim:'ninguna',vistas:[]}, fluyendo:false};
+var estado={clave:(MODO==='clave'?(localStorage.getItem(LS_CLAVE)||''):'proxy'), msgs:[], mapa:{bloque:1,dim:'ninguna',vistas:[]}, fluyendo:false};
 try{ estado.msgs=JSON.parse(localStorage.getItem(LS_CONV)||'[]'); }catch(e){ estado.msgs=[]; }
 try{ var m=JSON.parse(localStorage.getItem(LS_MAPA)||'null'); if(m&&m.bloque){estado.mapa=m;} }catch(e){}
 
@@ -520,6 +529,7 @@ function guardar(){
   }catch(e){}
 }
 function cabeceras(k){
+  if(MODO==='proxy'){return {'content-type':'application/json'};}
   return {'content-type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};
 }
 
@@ -735,7 +745,8 @@ function fluir(){
     if(nodo.parentNode){nodo.parentNode.removeChild(nodo);}
     var st=err&&err.status;
     if(st===401||st===403){
-      aviso('La clave no fue aceptada (puede haberse revocado). Pide la clave vigente al facilitador.',{cambiarClave:true});
+      if(MODO==='proxy'){aviso('El maestro no está disponible desde aquí ('+(st===403?'acceso no permitido':'autenticación')+'). Avísale al facilitador.',{retry:true});}
+      else{aviso('La clave no fue aceptada (puede haberse revocado). Pide la clave vigente al facilitador.',{cambiarClave:true});}
     }else if(st===429){
       aviso('El maestro está atendiendo a muchos a la vez. Espera unos segundos y reintenta.',{retry:true});
     }else if(st===529||st>=500){
@@ -848,8 +859,9 @@ document.getElementById('salir').addEventListener('click',function(){
   estado.clave='';
   abrirPuerta();
 });
+if(MODO==='proxy'){var bs=document.getElementById('salir');if(bs){bs.style.display='none';}}
 
-if(estado.clave||location.hash==='#vista'){abrirApp();}else{abrirPuerta();}
+if(MODO==='proxy'||estado.clave||location.hash==='#vista'){abrirApp();}else{abrirPuerta();}
 })();
 </script>
 </body>
