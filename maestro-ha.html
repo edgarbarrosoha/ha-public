@@ -504,7 +504,7 @@ var SYS=document.getElementById('sys').textContent.trim();
 var LS_CLAVE='mha_clave', LS_CONV='mha_conv', LS_MAPA='mha_mapa', LS_PROXY='mha_proxy';
 
 /* ---------- modo: proxy (la key vive en el servidor) o clave (pegar key) ---------- */
-var PROXY_BAKED='';   /* se hornea al construir; vacío/placeholder = modo clave */
+var PROXY_BAKED='https://maestro-ha-proxy.edgar-1c5.workers.dev/';   /* se hornea al construir; vacío/placeholder = modo clave */
 var proxyOverride=(function(){var m=location.search.match(/[?&]proxy=([^&]+)/);return m?decodeURIComponent(m[1]):'';})();
 if(proxyOverride){try{localStorage.setItem(LS_PROXY,proxyOverride);}catch(e){}}
 var PROXY=(PROXY_BAKED&&PROXY_BAKED.indexOf('__')!==0)?PROXY_BAKED
