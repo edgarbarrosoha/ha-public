@@ -1,0 +1,105 @@
+/**
+ * Maestro HA — proxy de Anthropic para el taller.
+ *
+ * Corre en Cloudflare Workers (gratis). Guarda la API key como SECRETO del
+ * servidor (variable ANTHROPIC_API_KEY, encriptada) — nunca viaja al navegador
+ * ni vive en el repo público. El sitio del taller llama a este Worker; el Worker
+ * le agrega la key y reenvía a Anthropic, devolviendo el stream tal cual.
+ *
+ * Protecciones (defensa en capas; el tope de gasto en la consola es el respaldo):
+ *  - Solo acepta peticiones desde el origen del taller (ORIGENES_OK).
+ *  - Solo deja pasar los modelos de la lista (MODELOS_OK) y capa max_tokens.
+ *  - Efímero: lo borras al cerrar el taller y la llave queda inalcanzable.
+ *
+ * Despliegue: ver MAESTRO-PROXY-SETUP.md (panel de Cloudflare, sin terminal).
+ */
+
+// El origen de GitHub Pages del taller. El "origen" es esquema+host, SIN ruta.
+// Para probar en local agrega "http://localhost:8080" o lo que uses.
+const ORIGENES_OK = [
+  "https://edgarbarrosoha.github.io",
+];
+
+const MODELOS_OK = ["claude-sonnet-4-6", "claude-haiku-4-5"];
+const MAX_TOKENS_TOPE = 2000;
+
+function cors(origen) {
+  const permitido = ORIGENES_OK.includes(origen) ? origen : ORIGENES_OK[0];
+  return {
+    "Access-Control-Allow-Origin": permitido,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "content-type",
+    "Access-Control-Max-Age": "86400",
+    "Vary": "Origin",
+  };
+}
+
+function json(obj, status, origen) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { "content-type": "application/json", ...cors(origen) },
+  });
+}
+
+export default {
+  async fetch(request, env) {
+    const origen = request.headers.get("Origin") || "";
+
+    // Preflight CORS
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: cors(origen) });
+    }
+
+    // Health check: abrir la URL del Worker en el navegador devuelve esto.
+    if (request.method === "GET") {
+      return json({ status: "maestro-ha proxy activo" }, 200, origen);
+    }
+
+    if (request.method !== "POST") {
+      return json({ error: { message: "metodo no permitido" } }, 405, origen);
+    }
+
+    if (!ORIGENES_OK.includes(origen)) {
+      return json({ error: { message: "origen no permitido" } }, 403, origen);
+    }
+
+    if (!env.ANTHROPIC_API_KEY) {
+      return json({ error: { message: "falta configurar ANTHROPIC_API_KEY en el Worker" } }, 500, origen);
+    }
+
+    let cuerpo;
+    try {
+      cuerpo = await request.json();
+    } catch (e) {
+      return json({ error: { message: "json invalido" } }, 400, origen);
+    }
+
+    // Candados: modelo en lista y tope de tokens.
+    if (!MODELOS_OK.includes(cuerpo.model)) {
+      return json({ error: { message: "modelo no permitido" } }, 400, origen);
+    }
+    if (typeof cuerpo.max_tokens !== "number" || cuerpo.max_tokens > MAX_TOKENS_TOPE) {
+      cuerpo.max_tokens = MAX_TOKENS_TOPE;
+    }
+
+    let arriba;
+    try {
+      arriba = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": env.ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify(cuerpo),
+      });
+    } catch (e) {
+      return json({ error: { message: "no se pudo contactar a Anthropic" } }, 502, origen);
+    }
+
+    // Reenvía la respuesta tal cual (incluido el stream SSE) con CORS.
+    const headers = new Headers(cors(origen));
+    headers.set("content-type", arriba.headers.get("content-type") || "application/json");
+    return new Response(arriba.body, { status: arriba.status, headers });
+  },
+};
