@@ -652,7 +652,7 @@ function quitarAvisos(){
 
 /* ---------- petición ---------- */
 function cuerpoPeticion(){
-  var hist=estado.msgs.filter(function(m){return !m.local&&(m.role==='user'||m.role==='assistant');});
+  var hist=estado.msgs.filter(function(m){return !m.local&&(m.role==='user'||m.role==='assistant')&&m.content&&String(m.content).trim();});
   if(hist.length>22){hist=hist.slice(-22);}
   while(hist.length&&hist[0].role!=='user'){hist.shift();}
   var mensajes=hist.map(function(m,i){
