@@ -1,0 +1,2273 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>SIC-Q — Presentación al Gobernador · v0.5 (final)</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            /* =====================================================================
+               SIC-Q · Presentación al Gobernador · v0.5
+               Estética: deck insignia del taller de IA corporativa de HA.
+               Nav: scale-to-fit #stage 1920×1080 + toggle .on (de v0.4, sin scroll-snap).
+
+               CIC SWAP-READY — para el skin oficial (Anagrama) basta cambiar 4 tokens:
+                 --blue:#B8CCE2 (celeste) · --offset:#232323 (carbón)
+                 --offwhite:#F0ECE3 (crema) · --on-blue:#232323 (texto sobre celeste)
+               Las slides .blue usan --on-blue (no --white) para sobrevivir el celeste claro.
+               Los SVG usan stroke/fill "currentColor" -> heredan el color de la slide y sobreviven el swap.
+               ===================================================================== */
+            :root {
+                --blue: #3356f6;
+                --black: #000;
+                --offset: #231f20;
+                --offwhite: #f1f2f2;
+                --white: #fff;
+                --on-blue: #fff;
+
+                /* tintes derivados (no son tokens de swap; tonos de apoyo del taller) */
+                --hair: rgba(0, 0, 0, 0.16);
+                --hair-light: rgba(241, 242, 242, 0.22);
+                --ink-2: #6b6660; /* mono secundario sobre claro */
+                --ink-3: #8a857c; /* labels tenues */
+                --on-dark-2: #cfcbc4; /* secundario sobre oscuro */
+                --on-dark-3: #b9b4ac;
+
+                --sans:
+                    "Plus Jakarta Sans", "Helvetica Neue", Helvetica,
+                    Arial, system-ui, sans-serif;
+                --mono:
+                    "Roboto Mono", "SF Mono", Menlo, Monaco, Consolas,
+                    "Liberation Mono", monospace;
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                height: 100%;
+                background: var(--black);
+                overflow: hidden;
+                font-family: var(--sans);
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* ===== Nav shell (scale-to-fit, de v0.4) ===== */
+            #deck {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--black);
+                transition: background 0.25s ease;
+            }
+            #stage {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 1920px;
+                height: 1080px;
+                transform-origin: top left;
+            }
+
+            .slide {
+                position: absolute;
+                inset: 0;
+                width: 1920px;
+                height: 1080px;
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                /* asimétrica izquierda-pesada con aire: 7vh/7vw del taller -> px de stage */
+                padding: 108px 150px 120px;
+                overflow: hidden;
+            }
+            .slide.on {
+                display: flex;
+            }
+
+            /* temas */
+            .light {
+                background: var(--offwhite);
+                color: var(--offset);
+            }
+            .dark {
+                background: var(--offset);
+                color: var(--offwhite);
+            }
+            .blue {
+                background: var(--blue);
+                color: var(--on-blue);
+            }
+
+            /* ===== centrado: solo portada / bigq / cierre ===== */
+            .slide.center {
+                align-items: center;
+                text-align: center;
+            }
+            .wrap {
+                width: 100%;
+                max-width: 1620px;
+            }
+            .slide.center .wrap {
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            /* ===== Tipografía (clamp del taller, caps altos -> px de stage) ===== */
+            .eyebrow {
+                font-family: var(--mono);
+                font-weight: 500;
+                font-size: 25px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--blue);
+                margin-bottom: 30px;
+            }
+            .dark .eyebrow {
+                color: var(--blue);
+            }
+            .blue .eyebrow {
+                color: var(--on-blue);
+                opacity: 0.82;
+            }
+
+            h1.display {
+                font-family: var(--sans);
+                font-weight: 700;
+                font-size: 118px;
+                line-height: 1.02;
+                letter-spacing: -0.025em;
+                max-width: 17ch;
+            }
+            h2.title {
+                font-family: var(--sans);
+                font-weight: 600;
+                font-size: 76px;
+                line-height: 1.06;
+                letter-spacing: -0.018em;
+                max-width: 21ch;
+            }
+            .lead {
+                font-weight: 500;
+                font-size: 44px;
+                line-height: 1.16;
+                letter-spacing: -0.01em;
+                max-width: 24ch;
+                margin-top: 30px;
+            }
+            .sub {
+                font-weight: 400;
+                font-size: 36px;
+                line-height: 1.32;
+                max-width: 40ch;
+                margin-top: 26px;
+            }
+            .blue .sub,
+            .dark .sub {
+                color: var(--offwhite);
+            }
+            .note {
+                font-family: var(--mono);
+                font-weight: 400;
+                font-size: 23px;
+                line-height: 1.55;
+                color: #555;
+                max-width: 66ch;
+            }
+            .dark .note,
+            .blue .note {
+                color: var(--on-dark-2);
+            }
+            .src {
+                font-family: var(--mono);
+                font-weight: 400;
+                font-size: 21px;
+                line-height: 1.5;
+                color: var(--ink-3);
+                margin-top: 34px;
+                max-width: 70ch;
+            }
+            .dark .src,
+            .blue .src {
+                color: rgba(241, 242, 242, 0.62);
+            }
+            .kw {
+                color: var(--blue);
+                font-weight: 600;
+            }
+            .dark .kw,
+            .blue .kw {
+                color: var(--white);
+                text-decoration: underline;
+                text-decoration-color: rgba(255, 255, 255, 0.42);
+                text-underline-offset: 5px;
+            }
+
+            /* ===== bigq (slides-quiebre): peso 800 + barrita azul ::before ===== */
+            .slide.bigq {
+                align-items: center;
+                text-align: center;
+                justify-content: center;
+            }
+            .slide.bigq .eyebrow {
+                font-weight: 700;
+                letter-spacing: 0.24em;
+                font-size: 23px;
+            }
+            .slide.bigq .eyebrow::before {
+                content: "";
+                display: block;
+                width: 64px;
+                height: 9px;
+                background: var(--blue);
+                margin: 0 auto 26px;
+                border-radius: 1px;
+            }
+            .blue.bigq .eyebrow::before {
+                background: var(--on-blue);
+            }
+            .bigq .big {
+                font-family: var(--sans);
+                font-weight: 800;
+                font-size: 142px;
+                line-height: 1;
+                letter-spacing: -0.03em;
+                max-width: 22ch;
+                margin: 0 auto;
+            }
+            .bigq .sub {
+                margin: 44px auto 0;
+                max-width: 46ch;
+                font-weight: 500;
+            }
+
+            /* ===== brand discreto (wordmark mono, sin logo PNG) ===== */
+            .brand {
+                font-family: var(--mono);
+                font-weight: 500;
+                font-size: 21px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                margin-top: 56px;
+                opacity: 0.85;
+            }
+            .slidenum {
+                position: absolute;
+                left: 150px;
+                bottom: 56px;
+                font-family: var(--mono);
+                font-size: 21px;
+                letter-spacing: 0.12em;
+                color: var(--ink-3);
+                z-index: 5;
+            }
+            .dark .slidenum,
+            .blue .slidenum {
+                color: rgba(255, 255, 255, 0.5);
+            }
+
+            /* ===== stats gigantes ===== */
+            .stats {
+                display: flex;
+                gap: 150px;
+                margin-top: 56px;
+                align-items: flex-start;
+            }
+            .stat .n {
+                font-weight: 700;
+                font-size: 156px;
+                line-height: 0.92;
+                letter-spacing: -0.03em;
+                color: var(--blue);
+            }
+            .dark .stat .n {
+                color: var(--white);
+            }
+            .blue .stat .n {
+                color: var(--on-blue);
+            }
+            .stat .u {
+                font-family: var(--mono);
+                font-weight: 400;
+                font-size: 25px;
+                line-height: 1.4;
+                margin-top: 22px;
+                color: var(--ink-2);
+                max-width: 24ch;
+            }
+            .dark .stat .u,
+            .blue .stat .u {
+                color: var(--on-dark-2);
+            }
+
+            /* ===== grid tipado de tarjetas (regla 2px como techo, taller .three/.step) ===== */
+            .cards {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0 64px;
+                margin-top: 54px;
+                width: 100%;
+            }
+            .card {
+                border-top: 2px solid currentColor;
+                padding-top: 26px;
+            }
+            .card .h {
+                font-family: var(--mono);
+                font-weight: 500;
+                font-size: 24px;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--blue);
+                margin-bottom: 20px;
+            }
+            .blue .card .h {
+                color: var(--on-blue);
+            }
+            .card .b {
+                font-size: 33px;
+                line-height: 1.24;
+                font-weight: 500;
+            }
+            /* contacto: grid de hairlines (taller .prod) */
+            .contact {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0;
+                margin-top: 56px;
+                width: 100%;
+                border-top: 1px solid rgba(255, 255, 255, 0.28);
+            }
+            .blue .contact {
+                border-top-color: rgba(255, 255, 255, 0.32);
+            }
+            .contact .c {
+                padding: 28px 36px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+                border-right: 1px solid rgba(255, 255, 255, 0.28);
+                text-align: left;
+            }
+            .contact .c:first-child {
+                padding-left: 0;
+            }
+            .contact .c:last-child {
+                border-right: 0;
+            }
+            .contact .ck {
+                font-family: var(--mono);
+                font-size: 21px;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                opacity: 0.72;
+                margin-bottom: 12px;
+            }
+            .contact .cv {
+                font-size: 30px;
+                font-weight: 600;
+                line-height: 1.18;
+            }
+
+            /* ===== SVG diagram system (malla azul del taller) =====
+               nodos huecos: fill offwhite + stroke azul 2-2.4
+               conexiones tenues: stroke azul opacity .15
+               labels: Roboto Mono · todo hereda color via currentColor donde aplica */
+            .diagram {
+                margin-top: 4px;
+                width: 100%;
+                display: flex;
+                justify-content: flex-start;
+            }
+            .diagram.full {
+                justify-content: center;
+            }
+            .diagram svg {
+                display: block;
+                width: 100%;
+                height: auto;
+                max-width: 1500px;
+            }
+            /* caja del diagrama hueca: borde azul, relleno = color de fondo de la slide */
+            .light .d-box {
+                fill: var(--offwhite);
+            }
+            .dark .d-box {
+                fill: var(--offset);
+            }
+            .blue .d-box {
+                fill: var(--blue);
+            }
+            .d-box {
+                stroke: var(--blue);
+                stroke-width: 2.2;
+            }
+            .blue .d-box {
+                stroke: var(--on-blue);
+            }
+            .dark .d-box {
+                stroke: var(--blue);
+            }
+            /* nodo sólido azul (acento) */
+            .d-fill {
+                fill: var(--blue);
+                stroke: none;
+            }
+            .dark .d-fill {
+                fill: var(--white);
+            }
+            .blue .d-fill {
+                fill: var(--on-blue);
+            }
+            /* conector estructural (hereda color de slide, suave) */
+            .d-line {
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2;
+                opacity: 0.85;
+            }
+            /* malla tenue azul (la firma del taller) */
+            .d-mesh {
+                stroke: var(--blue);
+                stroke-width: 1.2;
+                stroke-opacity: 0.15;
+                fill: none;
+            }
+            .dark .d-mesh,
+            .blue .d-mesh {
+                stroke: currentColor;
+                stroke-opacity: 0.22;
+            }
+            .d-dash {
+                stroke-dasharray: 7 8;
+            }
+            .d-lbl {
+                font-family: var(--sans);
+                font-weight: 600;
+                fill: currentColor;
+            }
+            .d-lbl-mono {
+                font-family: var(--mono);
+                font-weight: 500;
+                letter-spacing: 0.04em;
+                fill: var(--blue);
+            }
+            .dark .d-lbl-mono,
+            .blue .d-lbl-mono {
+                fill: currentColor;
+            }
+            .d-lbl-dim {
+                font-family: var(--mono);
+                font-weight: 400;
+                fill: currentColor;
+                opacity: 0.55;
+            }
+            /* etiqueta sobre el nodo sólido (cima de la escalera): contrasta con .d-fill */
+            .d-lbl-oncima {
+                font-family: var(--sans);
+                font-weight: 600;
+                fill: var(--offwhite);
+            }
+            .dark .d-lbl-oncima {
+                fill: var(--offset);
+            }
+            .blue .d-lbl-oncima {
+                fill: var(--blue);
+            }
+            .d-axis {
+                stroke: currentColor;
+                stroke-width: 1;
+                opacity: 0.3;
+            }
+
+            /* ===== cromo de presentación ===== */
+            #bartrack {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.12);
+                z-index: 20;
+            }
+            #bar {
+                height: 100%;
+                width: 0%;
+                background: var(--blue);
+                transition: width 0.35s ease;
+            }
+            #counter {
+                position: absolute;
+                right: 42px;
+                top: 28px;
+                font-family: var(--mono);
+                font-size: 24px;
+                color: var(--white);
+                mix-blend-mode: difference;
+                z-index: 20;
+                letter-spacing: 0.08em;
+            }
+            #hint {
+                position: absolute;
+                right: 42px;
+                bottom: 30px;
+                font-family: var(--mono);
+                font-size: 24px;
+                color: var(--white);
+                mix-blend-mode: difference;
+                opacity: 0.7;
+                z-index: 20;
+                letter-spacing: 0.04em;
+            }
+            #fsbtn {
+                position: absolute;
+                left: 42px;
+                bottom: 30px;
+                font-family: var(--mono);
+                font-size: 24px;
+                color: var(--white);
+                mix-blend-mode: difference;
+                opacity: 0.7;
+                z-index: 21;
+                letter-spacing: 0.04em;
+                background: none;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+            }
+            #fsbtn:hover {
+                opacity: 1;
+            }
+            .navzone {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 7%;
+                z-index: 9;
+                cursor: pointer;
+            }
+            #prevz {
+                left: 0;
+            }
+            #nextz {
+                right: 0;
+            }
+
+            /* ===== PORTADA animada (negro + nube de partículas, alineada a la izquierda) ===== */
+            .black {
+                background: var(--black);
+                color: var(--offwhite);
+            }
+            .slide.cover {
+                align-items: flex-start;
+                justify-content: center;
+                padding: 108px 150px 120px;
+            }
+            .fx,
+            .netfx,
+            .cfx,
+            .cyclefx,
+            .tierfx,
+            .loopfx {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+                pointer-events: none;
+            }
+            .black .wrap {
+                position: relative;
+                z-index: 1;
+            }
+            .black .sub {
+                color: var(--on-dark-2);
+            }
+            .cover-wrap {
+                position: relative;
+                z-index: 1;
+                max-width: 1480px;
+            }
+            .black .eyebrow {
+                color: #5e7bff;
+                margin-bottom: 40px;
+            }
+            .cover-title {
+                font-family: var(--sans);
+                font-weight: 600;
+                font-size: 100px;
+                line-height: 1.05;
+                letter-spacing: -0.028em;
+                color: var(--offwhite);
+                max-width: 1440px;
+            }
+            .cover-title .kw-cover {
+                color: #5e7bff;
+            }
+            .cover-tag {
+                font-family: var(--mono);
+                font-weight: 500;
+                font-size: 30px;
+                letter-spacing: 0.32em;
+                color: var(--on-dark-3);
+                margin-top: 46px;
+            }
+            .cover-foot {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 54px;
+                text-align: center;
+                z-index: 1;
+                font-family: var(--mono);
+                font-size: 30px;
+                letter-spacing: 0.08em;
+                color: rgba(241, 242, 242, 0.62);
+            }
+
+            /* ===== comparación "Más que ChatGPT" (asimétrica, SIC-Q acentuado) ===== */
+            .vs {
+                display: grid;
+                grid-template-columns: 1fr 1.3fr;
+                gap: 64px;
+                margin-top: 60px;
+                width: 100%;
+                align-items: start;
+            }
+            .vs-a,
+            .vs-b {
+                border-top: 2px solid currentColor;
+                padding-top: 30px;
+            }
+            .vs-a {
+                opacity: 0.5;
+            }
+            .vs-b {
+                border-top-color: #5e7bff;
+            }
+            .vs-tag {
+                font-family: var(--mono);
+                font-weight: 500;
+                font-size: 27px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 20px;
+            }
+            .vs-b .vs-tag {
+                color: #5e7bff;
+            }
+            .vs-desc {
+                font-size: 36px;
+                line-height: 1.3;
+                font-weight: 500;
+            }
+
+            /* ===== remate (faltaba en v0.5) ===== */
+            .remate {
+                font-weight: 500;
+                font-size: 38px;
+                line-height: 1.3;
+                letter-spacing: -0.01em;
+                max-width: 1320px;
+                margin-top: 36px;
+            }
+
+            /* ===== grid de demos en vivo (2x2) ===== */
+            .demos {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 38px 64px;
+                margin-top: 50px;
+                width: 100%;
+            }
+            .demo {
+                border-top: 2px solid var(--blue);
+                padding-top: 24px;
+            }
+            .demo .dt {
+                font-size: 34px;
+                font-weight: 600;
+                line-height: 1.14;
+            }
+            .demo .dd {
+                font-size: 25px;
+                line-height: 1.36;
+                color: var(--ink-2);
+                margin-top: 12px;
+            }
+            .demo .du {
+                font-family: var(--mono);
+                font-size: 23px;
+                color: var(--blue);
+                margin-top: 16px;
+            }
+            .demo .du a {
+                color: inherit;
+                text-decoration: none;
+                border-bottom: 1px solid rgba(51, 86, 246, 0.35);
+                padding-bottom: 2px;
+            }
+            .demo .du a:hover {
+                border-bottom-color: var(--blue);
+            }
+        </style>
+    </head>
+    <body>
+        <div id="deck">
+            <div id="stage">
+                <!-- ============ 1 · PORTADA ============ -->
+                <!-- nota (apertura): Sistema de Inteligencia Colectiva de Querétaro. -->
+                <section class="slide black cover on">
+                    <canvas
+                        class="fx"
+                        data-cx="1180"
+                        data-cy="520"
+                        data-r="360"
+                        aria-hidden="true"
+                    ></canvas>
+                    <div class="wrap cover-wrap">
+                        <div class="eyebrow">
+                            Gobierno del Estado de Querétaro
+                        </div>
+                        <h1 class="cover-title">
+                            Sistema de
+                            <span class="kw-cover">Inteligencia</span
+                            ><br />Colectiva de Querétaro
+                        </h1>
+                        <div class="cover-tag">SIC-Q</div>
+                    </div>
+                </section>
+
+                <!-- ============ 2 · CONTEXTO (stat fuerte, relatable) ============ -->
+                <!-- nota: cada día se genera más información de la que podemos procesar; la inteligencia artificial es la herramienta para entenderla. -->
+                <section class="slide dark">
+                    <div class="wrap">
+                        <div class="eyebrow">El contexto</div>
+                        <h2 class="title">
+                            Cada día se genera más información de la que
+                            podemos procesar.
+                        </h2>
+                        <div class="stats" style="margin-top: 64px">
+                            <div
+                                class="stat"
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 56px;
+                                "
+                            >
+                                <div class="n">~400M</div>
+                                <div
+                                    class="u"
+                                    style="
+                                        max-width: 34ch;
+                                        font-size: 28px;
+                                        margin-top: 0;
+                                    "
+                                >
+                                    terabytes nuevos al día en el mundo —
+                                    equivalente, en orden de magnitud, a 40
+                                    millones de bibliotecas cada día
+                                </div>
+                            </div>
+                        </div>
+                        <p
+                            class="lead"
+                            style="margin-top: 54px; max-width: 26ch"
+                        >
+                            La inteligencia artificial permite convertir
+                            ese volumen en claridad.
+                        </p>
+                        <p class="src">
+                            Estimación, orden de magnitud (2024–2025).
+                        </p>
+                    </div>
+                </section>
+                <!-- ============ 1b · INTELIGENCIA COLECTIVA (el concepto que da nombre) ============ -->
+                <!-- nota: nadie sabe todo, pero todos saben algo; juntar lo que cada quien sabe es la inteligencia colectiva que da nombre al sistema. -->
+                <section class="slide black cover">
+                    <canvas class="cfx" aria-hidden="true"></canvas>
+                    <div class="wrap cover-wrap">
+                        <div class="eyebrow">Inteligencia colectiva</div>
+                        <h2 class="cover-title" style="font-size: 94px">
+                            Nadie sabe todo,<br />pero
+                            <span class="kw-cover">todos saben algo</span>.
+                        </h2>
+                        <p
+                            class="sub"
+                            style="max-width: 32ch; margin-top: 34px"
+                        >
+                            Reunir lo que cada quien sabe convierte
+                            conocimiento disperso en inteligencia
+                            colectiva.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ============ 3 · EL PROBLEMA (red de nodos dispersos) ============ -->
+                <!-- nota: la información del Estado vive dispersa, cada fuente por su lado, sin conectarse. -->
+                <section
+                    class="slide light"
+                    style="justify-content: flex-start"
+                >
+                    <canvas
+                        class="netfx"
+                        data-mode="scattered"
+                        aria-hidden="true"
+                    ></canvas>
+                    <div
+                        class="wrap"
+                        style="position: relative; z-index: 1"
+                    >
+                        <div class="eyebrow">El punto de partida</div>
+                        <h2
+                            class="title"
+                            style="
+                                font-size: 60px;
+                                line-height: 1.05;
+                                max-width: none;
+                                white-space: nowrap;
+                            "
+                        >
+                            Querétaro ha avanzado en integrar su
+                            información.
+                        </h2>
+                        <p
+                            class="lead"
+                            style="
+                                margin-top: 18px;
+                                font-size: 29px;
+                                max-width: 36ch;
+                            "
+                        >
+                            El siguiente paso es hacerla interoperable.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ============ 3b · CONECTADAS (flujo animado de la red) ============ -->
+                <!-- nota: al conectarlas, la información fluye y se cruza: una sola inteligencia. -->
+                <section
+                    class="slide dark"
+                    style="justify-content: flex-start"
+                >
+                    <canvas
+                        class="netfx"
+                        data-mode="connected"
+                        aria-hidden="true"
+                    ></canvas>
+                    <div
+                        class="wrap"
+                        style="position: relative; z-index: 1"
+                    >
+                        <div class="eyebrow">El siguiente paso</div>
+                        <h2 class="title">
+                            Juntas, una sola inteligencia.
+                        </h2>
+                    </div>
+                </section>
+
+                <!-- ============ 6 · ANTICIPAR (ciclo vivo de escenarios) ============ -->
+                <!-- nota: un ciclo permanente —datos vivos → motor → escenarios → planeación— que se actualiza con cada nueva señal. -->
+                <section
+                    class="slide dark"
+                    style="justify-content: flex-start"
+                >
+                    <canvas class="cyclefx" aria-hidden="true"></canvas>
+                    <div
+                        class="wrap"
+                        style="position: relative; z-index: 1"
+                    >
+                        <div class="eyebrow">Lo que habilita</div>
+                        <h2 class="title">
+                            Un solo sistema para gobernar con información.
+                        </h2>
+                    </div>
+                </section>
+
+                <!-- ============ 5 · LA IDEA-ANCLA (bigq) ============ -->
+                <!-- nota: lo que proponemos reúne esas fuentes y responde con claridad cuando se necesita. -->
+                <section class="slide black cover">
+                    <canvas
+                        class="fx"
+                        data-cx="1260"
+                        data-cy="540"
+                        data-r="330"
+                        aria-hidden="true"
+                    ></canvas>
+                    <div class="wrap cover-wrap">
+                        <p
+                            class="sub"
+                            style="margin-bottom: 22px; opacity: 0.82"
+                        >
+                            Cuando todo se vuelve más complejo,
+                        </p>
+                        <h2
+                            class="cover-title"
+                            style="
+                                font-size: 150px;
+                                letter-spacing: -0.035em;
+                            "
+                        >
+                            Claridad es
+                            <span class="kw-cover">poder</span>.
+                        </h2>
+                    </div>
+                </section>
+
+                <!-- ============ 6 · ACCESO POR NIVEL (jerarquía, flujo descendente) ============ -->
+                <!-- nota: el sistema sirve a cada público con los datos que le tocan; no todo el mundo ve todo (acceso por rol, principio HA). -->
+                <section
+                    class="slide light"
+                    style="justify-content: flex-start"
+                >
+                    <canvas class="tierfx" aria-hidden="true"></canvas>
+                    <div
+                        class="wrap"
+                        style="position: relative; z-index: 1"
+                    >
+                        <div class="eyebrow">Acceso por nivel</div>
+                        <h2 class="title">
+                            Cada nivel ve la información que le
+                            corresponde.
+                        </h2>
+                    </div>
+                </section>
+
+                <!-- ============ 7 · CÓMO FUNCIONA (bucle de 4 preguntas, se retroalimenta) ============ -->
+                <!-- nota: entiende qué pasó, por qué, qué es más probable y qué conviene hacer; un bucle que se retroalimenta, caso por caso y en agregado. -->
+                <section
+                    class="slide light"
+                    style="justify-content: flex-start"
+                >
+                    <canvas class="loopfx" aria-hidden="true"></canvas>
+                    <div
+                        class="wrap"
+                        style="position: relative; z-index: 1"
+                    >
+                        <div class="eyebrow">Cómo funciona</div>
+                        <h2 class="title">
+                            Describe, explica, anticipa y sugiere.
+                        </h2>
+                        <p class="src" style="margin-top: 30px">
+                            cita fuentes · reconoce límites · opera del
+                            lado del Estado
+                        </p>
+                        <p class="src" style="margin-top: 10px">
+                            caso por caso · y en agregado
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ============ 8 · MÁS QUE CHATGPT (sistema de IA escalable) ============ -->
+                <!-- nota: el modelo de IA lo tiene cualquiera; la diferencia son los datos propios del Estado y su gobernanza de agentes. -->
+                <section class="slide dark">
+                    <div class="wrap">
+                        <div class="eyebrow">De asistente a sistema</div>
+                        <h2 class="title">
+                            Más que ChatGPT: IA y creatividad al servicio
+                            del Estado.
+                        </h2>
+                        <div class="vs">
+                            <div class="vs-a">
+                                <div class="vs-tag">ChatGPT</div>
+                                <div class="vs-desc">
+                                    Un asistente general, fuera de la
+                                    operación del Estado.
+                                </div>
+                            </div>
+                            <div class="vs-b">
+                                <div class="vs-tag">SIC-Q</div>
+                                <div class="vs-desc">
+                                    Un sistema del Estado: datos propios,
+                                    gobernanza y criterio para usar modelos
+                                    según cada necesidad.
+                                </div>
+                            </div>
+                        </div>
+                        <p class="remate" style="margin-top: 50px">
+                            La diferencia está en cómo los modelos se
+                            integran a los datos y reglas del Estado.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ============ 9 · EL POTENCIAL (grafo de conocimiento: breve intro + enlace) ============ -->
+                <!-- nota: una misma base alimenta varios conocimientos; el cruce produce respuestas que ninguna secretaría tiene sola. El orador abre el grafo en vivo. -->
+                <section class="slide blue">
+                    <div class="wrap">
+                        <div class="eyebrow">El potencial</div>
+                        <h2 class="title" style="max-width: 26ch">
+                            El contexto aparece al cruzar las bases.
+                        </h2>
+                        <p
+                            class="sub"
+                            style="max-width: 48ch; margin-top: 28px"
+                        >
+                            Una misma base alimenta varios usos; los cruces
+                            ayudan a ver preguntas que una sola secretaría
+                            no alcanza a responder.
+                        </p>
+                        <p style="margin-top: 48px">
+                            <a
+                                href="06-grafo-conocimiento-sicq.html"
+                                target="_blank"
+                                rel="noopener"
+                                style="
+                                    font-family: var(--sans);
+                                    font-weight: 600;
+                                    font-size: 34px;
+                                    letter-spacing: -0.01em;
+                                    color: var(--on-blue);
+                                    text-decoration: underline;
+                                    text-underline-offset: 8px;
+                                    text-decoration-thickness: 3px;
+                                "
+                            >
+                                Ver datos reales interconectados ↗
+                            </a>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ============ 11 · DEMOS EN VIVO (4 aplicativos) ============ -->
+                <!-- nota: cuatro herramientas del sistema que el equipo puede abrir y probar. -->
+                <section class="slide light">
+                    <div class="wrap">
+                        <div class="eyebrow">El sistema en uso</div>
+                        <h2 class="title">
+                            Cuatro formas de usar SIC‑Q según la necesidad.
+                        </h2>
+                        <div class="demos">
+                            <div class="demo">
+                                <div class="dt">
+                                    Taller de participación ciudadana
+                                </div>
+                                <div class="dd">
+                                    Captura las ideas de los talleres y
+                                    encuentra patrones.
+                                </div>
+                                <div class="du">
+                                    <a
+                                        href="https://taller-sic-q.horizonsarchitecture.ai"
+                                        target="_blank"
+                                        rel="noopener"
+                                        >taller-sic-q.horizonsarchitecture.ai</a
+                                    >
+                                </div>
+                            </div>
+                            <div class="demo">
+                                <div class="dt">
+                                    Plataforma de participación ciudadana
+                                </div>
+                                <div class="dd">
+                                    La ciudadanía propone y prioriza; el
+                                    gobierno escucha a escala.
+                                </div>
+                                <div class="du">
+                                    <a
+                                        href="https://sicq-demo.horizonsarchitecture.ai/"
+                                        target="_blank"
+                                        rel="noopener"
+                                        >sicq-demo.horizonsarchitecture.ai</a
+                                    >
+                                </div>
+                            </div>
+                            <div class="demo">
+                                <div class="dt">
+                                    Herramienta del Plan QRO 2050
+                                </div>
+                                <div class="dd">
+                                    Explora y da seguimiento al Plan de
+                                    largo plazo.
+                                </div>
+                                <div class="du">
+                                    <a
+                                        href="https://tree.horizonsarchitecture.ai/"
+                                        target="_blank"
+                                        rel="noopener"
+                                        >tree.horizonsarchitecture.ai</a
+                                    >
+                                </div>
+                            </div>
+                            <div class="demo">
+                                <div class="dt">Agente del Gobernador</div>
+                                <div class="dd">
+                                    Consulta en lenguaje natural y muestra
+                                    la fuente.
+                                </div>
+                                <div class="du">
+                                    <a
+                                        href="https://ha-sicq-agents.horizonsarchitecture.ai/"
+                                        target="_blank"
+                                        rel="noopener"
+                                        >ha-sicq-agents.horizonsarchitecture.ai</a
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ 12 · EL LEGADO (declaración breve: IA como infraestructura) ============ -->
+                <!-- nota: la IA se vuelve infraestructura invisible; la primera piedra de un Estado que perdura, con sus logros y lecciones; ambición: el primero en América Latina. El orador desarrolla en vivo. -->
+                <section class="slide dark">
+                    <div class="wrap">
+                        <h2
+                            class="title"
+                            style="
+                                font-size: 138px;
+                                line-height: 1;
+                                letter-spacing: -0.03em;
+                            "
+                        >
+                            El legado
+                        </h2>
+                        <p
+                            class="lead"
+                            style="margin-top: 48px; max-width: 38ch"
+                        >
+                            SIC-Q puede documentar la historia de esta
+                            administración: sus decisiones, sus logros y
+                            sus aprendizajes.
+                        </p>
+                        <p
+                            class="sub"
+                            style="margin-top: 24px; max-width: 40ch"
+                        >
+                            Una memoria institucional para Querétaro, con
+                            valor para otros gobiernos de la región.
+                        </p>
+                        <p
+                            class="lead"
+                            style="margin-top: 30px; max-width: 42ch"
+                        >
+                            La inteligencia artificial puede ser
+                            infraestructura del Estado; SIC‑Q es la
+                            <span class="kw">primera piedra</span>.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ============ 13 · CIERRE + CONTACTO ============ -->
+                <!-- nota: respaldo para desarrollarlo, uso para afinarlo, mira en 2027. -->
+                <section class="slide black cover">
+                    <canvas
+                        class="fx"
+                        data-cx="1420"
+                        data-cy="560"
+                        data-r="300"
+                        aria-hidden="true"
+                    ></canvas>
+                    <div class="wrap cover-wrap">
+                        <h2 class="cover-title" style="font-size: 128px">
+                            Muchas gracias.<br />
+                        </h2>
+                        <div class="contact">
+                            <div class="c">
+                                <div class="ck">Líder del proyecto</div>
+                                <div class="cv">Antonio Rangel</div>
+                            </div>
+                            <div class="c">
+                                <div class="ck">
+                                    Arquitectura y desarrollo
+                                </div>
+                                <div class="cv">Horizons Architecture</div>
+                            </div>
+                            <div class="c">
+                                <div class="ck">Contacto</div>
+                                <div class="cv">
+                                    edgar@horizonsarchitecture.ai
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ 15 · ANEXO · DEMO LOCAL (Asesor Electoral) ============ -->
+                <!-- nota: ligas localhost; solo corren en la máquina con el demo arrancado. Insertada al final, tras el cierre. -->
+                <section class="slide light">
+                    <div class="wrap">
+                        <div class="eyebrow">Anexo · demo local</div>
+                        <h2 class="title">
+                            Ejemplos de un par de extra tracks.
+                        </h2>
+                        <div class="demos">
+                            <div class="demo">
+                                <div class="dt">Dashboards</div>
+                                <div class="dd">
+                                    datos de Querétaro 2015–2024.
+                                </div>
+                                <div class="du">
+                                    <a
+                                        href="http://localhost:8080"
+                                        target="_blank"
+                                        rel="noopener"
+                                        >localhost:8080</a
+                                    >
+                                </div>
+                            </div>
+                            <div class="demo">
+                                <div class="dt">Asesor · chat</div>
+                                <div class="dd">
+                                    Pregunta en lenguaje natural; responde
+                                    con la fuente citada, sobre los datos
+                                    reales del Estado.
+                                </div>
+                                <div class="du">
+                                    <a
+                                        href="http://localhost:8900"
+                                        target="_blank"
+                                        rel="noopener"
+                                        >localhost:8900</a
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div id="bartrack"><div id="bar"></div></div>
+                <div id="counter">01 / 15</div>
+                <div id="hint">← → para avanzar</div>
+                <button id="fsbtn" aria-label="Pantalla completa">
+                    ⤢ pantalla completa
+                </button>
+                <div class="navzone" id="prevz"></div>
+                <div class="navzone" id="nextz"></div>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                var slides = Array.prototype.slice.call(
+                    document.querySelectorAll(".slide"),
+                );
+                var stage = document.getElementById("stage");
+                var counter = document.getElementById("counter");
+                var bar = document.getElementById("bar");
+                var i = 0;
+                function pad(n) {
+                    return (n < 10 ? "0" : "") + n;
+                }
+                var deck = document.getElementById("deck");
+                function show(n) {
+                    i = Math.max(0, Math.min(slides.length - 1, n));
+                    slides.forEach(function (s, k) {
+                        s.classList.toggle("on", k === i);
+                    });
+                    if (deck && slides[i])
+                        deck.style.background = getComputedStyle(
+                            slides[i],
+                        ).backgroundColor;
+                    counter.textContent =
+                        pad(i + 1) + " / " + pad(slides.length);
+                    bar.style.width =
+                        ((i + 1) / slides.length) * 100 + "%";
+                }
+                function next() {
+                    show(i + 1);
+                }
+                function prev() {
+                    show(i - 1);
+                }
+                function fit() {
+                    var s = Math.min(
+                        window.innerWidth / 1920,
+                        window.innerHeight / 1080,
+                    );
+                    var tx = (window.innerWidth - 1920 * s) / 2;
+                    var ty = (window.innerHeight - 1080 * s) / 2;
+                    stage.style.transform =
+                        "translate(" +
+                        tx +
+                        "px," +
+                        ty +
+                        "px) scale(" +
+                        s +
+                        ")";
+                }
+                window.addEventListener("resize", fit);
+                fit();
+                document.addEventListener("keydown", function (e) {
+                    if (
+                        [
+                            "ArrowRight",
+                            "PageDown",
+                            " ",
+                            "Spacebar",
+                        ].indexOf(e.key) > -1
+                    ) {
+                        e.preventDefault();
+                        next();
+                    } else if (
+                        ["ArrowLeft", "PageUp"].indexOf(e.key) > -1
+                    ) {
+                        e.preventDefault();
+                        prev();
+                    } else if (e.key === "Home") {
+                        show(0);
+                    } else if (e.key === "End") {
+                        show(slides.length - 1);
+                    }
+                });
+                document
+                    .getElementById("nextz")
+                    .addEventListener("click", next);
+                document
+                    .getElementById("prevz")
+                    .addEventListener("click", prev);
+                var x0 = null;
+                document.addEventListener(
+                    "touchstart",
+                    function (e) {
+                        x0 = e.touches[0].clientX;
+                    },
+                    { passive: true },
+                );
+                document.addEventListener(
+                    "touchend",
+                    function (e) {
+                        if (x0 === null) return;
+                        var dx = e.changedTouches[0].clientX - x0;
+                        if (Math.abs(dx) > 50) {
+                            dx < 0 ? next() : prev();
+                        }
+                        x0 = null;
+                    },
+                    { passive: true },
+                );
+                show(0);
+            })();
+        </script>
+        <script>
+            /* Portada: nube de partículas (canvas 2D, esfera 3D en rotación lenta). Buen gusto; respeta prefers-reduced-motion. */
+            (function () {
+                var reduce =
+                    window.matchMedia &&
+                    window.matchMedia("(prefers-reduced-motion: reduce)")
+                        .matches;
+                function rnd(a, b) {
+                    return a + (b - a) * Math.random();
+                }
+                function build(cv) {
+                    if (!cv || !cv.getContext) return null;
+                    var ctx = cv.getContext("2d");
+                    var W = 1920,
+                        H = 1080;
+                    cv.width = W;
+                    cv.height = H;
+                    var slide = cv.closest(".slide");
+                    var cx = parseFloat(cv.getAttribute("data-cx")) || 960,
+                        cy = parseFloat(cv.getAttribute("data-cy")) || 540,
+                        R = parseFloat(cv.getAttribute("data-r")) || 360,
+                        N = parseFloat(cv.getAttribute("data-n")) || 460;
+                    var P = [];
+                    for (var k = 0; k < N; k++) {
+                        var u = Math.random(),
+                            v = Math.random();
+                        var th = 2 * Math.PI * u,
+                            ph = Math.acos(2 * v - 1);
+                        var rr = R * Math.cbrt(rnd(0.1, 1));
+                        P.push({
+                            x: rr * Math.sin(ph) * Math.cos(th),
+                            y: rr * Math.cos(ph),
+                            z: rr * Math.sin(ph) * Math.sin(th),
+                            s: rnd(0.6, 2.3),
+                            tw: Math.random() * 6.28,
+                            ts: rnd(0.004, 0.014),
+                            h: Math.random(),
+                        });
+                    }
+                    var a = 0;
+                    return function () {
+                        var vis = slide && slide.classList.contains("on");
+                        ctx.clearRect(0, 0, W, H);
+                        if (!vis) return;
+                        a += 0.0015;
+                        var ca = Math.cos(a),
+                            sa = Math.sin(a);
+                        for (var k = 0; k < N; k++) {
+                            var p = P[k];
+                            var x = p.x * ca - p.z * sa;
+                            var z = p.x * sa + p.z * ca;
+                            var d = (z + R) / (2 * R);
+                            p.tw += p.ts;
+                            var op =
+                                (0.1 + 0.82 * d) *
+                                (0.78 + 0.22 * Math.sin(p.tw));
+                            var size = p.s * (0.45 + 0.95 * d);
+                            var r, g, b;
+                            if (p.h < 0.72) {
+                                r = 51;
+                                g = 86;
+                                b = 246;
+                            } else if (p.h < 0.93) {
+                                r = 110;
+                                g = 140;
+                                b = 255;
+                            } else {
+                                r = 214;
+                                g = 224;
+                                b = 255;
+                            }
+                            ctx.beginPath();
+                            ctx.arc(cx + x, cy + p.y, size, 0, 6.2832);
+                            ctx.fillStyle =
+                                "rgba(" +
+                                r +
+                                "," +
+                                g +
+                                "," +
+                                b +
+                                "," +
+                                op.toFixed(3) +
+                                ")";
+                            ctx.fill();
+                        }
+                    };
+                }
+                var draws = [];
+                var canvases = document.querySelectorAll(".fx");
+                for (var i = 0; i < canvases.length; i++) {
+                    var dfn = build(canvases[i]);
+                    if (dfn) draws.push(dfn);
+                }
+                function frame() {
+                    for (var j = 0; j < draws.length; j++) draws[j]();
+                    if (!reduce) requestAnimationFrame(frame);
+                }
+                frame();
+            })();
+        </script>
+        <script>
+            /* Red de nodos: 'scattered' (dispersa, estática) y 'connected' (flujo animado). Respeta prefers-reduced-motion. */
+            (function () {
+                var reduce =
+                    window.matchMedia &&
+                    window.matchMedia("(prefers-reduced-motion: reduce)")
+                        .matches;
+                var LABELS = [
+                    "Salud",
+                    "Agua",
+                    "Finanzas",
+                    "Seguridad",
+                    "Movilidad",
+                    "Educación",
+                    "Energía",
+                    "Catastro",
+                    "Obra pública",
+                    "Medio ambiente",
+                    "Empleo",
+                    "Voz ciudadana",
+                    "Padrones",
+                    "Presupuesto",
+                    "Inversión",
+                    "Medios",
+                    "Transporte",
+                    "Turismo",
+                    "Industria",
+                    "Vivienda",
+                    "Agricultura",
+                    "Cultura",
+                    "Deporte",
+                    "Desarrollo social",
+                    "Protección civil",
+                    "Hacienda",
+                    "Planeación",
+                    "Servicios",
+                ];
+                var COLS = 7,
+                    ROWS = 4,
+                    X0 = 150,
+                    X1 = 1770,
+                    Y0 = 336,
+                    Y1 = 918;
+                var CW = (X1 - X0) / COLS,
+                    CH = (Y1 - Y0) / ROWS;
+                var NODES = [];
+                for (var gi = 0; gi < LABELS.length; gi++) {
+                    var gc = gi % COLS,
+                        gr = Math.floor(gi / COLS);
+                    var hx = Math.sin(gi * 127.1) * 43758.5453;
+                    hx -= Math.floor(hx);
+                    var hy = Math.sin(gi * 311.7) * 43758.5453;
+                    hy -= Math.floor(hy);
+                    NODES.push([
+                        X0 + gc * CW + CW * 0.5 + (hx - 0.5) * CW * 0.32,
+                        Y0 + gr * CH + CH * 0.5 + (hy - 0.5) * CH * 0.34,
+                        LABELS[gi],
+                    ]);
+                }
+                var EDGES = [];
+                for (var ei = 0; ei < LABELS.length; ei++) {
+                    var ec = ei % COLS,
+                        er = Math.floor(ei / COLS);
+                    if (ec < COLS - 1) EDGES.push([ei, ei + 1]);
+                    if (er < ROWS - 1) EDGES.push([ei, ei + COLS]);
+                    if (ec < COLS - 1 && er < ROWS - 1)
+                        EDGES.push([ei, ei + COLS + 1]);
+                    if (ec > 0 && er < ROWS - 1)
+                        EDGES.push([ei, ei + COLS - 1]);
+                }
+                EDGES.push(
+                    [0, 16],
+                    [3, 20],
+                    [8, 24],
+                    [5, 26],
+                    [1, 13],
+                    [11, 23],
+                    [9, 2],
+                    [18, 6],
+                );
+                function build(cv) {
+                    if (!cv || !cv.getContext) return null;
+                    var ctx = cv.getContext("2d");
+                    cv.width = 1920;
+                    cv.height = 1080;
+                    var slide = cv.closest(".slide");
+                    var mode = cv.getAttribute("data-mode");
+                    var ns = mode === "scattered" ? 16 : 18;
+                    var npad = mode === "scattered" ? 34 : 40;
+                    var nh = mode === "scattered" ? 40 : 44;
+                    var dark =
+                        slide &&
+                        (slide.classList.contains("dark") ||
+                            slide.classList.contains("black"));
+                    var bg = dark ? "#231F20" : "#F1F2F2";
+                    var ink = dark ? "#F1F2F2" : "#231F20";
+                    var t = 0;
+                    return function () {
+                        var vis = slide && slide.classList.contains("on");
+                        ctx.clearRect(0, 0, 1920, 1080);
+                        if (!vis) return;
+                        ctx.font =
+                            "500 " +
+                            ns +
+                            'px "Plus Jakarta Sans", sans-serif';
+                        var B = [];
+                        var yoff = 0;
+                        for (var i = 0; i < NODES.length; i++) {
+                            var w =
+                                ctx.measureText(NODES[i][2]).width + npad;
+                            B.push({
+                                x: NODES[i][0],
+                                y: NODES[i][1] + yoff,
+                                w: w,
+                                h: nh,
+                            });
+                        }
+                        if (mode === "connected") {
+                            t += 0.0045;
+                            ctx.lineWidth = 1.4;
+                            ctx.strokeStyle = dark
+                                ? "rgba(110,140,255,0.32)"
+                                : "rgba(51,86,246,0.22)";
+                            for (var e = 0; e < EDGES.length; e++) {
+                                var a = B[EDGES[e][0]],
+                                    b = B[EDGES[e][1]];
+                                ctx.beginPath();
+                                ctx.moveTo(a.x, a.y);
+                                ctx.lineTo(b.x, b.y);
+                                ctx.stroke();
+                            }
+                            for (var e2 = 0; e2 < EDGES.length; e2++) {
+                                var a2 = B[EDGES[e2][0]],
+                                    b2 = B[EDGES[e2][1]];
+                                var p = (t + e2 * 0.131) % 1;
+                                var dx = a2.x + (b2.x - a2.x) * p,
+                                    dy = a2.y + (b2.y - a2.y) * p;
+                                ctx.beginPath();
+                                ctx.arc(dx, dy, 2.8, 0, 6.2832);
+                                ctx.fillStyle = dark
+                                    ? "#6f8cff"
+                                    : "#3356F6";
+                                ctx.fill();
+                            }
+                        }
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        for (var n = 0; n < B.length; n++) {
+                            var nd = B[n],
+                                rx = nd.x - nd.w / 2,
+                                ry = nd.y - nd.h / 2;
+                            ctx.beginPath();
+                            if (ctx.roundRect)
+                                ctx.roundRect(rx, ry, nd.w, nd.h, 10);
+                            else ctx.rect(rx, ry, nd.w, nd.h);
+                            ctx.fillStyle = bg;
+                            ctx.fill();
+                            ctx.lineWidth = 2;
+                            ctx.strokeStyle = "#3356F6";
+                            ctx.stroke();
+                            ctx.fillStyle = ink;
+                            ctx.font =
+                                "500 " +
+                                ns +
+                                'px "Plus Jakarta Sans", sans-serif';
+                            ctx.fillText(NODES[n][2], nd.x, nd.y + 1);
+                        }
+                    };
+                }
+                var fns = [];
+                var cs = document.querySelectorAll(".netfx");
+                for (var i = 0; i < cs.length; i++) {
+                    var f = build(cs[i]);
+                    if (f) fns.push(f);
+                }
+                function frame() {
+                    for (var j = 0; j < fns.length; j++) fns[j]();
+                    if (!reduce) requestAnimationFrame(frame);
+                }
+                frame();
+            })();
+        </script>
+        <script>
+            /* Constelación (inteligencia colectiva): muchos puntos que se conectan al acercarse. Distinta de la nebulosa de la portada. */
+            (function () {
+                var reduce =
+                    window.matchMedia &&
+                    window.matchMedia("(prefers-reduced-motion: reduce)")
+                        .matches;
+                function build(cv) {
+                    if (!cv || !cv.getContext) return null;
+                    var ctx = cv.getContext("2d");
+                    cv.width = 1920;
+                    cv.height = 1080;
+                    var slide = cv.closest(".slide");
+                    var N = 92,
+                        P = [];
+                    for (var i = 0; i < N; i++) {
+                        P.push({
+                            x: Math.random() * 1920,
+                            y: Math.random() * 1080,
+                            vx: (Math.random() - 0.5) * 0.34,
+                            vy: (Math.random() - 0.5) * 0.34,
+                            r: Math.random() * 1.5 + 1.1,
+                        });
+                    }
+                    var D = 168;
+                    return function () {
+                        var vis = slide && slide.classList.contains("on");
+                        ctx.clearRect(0, 0, 1920, 1080);
+                        if (!vis) return;
+                        for (var i = 0; i < N; i++) {
+                            var p = P[i];
+                            p.x += p.vx;
+                            p.y += p.vy;
+                            if (p.x < 0 || p.x > 1920) p.vx *= -1;
+                            if (p.y < 0 || p.y > 1080) p.vy *= -1;
+                        }
+                        ctx.lineWidth = 1;
+                        for (var i2 = 0; i2 < N; i2++) {
+                            for (var j = i2 + 1; j < N; j++) {
+                                var a = P[i2],
+                                    b = P[j];
+                                var dx = a.x - b.x,
+                                    dy = a.y - b.y;
+                                var dist = Math.sqrt(dx * dx + dy * dy);
+                                if (dist < D) {
+                                    var op = (1 - dist / D) * 0.42;
+                                    ctx.strokeStyle =
+                                        "rgba(110,140,255," +
+                                        op.toFixed(3) +
+                                        ")";
+                                    ctx.beginPath();
+                                    ctx.moveTo(a.x, a.y);
+                                    ctx.lineTo(b.x, b.y);
+                                    ctx.stroke();
+                                }
+                            }
+                        }
+                        for (var i3 = 0; i3 < N; i3++) {
+                            var q = P[i3];
+                            ctx.beginPath();
+                            ctx.arc(q.x, q.y, q.r, 0, 6.2832);
+                            ctx.fillStyle = "rgba(150,172,255,0.85)";
+                            ctx.fill();
+                        }
+                    };
+                }
+                var fns = [];
+                var cs = document.querySelectorAll(".cfx");
+                for (var i = 0; i < cs.length; i++) {
+                    var f = build(cs[i]);
+                    if (f) fns.push(f);
+                }
+                function frame() {
+                    for (var j = 0; j < fns.length; j++) fns[j]();
+                    if (!reduce) requestAnimationFrame(frame);
+                }
+                frame();
+            })();
+        </script>
+        <script>
+            /* Ciclo vivo de escenarios (Anticipar): datos → motor → escenarios → planeación, en un loop que se actualiza siempre. */
+            (function () {
+                var reduce =
+                    window.matchMedia &&
+                    window.matchMedia("(prefers-reduced-motion: reduce)")
+                        .matches;
+                function build(cv) {
+                    if (!cv || !cv.getContext) return null;
+                    var ctx = cv.getContext("2d");
+                    cv.width = 1920;
+                    cv.height = 1080;
+                    var slide = cv.closest(".slide");
+                    var rowY = 524;
+                    var datos = {
+                        x: 330,
+                        y: rowY,
+                        l: "Datos e información integrada",
+                    };
+                    var motor = {
+                        x: 770,
+                        y: rowY,
+                        l: "SIC-Q",
+                        accent: true,
+                    };
+                    var plan = {
+                        x: 1610,
+                        y: rowY,
+                        l: "Acción de gobierno",
+                    };
+                    var XLEFT = 1040;
+                    var scen = [
+                        { x: 1185, y: 368, l: "Escenarios" },
+                        { x: 1185, y: 420, l: "Toma de decisiones" },
+                        { x: 1185, y: 472, l: "Estrategia" },
+                        { x: 1185, y: 524, l: "Planeación" },
+                        { x: 1185, y: 576, l: "Políticas públicas" },
+                        { x: 1185, y: 628, l: "Priorización de recursos" },
+                        { x: 1185, y: 680, l: "Anticipación de riesgos" },
+                    ];
+                    var t = 0;
+                    function flow(ax, ay, bx, by, phase, n) {
+                        ctx.lineWidth = 1.4;
+                        ctx.strokeStyle = "rgba(110,140,255,0.28)";
+                        ctx.beginPath();
+                        ctx.moveTo(ax, ay);
+                        ctx.lineTo(bx, by);
+                        ctx.stroke();
+                        ctx.fillStyle = "#6f8cff";
+                        for (var k = 0; k < n; k++) {
+                            var p = (t + phase + k / n) % 1;
+                            ctx.beginPath();
+                            ctx.arc(
+                                ax + (bx - ax) * p,
+                                ay + (by - ay) * p,
+                                3,
+                                0,
+                                6.2832,
+                            );
+                            ctx.fill();
+                        }
+                    }
+                    function drawBox(b, font, h, r, accent, pad) {
+                        ctx.font = font;
+                        var w = ctx.measureText(b.l).width + pad;
+                        b.w = w;
+                        var x = b.x - w / 2,
+                            y = b.y - h / 2;
+                        ctx.beginPath();
+                        if (ctx.roundRect) ctx.roundRect(x, y, w, h, r);
+                        else ctx.rect(x, y, w, h);
+                        ctx.fillStyle = accent ? "#3356F6" : "#231F20";
+                        ctx.fill();
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = "#3356F6";
+                        ctx.stroke();
+                        ctx.fillStyle = accent ? "#ffffff" : "#F1F2F2";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(b.l, b.x, b.y + 1);
+                    }
+                    return function () {
+                        var vis = slide && slide.classList.contains("on");
+                        ctx.clearRect(0, 0, 1920, 1080);
+                        if (!vis) return;
+                        t += 0.005;
+                        ctx.font =
+                            '600 26px "Plus Jakarta Sans", sans-serif';
+                        datos.w = ctx.measureText(datos.l).width + 52;
+                        motor.w = ctx.measureText(motor.l).width + 52;
+                        plan.w = ctx.measureText(plan.l).width + 52;
+                        ctx.font =
+                            '500 21px "Plus Jakarta Sans", sans-serif';
+                        for (var i = 0; i < scen.length; i++) {
+                            scen[i].w =
+                                ctx.measureText(scen[i].l).width + 38;
+                            scen[i].x = XLEFT + scen[i].w / 2;
+                        }
+                        flow(
+                            datos.x + datos.w / 2,
+                            rowY,
+                            motor.x - motor.w / 2,
+                            rowY,
+                            0,
+                            2,
+                        );
+                        for (var i2 = 0; i2 < scen.length; i2++) {
+                            flow(
+                                motor.x + motor.w / 2,
+                                rowY,
+                                scen[i2].x - scen[i2].w / 2,
+                                scen[i2].y,
+                                i2 * 0.21,
+                                1,
+                            );
+                            flow(
+                                scen[i2].x + scen[i2].w / 2,
+                                scen[i2].y,
+                                plan.x - plan.w / 2,
+                                rowY,
+                                0.5 + i2 * 0.21,
+                                1,
+                            );
+                        }
+                        var p0x = plan.x,
+                            p0y = rowY + 42,
+                            p2x = datos.x,
+                            p2y = rowY + 42,
+                            p1x = 880,
+                            p1y = 1050;
+                        ctx.lineWidth = 1.6;
+                        ctx.strokeStyle = "rgba(110,140,255,0.3)";
+                        ctx.beginPath();
+                        ctx.moveTo(p0x, p0y);
+                        ctx.quadraticCurveTo(p1x, p1y, p2x, p2y);
+                        ctx.stroke();
+                        ctx.fillStyle = "#6f8cff";
+                        for (var d = 0; d < 12; d++) {
+                            var u = (t * 0.7 + d / 12) % 1,
+                                mu = 1 - u;
+                            var bxx =
+                                mu * mu * p0x +
+                                2 * mu * u * p1x +
+                                u * u * p2x;
+                            var byy =
+                                mu * mu * p0y +
+                                2 * mu * u * p1y +
+                                u * u * p2y;
+                            ctx.beginPath();
+                            ctx.arc(bxx, byy, 3, 0, 6.2832);
+                            ctx.fill();
+                        }
+                        var ue = 0.965,
+                            mue = 1 - ue;
+                        var ex =
+                            mue * mue * p0x +
+                            2 * mue * ue * p1x +
+                            ue * ue * p2x;
+                        var ey =
+                            mue * mue * p0y +
+                            2 * mue * ue * p1y +
+                            ue * ue * p2y;
+                        var tgx =
+                            2 * mue * (p1x - p0x) + 2 * ue * (p2x - p1x);
+                        var tgy =
+                            2 * mue * (p1y - p0y) + 2 * ue * (p2y - p1y);
+                        var tl = Math.sqrt(tgx * tgx + tgy * tgy);
+                        tgx /= tl;
+                        tgy /= tl;
+                        ctx.fillStyle = "rgba(110,140,255,0.75)";
+                        ctx.beginPath();
+                        ctx.moveTo(ex + tgx * 12, ey + tgy * 12);
+                        ctx.lineTo(
+                            ex - tgx * 9 - tgy * 7,
+                            ey - tgy * 9 + tgx * 7,
+                        );
+                        ctx.lineTo(
+                            ex - tgx * 9 + tgy * 7,
+                            ey - tgy * 9 - tgx * 7,
+                        );
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.fillStyle = "rgba(241,242,242,0.5)";
+                        ctx.font = '500 22px "Roboto Mono", monospace';
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(
+                            "SE ACTUALIZA AUTOMÁTICAMENTE",
+                            880,
+                            724,
+                        );
+                        // los escenarios incluyen su propia caja "· · ·"
+                        drawBox(
+                            datos,
+                            '600 26px "Plus Jakarta Sans", sans-serif',
+                            62,
+                            12,
+                            false,
+                            52,
+                        );
+                        drawBox(
+                            motor,
+                            '600 26px "Plus Jakarta Sans", sans-serif',
+                            62,
+                            12,
+                            true,
+                            52,
+                        );
+                        drawBox(
+                            plan,
+                            '600 26px "Plus Jakarta Sans", sans-serif',
+                            62,
+                            12,
+                            false,
+                            52,
+                        );
+                        for (var s = 0; s < scen.length; s++)
+                            drawBox(
+                                scen[s],
+                                '500 21px "Plus Jakarta Sans", sans-serif',
+                                44,
+                                9,
+                                false,
+                                38,
+                            );
+                    };
+                }
+                var fns = [];
+                var cs = document.querySelectorAll(".cyclefx");
+                for (var i = 0; i < cs.length; i++) {
+                    var f = build(cs[i]);
+                    if (f) fns.push(f);
+                }
+                function frame() {
+                    for (var j = 0; j < fns.length; j++) fns[j]();
+                    if (!reduce) requestAnimationFrame(frame);
+                }
+                frame();
+            })();
+        </script>
+        <script>
+            /* Botón de pantalla completa (cromo discreto, no interfiere con las navzones). */
+            (function () {
+                var btn = document.getElementById("fsbtn");
+                if (!btn) return;
+                function isFs() {
+                    return (
+                        document.fullscreenElement ||
+                        document.webkitFullscreenElement
+                    );
+                }
+                function enter() {
+                    var el = document.documentElement;
+                    var r =
+                        el.requestFullscreen || el.webkitRequestFullscreen;
+                    if (r) r.call(el);
+                }
+                function exit() {
+                    var x =
+                        document.exitFullscreen ||
+                        document.webkitExitFullscreen;
+                    if (x) x.call(document);
+                }
+                function toggle() {
+                    isFs() ? exit() : enter();
+                }
+                function update() {
+                    btn.textContent = isFs()
+                        ? "⤢ salir"
+                        : "⤢ pantalla completa";
+                }
+                btn.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    toggle();
+                });
+                document.addEventListener("keydown", function (e) {
+                    if (e.key === "f" || e.key === "F") {
+                        e.preventDefault();
+                        toggle();
+                    }
+                });
+                document.addEventListener("fullscreenchange", update);
+                document.addEventListener(
+                    "webkitfullscreenchange",
+                    update,
+                );
+                update();
+            })();
+        </script>
+        <script>
+            /* Acceso por nivel: círculos concéntricos interconectados; el centro ve todo, cada anillo su capa. Animación lenta. */
+            (function () {
+                var reduce =
+                    window.matchMedia &&
+                    window.matchMedia("(prefers-reduced-motion: reduce)")
+                        .matches;
+                function build(cv) {
+                    if (!cv || !cv.getContext) return null;
+                    var ctx = cv.getContext("2d");
+                    cv.width = 1920;
+                    cv.height = 1080;
+                    var slide = cv.closest(".slide");
+                    var cx = 960,
+                        cy = 700,
+                        coreR = 66;
+                    var rings = [
+                        { r: 122, l: "Gabinete", n: 6 },
+                        { r: 180, l: "Directores", n: 9 },
+                        { r: 238, l: "Servidores públicos", n: 13 },
+                        { r: 296, l: "Ciudadanos", n: 18 },
+                    ];
+                    var spokes = 12;
+                    var t = 0;
+                    function pill(text, x, y, accent) {
+                        ctx.font =
+                            '600 22px "Plus Jakarta Sans", sans-serif';
+                        var w = ctx.measureText(text).width + 34,
+                            h = 42;
+                        ctx.beginPath();
+                        if (ctx.roundRect)
+                            ctx.roundRect(
+                                x - w / 2,
+                                y - h / 2,
+                                w,
+                                h,
+                                h / 2,
+                            );
+                        else ctx.rect(x - w / 2, y - h / 2, w, h);
+                        ctx.fillStyle = accent ? "#3356F6" : "#f1f2f2";
+                        ctx.fill();
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = "#3356F6";
+                        ctx.stroke();
+                        ctx.fillStyle = accent ? "#ffffff" : "#231F20";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(text, x, y + 1);
+                    }
+                    return function () {
+                        var vis = slide && slide.classList.contains("on");
+                        ctx.clearRect(0, 0, 1920, 1080);
+                        if (!vis) return;
+                        t += 0.0016;
+                        var maxR = rings[rings.length - 1].r;
+                        ctx.strokeStyle = "rgba(51,86,246,0.12)";
+                        ctx.lineWidth = 1.5;
+                        for (var s = 0; s < spokes; s++) {
+                            var a = (s / spokes) * 6.2832;
+                            ctx.beginPath();
+                            ctx.moveTo(
+                                cx + Math.cos(a) * coreR,
+                                cy + Math.sin(a) * coreR,
+                            );
+                            ctx.lineTo(
+                                cx + Math.cos(a) * maxR,
+                                cy + Math.sin(a) * maxR,
+                            );
+                            ctx.stroke();
+                        }
+                        for (var i = 0; i < rings.length; i++) {
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, rings[i].r, 0, 6.2832);
+                            ctx.strokeStyle = "rgba(51,86,246,0.42)";
+                            ctx.lineWidth = 2;
+                            ctx.stroke();
+                        }
+                        for (var i = 0; i < rings.length; i++) {
+                            var rg = rings[i];
+                            var rot =
+                                t * (0.5 + i * 0.1) * (i % 2 ? -1 : 1);
+                            ctx.fillStyle = "#3356F6";
+                            for (var k = 0; k < rg.n; k++) {
+                                var a = rot + (k / rg.n) * 6.2832;
+                                ctx.beginPath();
+                                ctx.arc(
+                                    cx + Math.cos(a) * rg.r,
+                                    cy + Math.sin(a) * rg.r,
+                                    4,
+                                    0,
+                                    6.2832,
+                                );
+                                ctx.fill();
+                            }
+                        }
+                        ctx.fillStyle = "#3356F6";
+                        for (var s = 0; s < spokes; s++) {
+                            var a = (s / spokes) * 6.2832;
+                            var ca = Math.cos(a),
+                                sa = Math.sin(a);
+                            for (var d = 0; d < 3; d++) {
+                                var po = (t * 0.5 + d / 3 + s * 0.05) % 1;
+                                var ro = coreR + (maxR - coreR) * po;
+                                ctx.beginPath();
+                                ctx.arc(
+                                    cx + ca * ro,
+                                    cy + sa * ro,
+                                    3.8,
+                                    0,
+                                    6.2832,
+                                );
+                                ctx.fill();
+                                var pi =
+                                    (t * 0.5 + d / 3 + s * 0.05 + 0.5) % 1;
+                                var ri = maxR - (maxR - coreR) * pi;
+                                ctx.beginPath();
+                                ctx.arc(
+                                    cx + ca * ri,
+                                    cy + sa * ri,
+                                    3.8,
+                                    0,
+                                    6.2832,
+                                );
+                                ctx.fill();
+                            }
+                        }
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, coreR, 0, 6.2832);
+                        ctx.fillStyle = "#3356F6";
+                        ctx.fill();
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = "#3356F6";
+                        ctx.stroke();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.font =
+                            '700 19px "Plus Jakarta Sans", sans-serif';
+                        ctx.fillText("Gobernador", cx, cy);
+                        for (var i = 0; i < rings.length; i++)
+                            pill(rings[i].l, cx, cy - rings[i].r, false);
+                    };
+                }
+                var fns = [],
+                    cs = document.querySelectorAll(".tierfx");
+                for (var i = 0; i < cs.length; i++) {
+                    var f = build(cs[i]);
+                    if (f) fns.push(f);
+                }
+                function frame() {
+                    for (var j = 0; j < fns.length; j++) fns[j]();
+                    if (!reduce) requestAnimationFrame(frame);
+                }
+                frame();
+            })();
+            /* Cómo funciona: bucle de 4 preguntas que se retroalimenta (caso por caso y en agregado). */
+            (function () {
+                var reduce =
+                    window.matchMedia &&
+                    window.matchMedia("(prefers-reduced-motion: reduce)")
+                        .matches;
+                function build(cv) {
+                    if (!cv || !cv.getContext) return null;
+                    var ctx = cv.getContext("2d");
+                    cv.width = 1920;
+                    cv.height = 1080;
+                    var slide = cv.closest(".slide");
+                    var cx = 960,
+                        cy = 720,
+                        rx = 320,
+                        ry = 240,
+                        bh = 104;
+                    var nodes = [
+                        {
+                            tag: "describe",
+                            q: "¿Qué pasó?",
+                            a: -Math.PI / 2,
+                            w: 320,
+                        },
+                        {
+                            tag: "explica",
+                            q: "¿Por qué pasó?",
+                            a: 0,
+                            w: 380,
+                        },
+                        {
+                            tag: "anticipa",
+                            q: "¿Qué es más probable que pase?",
+                            a: Math.PI / 2,
+                            w: 540,
+                        },
+                        {
+                            tag: "sugiere",
+                            q: "¿Qué conviene hacer?",
+                            a: Math.PI,
+                            w: 440,
+                        },
+                    ];
+                    for (var i = 0; i < nodes.length; i++) {
+                        nodes[i].x = cx + Math.cos(nodes[i].a) * rx;
+                        nodes[i].y = cy + Math.sin(nodes[i].a) * ry;
+                    }
+                    var t = 0;
+                    return function () {
+                        var vis = slide && slide.classList.contains("on");
+                        ctx.clearRect(0, 0, 1920, 1080);
+                        if (!vis) return;
+                        t += 0.0016;
+                        ctx.strokeStyle = "rgba(51,86,246,0.26)";
+                        ctx.lineWidth = 1.8;
+                        ctx.beginPath();
+                        ctx.ellipse(cx, cy, rx, ry, 0, 0, 6.2832);
+                        ctx.stroke();
+                        ctx.fillStyle = "#3356F6";
+                        for (var d = 0; d < 12; d++) {
+                            var ang = -Math.PI / 2 + (t + d / 12) * 6.2832;
+                            ctx.beginPath();
+                            ctx.arc(
+                                cx + Math.cos(ang) * rx,
+                                cy + Math.sin(ang) * ry,
+                                3.2,
+                                0,
+                                6.2832,
+                            );
+                            ctx.fill();
+                        }
+                        for (var i = 0; i < nodes.length; i++) {
+                            var n = nodes[i],
+                                x = n.x - n.w / 2,
+                                y = n.y - bh / 2;
+                            ctx.beginPath();
+                            if (ctx.roundRect)
+                                ctx.roundRect(x, y, n.w, bh, 14);
+                            else ctx.rect(x, y, n.w, bh);
+                            ctx.fillStyle = "#f1f2f2";
+                            ctx.fill();
+                            ctx.lineWidth = 2;
+                            ctx.strokeStyle = "#3356F6";
+                            ctx.stroke();
+                            ctx.textAlign = "center";
+                            ctx.textBaseline = "middle";
+                            ctx.fillStyle = "#3356F6";
+                            ctx.font = '500 18px "Roboto Mono", monospace';
+                            ctx.fillText(n.tag, n.x, n.y - 22);
+                            ctx.fillStyle = "#231F20";
+                            ctx.font =
+                                '600 26px "Plus Jakarta Sans", sans-serif';
+                            ctx.fillText(n.q, n.x, n.y + 12);
+                        }
+                    };
+                }
+                var fns = [],
+                    cs = document.querySelectorAll(".loopfx");
+                for (var i = 0; i < cs.length; i++) {
+                    var f = build(cs[i]);
+                    if (f) fns.push(f);
+                }
+                function frame() {
+                    for (var j = 0; j < fns.length; j++) fns[j]();
+                    if (!reduce) requestAnimationFrame(frame);
+                }
+                frame();
+            })();
+        </script>
+    </body>
+</html>
