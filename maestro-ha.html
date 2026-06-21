@@ -140,13 +140,13 @@ main{flex:1;display:flex;flex-direction:column;min-width:0}
     <h1>Maestro HA</h1>
     <p class="fecha">Día 2 · viernes 12 de junio de 2026 · 09:00–13:00</p>
     <p class="error" id="puerta-error"></p>
-    <label for="clave">Clave del taller</label>
+    <label for="clave">Clave de acceso</label>
     <div class="fila">
       <input id="clave" type="password" autocomplete="off" spellcheck="false">
       <button id="entrar" type="button">Entrar</button>
     </div>
     <div class="linea"></div>
-    <p class="nota">La clave la comparte el facilitador en el salón. Se guarda solo en este navegador y se usa para hablar directo con el modelo de IA. Tu guía durante el trabajo práctico: pregúntale qué sigue, pídele que te explique más simple, o pégale lo que tu asistente te respondió.</p>
+    <p class="nota">Escribe la clave de acceso para usar el Maestro HA. Se guarda solo en este navegador. Es tu guía: pregúntale qué sigue, pídele que te explique más simple, o pégale lo que tu asistente te respondió.</p>
   </div>
 </div>
 
@@ -511,9 +511,15 @@ var PROXY=(PROXY_BAKED&&PROXY_BAKED.indexOf('__')!==0)?PROXY_BAKED
         :(proxyOverride||(function(){try{return localStorage.getItem(LS_PROXY)||'';}catch(e){return '';}})());
 var MODO=PROXY?'proxy':'clave';
 var API=PROXY||ANTHROPIC;
+/* candado de contraseña compartida: se hornea 1='1' cuando existe maestro-pass-required.txt */
+var PASS_REQ=('1'==='1');
+var NECESITA_CLAVE=(MODO==='clave')||(MODO==='proxy'&&PASS_REQ);
+/* clave de demo validada en el navegador (gate inmediato sin Cloudflare; visible en el código fuente) */
+var CLAVE_CLIENTE='HA-DEMO-2026';
+var CLAVE_CLIENTE_ON=(CLAVE_CLIENTE&&CLAVE_CLIENTE.indexOf('__')!==0);
 var SALUDO='Hola — soy el **Maestro HA**, tu guía para el trabajo práctico de hoy. Te acompaño paso a paso mientras montas tu entorno y trabajas tu proyecto con tu propio asistente de IA.\n\nPara arrancar, cuéntame tres cosas:\n1. Tu nombre y a qué se dedica tu empresa (con el giro basta — sin datos confidenciales).\n2. Qué herramienta de IA vas a usar hoy (Claude, ChatGPT, Copilot, otra).\n3. El proyecto o reto que definiste ayer, en una frase.\n\nSi algo de ayer quedó volando, también dímelo y lo aterrizamos antes de empezar.';
 
-var estado={clave:(MODO==='clave'?(localStorage.getItem(LS_CLAVE)||''):'proxy'), msgs:[], mapa:{bloque:1,dim:'ninguna',vistas:[]}, fluyendo:false};
+var estado={clave:(NECESITA_CLAVE?(localStorage.getItem(LS_CLAVE)||''):'proxy'), msgs:[], mapa:{bloque:1,dim:'ninguna',vistas:[]}, fluyendo:false};
 try{ estado.msgs=JSON.parse(localStorage.getItem(LS_CONV)||'[]'); }catch(e){ estado.msgs=[]; }
 try{ var m=JSON.parse(localStorage.getItem(LS_MAPA)||'null'); if(m&&m.bloque){estado.mapa=m;} }catch(e){}
 
@@ -529,7 +535,7 @@ function guardar(){
   }catch(e){}
 }
 function cabeceras(k){
-  if(MODO==='proxy'){return {'content-type':'application/json'};}
+  if(MODO==='proxy'){var h={'content-type':'application/json'};if(PASS_REQ){h['x-maestro-pass']=k;}return h;}
   return {'content-type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};
 }
 
@@ -745,8 +751,8 @@ function fluir(){
     if(nodo.parentNode){nodo.parentNode.removeChild(nodo);}
     var st=err&&err.status;
     if(st===401||st===403){
-      if(MODO==='proxy'){aviso('El maestro no está disponible desde aquí ('+(st===403?'acceso no permitido':'autenticación')+'). Avísale al facilitador.',{retry:true});}
-      else{aviso('La clave no fue aceptada (puede haberse revocado). Pide la clave vigente al facilitador.',{cambiarClave:true});}
+      if(MODO==='proxy'&&!PASS_REQ){aviso('El maestro no está disponible desde aquí ('+(st===403?'acceso no permitido':'autenticación')+'). Avísale al facilitador.',{retry:true});}
+      else{aviso('La clave no fue aceptada. Verifícala e intenta de nuevo.',{cambiarClave:true});}
     }else if(st===429){
       aviso('El maestro está atendiendo a muchos a la vez. Espera unos segundos y reintenta.',{retry:true});
     }else if(st===529||st>=500){
@@ -791,6 +797,7 @@ function abrirPuerta(){
   elClave.focus();
 }
 function validarClave(k){
+  if(CLAVE_CLIENTE_ON){return Promise.resolve(k===CLAVE_CLIENTE?{ok:true}:{ok:false,msg:'La clave no es válida. Verifícala (sin espacios al copiar).'});}
   return fetch(API,{method:'POST',headers:cabeceras(k),body:JSON.stringify({model:MODELO_PING,max_tokens:1,messages:[{role:'user',content:'ok'}]})})
   .then(function(r){
     if(r.status===401||r.status===403){return {ok:false,msg:'La clave no es válida. Revísala con el facilitador (sin espacios al copiar).'};}
@@ -859,9 +866,9 @@ document.getElementById('salir').addEventListener('click',function(){
   estado.clave='';
   abrirPuerta();
 });
-if(MODO==='proxy'){var bs=document.getElementById('salir');if(bs){bs.style.display='none';}}
+if(!NECESITA_CLAVE){var bs=document.getElementById('salir');if(bs){bs.style.display='none';}}
 
-if(MODO==='proxy'||estado.clave||location.hash==='#vista'){abrirApp();}else{abrirPuerta();}
+if((MODO==='proxy'&&!PASS_REQ)||estado.clave||(MODO==='clave'&&location.hash==='#vista')){abrirApp();}else{abrirPuerta();}
 })();
 </script>
 </body>
