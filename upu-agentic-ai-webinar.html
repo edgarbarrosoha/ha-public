@@ -1,0 +1,1328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Towards an Agentic AI Future for the UPU — Edgar Barroso · Horizons Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* =====================================================================
+   UPU Innovation Webinar · Session 01
+   "Towards an Agentic AI Future for the UPU" · Edgar Barroso (HA)
+   Engine + aesthetic ported from the SIC-Q Governor deck (v0.5):
+   scale-to-fit #stage 1920x1080 · crossfade · staggered act-entry ·
+   shared #bglayers (seamless letterbox) · auto-contrast chrome.
+
+   SWAP-READY tokens — to reskin (e.g. UPU navy) change 4 tokens:
+     --blue (action/accents) · --offset (dark surfaces/text)
+     --offwhite (light shell) · --on-blue (text over light blue)
+   SVG diagrams use currentColor so they survive a theme swap.
+   ===================================================================== */
+:root{
+  --blue:#3673c7;            /* action blue — text/accents, AA on light */
+  --aerial:#b3c8e5;          /* aerial blue — particles, soft surfaces */
+  --surface:#a8cafb;         /* surface blue — accents, halos */
+  --surface-subtle:#dae8f9;  /* very light tint */
+  --offset:#2b2d2a;          /* deep slate — main text / dark grounds */
+  --offwhite:#f4f3f0;        /* cloud off-white */
+  --white:#fff;
+  --on-blue:#2b2d2a;         /* text over light-blue surface */
+
+  --hair:rgba(43,45,42,.16);
+  --ink-2:#5b5f5a;
+  --ink-3:#8a8d86;
+  --on-dark-2:#d6d3cb;
+
+  --radius:20px;
+  --radius-pill:999px;
+  --chip-bg:rgba(54,115,199,.09);
+  --chip-line:rgba(54,115,199,.20);
+  --panel-bg:rgba(43,45,42,.035);
+  --panel-line:rgba(43,45,42,.10);
+  --panel-bg-dark:rgba(255,255,255,.05);
+  --panel-line-dark:rgba(255,255,255,.14);
+
+  --sans:"Instrument Sans","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+  --mono:var(--sans);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--offset);overflow:hidden;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+
+/* ===== Nav shell (scale-to-fit) ===== */
+#deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--offset)}
+#bglayers{position:absolute;inset:0;z-index:0;pointer-events:none}
+#bglayers .bgl{position:absolute;inset:0;opacity:0;transition:opacity .55s ease}
+#bglayers .bgl.on{opacity:1}
+#deck.bgmoved .slide{background:transparent !important}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:top left;z-index:1}
+
+.slide{
+  position:absolute;inset:0;width:1920px;height:1080px;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:108px 150px 120px;overflow:hidden;
+  opacity:0;visibility:hidden;pointer-events:none;will-change:opacity;
+  transition:opacity .55s ease,visibility 0s linear .55s;
+}
+.slide.on{opacity:1;visibility:visible;pointer-events:auto;z-index:2;transition:opacity .55s ease,visibility 0s}
+
+/* content reveal: opacity via transition (symmetric), motion via keyframe (entry only) */
+.slide .wrap>*{opacity:0;transition:opacity .42s ease;transition-delay:0s}
+.slide.on .wrap>*{opacity:1}
+.slide.on .wrap>*:nth-child(1){transition-delay:.05s;animation-delay:.05s}
+.slide.on .wrap>*:nth-child(2){transition-delay:.11s;animation-delay:.11s}
+.slide.on .wrap>*:nth-child(3){transition-delay:.17s;animation-delay:.17s}
+.slide.on .wrap>*:nth-child(4){transition-delay:.23s;animation-delay:.23s}
+.slide.on .wrap>*:nth-child(5){transition-delay:.29s;animation-delay:.29s}
+.slide.on .wrap>*:nth-child(6){transition-delay:.35s;animation-delay:.35s}
+.slide.on .wrap>*:nth-child(7){transition-delay:.41s;animation-delay:.41s}
+
+.slide.dark.on .wrap>*{animation:actRise .5s cubic-bezier(.16,1,.3,1) both}
+.slide.light.on .wrap>*{animation:actClear .52s cubic-bezier(.16,1,.3,1) both}
+.slide.blue.on .wrap>*{animation:actFocus .54s cubic-bezier(.16,1,.3,1) both}
+@keyframes actRise{from{transform:translateY(34px)}to{transform:none}}
+@keyframes actClear{from{transform:translateX(-38px)}to{transform:none}}
+@keyframes actFocus{from{transform:scale(.93)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .slide,.slide.on,.slide .wrap>*,.slide.on .wrap>*{transition-duration:.001s;transition-delay:0s;transform:none;animation:none}
+}
+
+/* ===== themes ===== */
+.light{background:var(--offwhite);color:var(--offset)}
+.dark{background:var(--offset);color:var(--offwhite)}
+.blue{background:linear-gradient(160deg,var(--aerial) 0%,var(--surface-subtle) 70%);color:var(--on-blue)}
+.black{background:linear-gradient(155deg,var(--surface-subtle) 0%,var(--offwhite) 58%);color:var(--offset)}
+
+.slide.center{align-items:center;text-align:center}
+.wrap{width:100%;max-width:1620px}
+.slide.center .wrap{margin:0 auto;display:flex;flex-direction:column;align-items:center}
+
+/* ===== typography ===== */
+.eyebrow{display:inline-flex;align-items:center;align-self:flex-start;font-weight:600;font-size:22px;letter-spacing:.04em;color:var(--blue);background:var(--chip-bg);border:1px solid var(--chip-line);border-radius:var(--radius-pill);padding:11px 24px;margin-bottom:30px}
+.slide.center .eyebrow{align-self:center}
+.dark .eyebrow{color:#cfe0f7;background:rgba(168,202,251,.14);border-color:rgba(168,202,251,.26)}
+.blue .eyebrow{color:var(--blue);background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.7)}
+
+h1.display{font-weight:700;font-size:118px;line-height:1.02;letter-spacing:-.025em;max-width:17ch}
+h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;max-width:21ch}
+.lead{font-weight:500;font-size:44px;line-height:1.16;letter-spacing:-.01em;max-width:26ch;margin-top:30px}
+.sub{font-weight:400;font-size:36px;line-height:1.32;max-width:42ch;margin-top:26px}
+.dark .sub{color:var(--offwhite)}
+.blue .sub{color:var(--offset)}
+.note{font-weight:400;font-size:24px;line-height:1.55;color:#555;max-width:66ch}
+.dark .note{color:var(--on-dark-2)}
+.blue .note{color:var(--ink-2)}
+.src{font-weight:400;font-size:21px;line-height:1.5;color:var(--ink-3);margin-top:34px;max-width:74ch}
+.dark .src{color:rgba(244,243,240,.62)}
+.bullets{margin-top:36px;padding:0;display:flex;flex-direction:column;gap:24px;max-width:42ch}
+.bullets li{list-style:none;position:relative;padding-left:36px;font-size:36px;line-height:1.22;font-weight:500;letter-spacing:-.01em}
+.bullets li::before{content:"";position:absolute;left:0;top:.62em;width:12px;height:12px;background:var(--blue);transform:translateY(-50%) rotate(45deg);border-radius:2px}
+.dark .bullets li::before{background:var(--surface)}
+.blue .bullets li::before{background:var(--on-blue)}
+.bullets.sm li{font-size:30px}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:46px 92px;max-width:1560px;margin-top:60px}
+.qcard{display:flex;gap:22px;align-items:flex-start;font-size:31px;line-height:1.26;font-weight:500;letter-spacing:-.01em}
+.qcard .qn{font-size:21px;font-weight:700;opacity:.42;flex:none;padding-top:9px;font-variant-numeric:tabular-nums}
+.qcard .qt{border-top:2px solid rgba(43,45,42,.22);padding-top:14px}
+/* ===== durable core + thin adapters (evolving structure) ===== */
+.core-adapters{position:absolute;right:130px;top:50%;transform:translateY(-50%);width:540px;height:540px;z-index:1}
+.ca-core{fill:var(--surface-subtle);stroke:var(--blue);stroke-width:2.6}
+.ca-edge{stroke:var(--blue);stroke-width:1.5;opacity:.32}
+.ca-adapter{fill:var(--offwhite);stroke:var(--blue);stroke-width:2;transform-origin:center;animation:caswap 4.6s ease-in-out infinite}
+.ca-corelbl{font-family:var(--sans);font-weight:700;fill:var(--blue);text-anchor:middle}
+.ca-sub{font-family:var(--sans);font-weight:500;fill:var(--ink-2);text-anchor:middle}
+.ca-tag{font-family:var(--sans);font-weight:600;fill:var(--ink-3);text-anchor:middle}
+@keyframes caswap{0%,100%{opacity:1}46%{opacity:.22}}
+.kw{color:var(--blue);font-weight:600}
+.dark .kw{color:var(--white);text-decoration:underline;text-decoration-color:rgba(255,255,255,.42);text-underline-offset:5px}
+.blue .kw{color:var(--blue);text-decoration:underline;text-decoration-color:rgba(54,115,199,.42);text-underline-offset:5px}
+
+/* ===== big break slide ===== */
+.slide.bigq{align-items:center;text-align:center;justify-content:center}
+.slide.bigq .eyebrow{display:block;align-self:center;background:none;border:none;border-radius:0;padding:0;font-weight:700;letter-spacing:.24em;font-size:23px;text-transform:uppercase}
+.dark.bigq .eyebrow{color:#cfe0f7}
+.slide.bigq .eyebrow::before{content:"";display:block;width:64px;height:9px;background:var(--blue);margin:0 auto 26px;border-radius:1px}
+.bigq .big{font-weight:800;font-size:128px;line-height:1.0;letter-spacing:-.03em;max-width:24ch;margin:0 auto}
+.bigq .sub{margin:44px auto 0;max-width:48ch;font-weight:500}
+
+/* ===== giant stats ===== */
+.stats{display:flex;gap:130px;margin-top:56px;align-items:flex-start;flex-wrap:wrap}
+.stat .n{font-weight:700;font-size:148px;line-height:.92;letter-spacing:-.03em;color:var(--blue)}
+.dark .stat .n{color:var(--white)}
+.stat .u{font-weight:400;font-size:25px;line-height:1.4;margin-top:22px;color:var(--ink-2);max-width:24ch}
+.dark .stat .u{color:var(--on-dark-2)}
+
+/* ===== typed card grid ===== */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:50px;width:100%}
+.cards.two{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--panel-bg);border:1px solid var(--panel-line);border-radius:var(--radius);padding:32px 34px}
+.dark .card{background:var(--panel-bg-dark);border-color:var(--panel-line-dark)}
+.blue .card{background:rgba(255,255,255,.4);border-color:rgba(255,255,255,.6)}
+.card .h{font-weight:600;font-size:22px;letter-spacing:.04em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+.blue .card .h{color:var(--on-blue)}
+.card .b{font-size:30px;line-height:1.24;font-weight:500}
+.card .cardlink{display:inline-block;margin-top:16px;font-size:22px;font-weight:600;color:var(--surface);text-decoration:none;border-bottom:1px solid rgba(168,202,251,.45);padding-bottom:2px}
+.card .s{font-size:21px;line-height:1.4;font-weight:400;color:var(--ink-2);margin-top:12px}
+.dark .card .s{color:var(--on-dark-2)}
+
+/* ===== contact row (hairline grid) ===== */
+.contact{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:56px;width:100%;border-top:1px solid var(--hair)}
+.contact .c{padding:28px 36px;border-bottom:1px solid var(--hair);border-right:1px solid var(--hair);text-align:left}
+.contact .c:first-child{padding-left:0}
+.contact .c:last-child{border-right:0}
+.contact .ck{font-weight:600;font-size:20px;letter-spacing:.04em;text-transform:uppercase;opacity:.72;margin-bottom:12px}
+.contact .cv{font-size:30px;font-weight:600;line-height:1.18}
+
+/* ===== definition / contrast row ===== */
+.defrow{display:flex;gap:28px;margin-top:46px;width:100%}
+.defcell{flex:1 1 0;border:1px solid var(--panel-line);border-radius:var(--radius);padding:30px 32px;background:var(--panel-bg)}
+.dark .defcell{background:var(--panel-bg-dark);border-color:var(--panel-line-dark)}
+.defcell.is-agent{border-color:var(--blue);background:var(--chip-bg)}
+.defcell .dk{font-weight:600;font-size:21px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.defcell.is-agent .dk{color:var(--blue)}
+.defcell .dv{font-size:30px;line-height:1.26;font-weight:500}
+
+/* ===== SVG diagram system ===== */
+.diagram{margin-top:6px;width:100%;display:flex;justify-content:center}
+.diagram svg{display:block;width:100%;height:auto;max-width:1500px}
+.light .d-box{fill:var(--offwhite)}
+.dark .d-box{fill:var(--offset)}
+.blue .d-box{fill:var(--surface-subtle)}
+.d-box{stroke:var(--blue);stroke-width:2.2}
+.dark .d-box{stroke:var(--blue)}
+.d-fill{fill:var(--blue);stroke:none}
+.dark .d-fill{fill:var(--white)}
+.d-line{fill:none;stroke:currentColor;stroke-width:2;opacity:.85}
+.d-mesh{stroke:var(--blue);stroke-width:1.2;stroke-opacity:.16;fill:none}
+.dark .d-mesh,.blue .d-mesh{stroke:currentColor;stroke-opacity:.22}
+.d-dash{stroke-dasharray:7 8}
+.d-lbl{font-family:var(--sans);font-weight:600;fill:currentColor}
+.d-lbl-mono{font-family:var(--mono);font-weight:600;letter-spacing:.04em;fill:var(--blue)}
+.dark .d-lbl-mono,.blue .d-lbl-mono{fill:currentColor}
+.d-lbl-dim{font-family:var(--mono);font-weight:400;fill:currentColor;opacity:.55}
+
+/* ===== fractal piece (nested hexagons) ===== */
+.fractal-ring{fill:none;stroke:var(--blue);stroke-width:2.4;opacity:.9;transform-origin:760px 380px;animation:breathe 6s ease-in-out infinite}
+.dark .fractal-ring{stroke:var(--surface)}
+.fractal-ring.r2{stroke-width:2;opacity:.7;animation-delay:.5s}
+.fractal-ring.r3{stroke-width:1.8;opacity:.55;animation-delay:1s}
+.fractal-ring.r4{stroke-width:1.6;opacity:.95;animation-delay:1.5s}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.012)}}
+.fractal-radial{stroke:currentColor;stroke-width:1.4;opacity:.28}
+.flow-dot{fill:var(--blue)}
+.dark .flow-dot{fill:var(--surface)}
+.fractal-coreglow{fill:var(--blue);opacity:.14}
+.dark .fractal-coreglow{fill:var(--surface);opacity:.18}
+.ring-lbl{font-family:var(--mono);font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:currentColor}
+.ring-lbl-sub{font-family:var(--sans);font-weight:400;fill:currentColor;opacity:.6}
+.leader{stroke:currentColor;stroke-width:1;opacity:.35}
+
+/* ===== streaming network + pedagogical build (full-bleed canvas + left overlay) ===== */
+.netstream,.netbuild,.netfull,.clarityfx,.fractalfx,.murmurfx,.gridfx,.udpfx,.scatterfx,.gaofx{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.murkey{position:absolute;bottom:84px;left:50%;transform:translateX(-50%);z-index:2;display:flex;gap:36px;font-size:22px;color:var(--on-dark-2)}
+.murkey .kitem{display:flex;align-items:center;gap:11px}
+.murkey i{display:inline-block;width:13px;height:13px;flex:none}
+.murkey .mk-h{border-radius:999px;background:#f0e8d6}
+.murkey .mk-a{background:var(--surface);transform:rotate(45deg)}
+.slide.netslide .wrap{position:relative;z-index:2;max-width:720px}
+.netcap{margin-top:26px;max-width:30ch}
+.flowkey{display:flex;gap:32px;margin-top:30px}
+.flowkey .k{display:flex;align-items:center;gap:12px;font-size:21px;color:var(--on-dark-2)}
+.flowkey .ln{width:42px;border-top:2px solid var(--surface)}
+.flowkey .ln.pv{border-top:2px dashed rgba(214,211,203,.5)}
+/* ===== HA-in-action flow (Caribbean example) ===== */
+.haflow{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.hasteps{margin-top:28px;display:flex;flex-direction:column;gap:18px;max-width:36ch}
+.hastep{display:flex;flex-direction:column;gap:7px;font-size:22px;line-height:1.3}
+.hastep .nx{flex:none;width:30px;height:30px;border-radius:999px;border:1px solid var(--surface);color:var(--surface);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;margin-top:2px}
+.hastep .dim{align-self:flex-start;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--surface);background:rgba(168,202,251,.12);border:1px solid rgba(168,202,251,.3);border-radius:999px;padding:4px 11px;white-space:nowrap}
+.hacap{margin-top:32px;font-size:23px;line-height:1.4;color:var(--surface);max-width:32ch;border-left:2px solid var(--surface);padding-left:18px}
+.netlegend{display:flex;gap:40px;margin-top:44px}
+.netlegend .li{display:flex;align-items:center;gap:13px;font-size:23px;color:var(--on-dark-2)}
+.netlegend .li b{color:var(--offwhite);font-weight:600}
+.netlegend svg{width:30px;height:30px;flex:none;display:block}
+.netlegend .hx{fill:rgba(43,45,42,.9);stroke:var(--surface)}
+.netlegend .li.u .hx{stroke-width:2.6}
+.netlegend .li.r .hx{stroke-width:2;opacity:.8}
+.netlegend .li.c .hx{stroke-width:1.6;opacity:.6}
+
+/* ===== snapshots -> streams ===== */
+.shift{display:flex;align-items:center;justify-content:center;gap:54px;margin-top:64px;width:100%}
+.shift .stage{display:flex;flex-direction:column;align-items:center;gap:26px;min-width:300px}
+.shift .vis{height:200px;display:flex;align-items:center;justify-content:center}
+.shift .lbl{font-family:var(--mono);font-weight:600;font-size:24px;letter-spacing:.14em;text-transform:uppercase;color:currentColor;opacity:.85}
+.shift .lbl .sm{display:block;font-family:var(--sans);font-weight:400;font-size:19px;letter-spacing:0;text-transform:none;opacity:.6;margin-top:8px}
+.shift .arrow{font-size:46px;opacity:.35;font-weight:300}
+.dot-snap{width:30px;height:30px;border-radius:999px;background:var(--blue)}
+.dot-film{display:flex;gap:16px}
+.dot-film i{width:18px;height:18px;border-radius:999px;background:var(--blue);opacity:.85}
+.dark .dot-film i{background:var(--surface)}
+.dark .dot-snap{background:var(--surface)}
+.stream-svg{width:300px;height:80px;overflow:visible}
+.stream-svg.score{width:360px;height:140px}
+.stream-path{fill:none;stroke:var(--blue);stroke-width:4.5;stroke-linecap:round;stroke-dasharray:0.1 24;animation:streamflow 1.1s linear infinite}
+.score .stream-path{stroke-width:2.3;stroke-dasharray:0.1 11.9;animation-duration:.62s}
+.score .stream-path.rev{animation-direction:reverse}
+.dark .stream-path{stroke:var(--surface)}
+.stream-base{fill:none;stroke:currentColor;stroke-width:1.4;opacity:.14}
+@keyframes streamflow{to{stroke-dashoffset:-48}}
+@media (prefers-reduced-motion:reduce){.stream-path{animation:none}}
+
+/* ===== demo button / live link ===== */
+.demolink{display:inline-flex;align-items:center;gap:14px;margin-top:40px;padding:18px 30px;border-radius:var(--radius-pill);background:var(--blue);color:#fff;font-weight:600;font-size:28px;text-decoration:none}
+.demolink .ar{font-size:24px;opacity:.85}
+.demonote{font-size:23px;color:var(--ink-2);margin-top:18px}
+.dark .demonote{color:var(--on-dark-2)}
+
+/* ===== cover ===== */
+.cover-brandline{position:relative;z-index:1;font-weight:600;font-size:40px;letter-spacing:.16em;line-height:1;color:var(--blue);margin-bottom:24px;text-transform:uppercase}
+.cover-title{position:relative;z-index:1;font-weight:700;font-size:104px;line-height:1.03;letter-spacing:-.025em;max-width:20ch}
+.cover-sub{position:relative;z-index:1;margin-top:30px;font-weight:500;font-size:34px;line-height:1.32;letter-spacing:-.005em;color:var(--offset);max-width:34ch}
+.cover-meta{position:relative;z-index:1;margin-top:38px;font-size:27px;line-height:1.55;color:var(--ink-2)}
+.cover-meta strong{color:var(--offset);font-weight:600}
+.slide.cover-home{flex-direction:column;align-items:flex-start;justify-content:center;padding:110px 150px 130px}
+
+/* ===== canvas FX ===== */
+.fx{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* ===== chrome ===== */
+#dots{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;z-index:20;color:var(--offset);transition:color .4s ease}
+#dots .dot{width:8px;height:8px;padding:0;border:none;border-radius:999px;background:currentColor;opacity:.32;cursor:pointer;transition:width .4s cubic-bezier(.22,1,.36,1),opacity .4s ease}
+#dots .dot:hover{opacity:.6}
+#dots .dot.on{width:30px;opacity:1;background:var(--surface)}
+#pagenum{position:absolute;left:48px;bottom:34px;z-index:21;font-family:var(--mono);font-weight:500;font-size:18px;letter-spacing:.06em;color:var(--offset);opacity:.78;transition:color .4s ease;font-variant-numeric:tabular-nums}
+#pagenum .pn-cur{font-weight:600}
+#pagenum .pn-sep{margin:0 6px;opacity:.5}
+#pagenum .pn-tot{opacity:.5}
+#fsbtn{position:absolute;right:40px;bottom:34px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--offset);transition:color .4s ease,opacity .3s ease;opacity:.55;z-index:21;background:none;border:none;padding:0;cursor:pointer}
+#fsbtn svg{width:22px;height:22px;display:block}
+#fsbtn:hover{opacity:1}
+.navzone{position:absolute;top:0;bottom:0;width:7%;z-index:9;cursor:pointer}
+#prevz{left:0}#nextz{right:0}
+.slidenum{position:absolute;left:150px;bottom:56px;font-family:var(--mono);font-size:21px;letter-spacing:.12em;color:var(--ink-3);z-index:5}
+.dark .slidenum{color:rgba(255,255,255,.5)}
+</style>
+</head>
+<body>
+<div id="deck">
+  <div id="bglayers" aria-hidden="true"></div>
+  <div id="stage">
+
+    <!-- ============ 1 · COVER ============ -->
+    <section class="slide black cover-home on">
+      <canvas class="fx" data-cx="1330" data-cy="520" data-r="430" data-n="5200" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div class="cover-brandline">UPU Innovation Webinar Series</div>
+        <h1 class="cover-title">Towards an Agentic AI Future for the <span class="kw">UPU</span></h1>
+        <div class="cover-meta">
+          <strong>Edgar Barroso</strong> · Professor, Tecnológico de Monterrey · Founder &amp; CEO, Horizons Architecture<br/>
+          Continuing the dialogue opened at the 4th UPU Innovation Challenge · Cologne &amp; Ghaziabad, May 2026<br/>
+          Friday, 3 July 2026 · 12:30–13:30 CET
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 2 · WHAT HAPPENED (stats) ============ -->
+    <section class="slide dark">
+      <div class="wrap">
+        <div class="eyebrow">Where the Post stands today</div>
+        <h2 class="title">The largest human network on earth — and a widening gap.</h2>
+        <div class="stats">
+          <div class="stat"><div class="n">679,000</div><div class="u">post offices worldwide — the world's largest retail network</div></div>
+          <div class="stat"><div class="n">4.6M</div><div class="u">people, in daily contact with citizens across six regions</div></div>
+          <div class="stat"><div class="n">+75% / +4%</div><div class="u">economy grew 75% (2006–2023); postal revenue, just 4%</div></div>
+        </div>
+        <div class="src">Universal Postal Union [UPU], 2025, pp. 9, 39–40, 83. Letter mail fell from 51% to 32% of revenue; the international network fragmented from 30–50 corridors into 150+ ad-hoc routes.</div>
+      </div>
+    </section>
+
+    <!-- ============ 3 · WHY (decisions, not geography) ============ -->
+    <section class="slide light">
+      <canvas class="scatterfx" aria-hidden="true"></canvas>
+      <div class="wrap" style="position:relative;z-index:2;max-width:860px">
+        <div class="eyebrow">Why it happened</div>
+        <h2 class="title">The report rejects technological determinism — <span class="kw">outright</span>.</h2>
+        <ul class="bullets">
+          <li>Outcomes follow decisions — not geography or income.</li>
+          <li>Estonia, Thailand, Mauritius: world class on middle incomes.</li>
+          <li>The variable is judgment under complexity.</li>
+        </ul>
+        <div class="src">Universal Postal Union, 2025, pp. 9, 13, 82.</div>
+      </div>
+    </section>
+
+    <!-- ============ 4 · THE AGENTIC TURN (definition) ============ -->
+    <section class="slide dark">
+      <div class="wrap">
+        <div class="eyebrow">The agentic turn</div>
+        <h2 class="title">A working definition of agentic AI.</h2>
+        <div class="defrow">
+          <div class="defcell"><div class="dk">Automation</div><div class="dv">Follows fixed rules.</div></div>
+          <div class="defcell"><div class="dk">Chatbot</div><div class="dv">Answers when asked.</div></div>
+          <div class="defcell is-agent"><div class="dk">Agentic AI</div><div class="dv">Sets a goal and <strong>reasons, decides, acts and learns</strong> — coordinating with other agents and with people, in real time.</div></div>
+        </div>
+        <div style="margin-top:44px;font-size:40px;line-height:1.18;font-weight:600;letter-spacing:-.018em;max-width:36ch">At scale, capability without a structure to govern it scatters into <span style="color:var(--surface)">noise</span>.</div>
+        <div class="note" style="margin-top:20px;max-width:52ch">A swarm of such machines, left ungoverned, can be counterproductive — even dangerous.</div>
+      </div>
+    </section>
+
+    <!-- ============ 4b · SNAPSHOTS -> STREAMS ============ -->
+    <section class="slide dark center">
+      <div class="wrap">
+        <div class="eyebrow">The shift</div>
+        <h2 class="title">From snapshots to streams.</h2>
+        <div class="shift">
+          <div class="stage">
+            <div class="vis"><div class="dot-snap"></div></div>
+            <div class="lbl">Photograph<span class="sm">a report — true the day it's taken</span></div>
+          </div>
+          <div class="arrow">→</div>
+          <div class="stage">
+            <div class="vis"><div class="dot-film"><i></i><i></i><i></i><i></i><i></i></div></div>
+            <div class="lbl">Film<span class="sm">periodic reports — the sector watched over time</span></div>
+          </div>
+          <div class="arrow">→</div>
+          <div class="stage">
+            <div class="vis">
+              <svg class="stream-svg score" viewBox="0 0 360 132" aria-hidden="true">
+                <path class="stream-base" d="M0,12 C72,7 144,17 216,12 S330,8 360,12"/>
+                <path class="stream-path" style="animation-delay:0s" d="M0,12 C72,7 144,17 216,12 S330,8 360,12"/>
+                <path class="stream-base" d="M0,28 C72,33 144,23 216,28 S330,32 360,28"/>
+                <path class="stream-path rev" style="animation-delay:-.18s" d="M0,28 C72,33 144,23 216,28 S330,32 360,28"/>
+                <path class="stream-base" d="M0,44 C72,39 144,49 216,44 S330,40 360,44"/>
+                <path class="stream-path" style="animation-delay:-.36s" d="M0,44 C72,39 144,49 216,44 S330,40 360,44"/>
+                <path class="stream-base" d="M0,60 C72,65 144,55 216,60 S330,64 360,60"/>
+                <path class="stream-path rev" style="animation-delay:-.1s" d="M0,60 C72,65 144,55 216,60 S330,64 360,60"/>
+                <path class="stream-base" d="M0,76 C72,71 144,81 216,76 S330,72 360,76"/>
+                <path class="stream-path" style="animation-delay:-.28s" d="M0,76 C72,71 144,81 216,76 S330,72 360,76"/>
+                <path class="stream-base" d="M0,92 C72,97 144,87 216,92 S330,96 360,92"/>
+                <path class="stream-path rev" style="animation-delay:-.46s" d="M0,92 C72,97 144,87 216,92 S330,96 360,92"/>
+                <path class="stream-base" d="M0,108 C72,103 144,113 216,108 S330,104 360,108"/>
+                <path class="stream-path" style="animation-delay:-.14s" d="M0,108 C72,103 144,113 216,108 S330,104 360,108"/>
+                <path class="stream-base" d="M0,124 C72,129 144,119 216,124 S330,128 360,124"/>
+                <path class="stream-path rev" style="animation-delay:-.34s" d="M0,124 C72,129 144,119 216,124 S330,128 360,124"/>
+              </svg>
+            </div>
+            <div class="lbl">Streams<span class="sm">live coordination across the network</span></div>
+          </div>
+        </div>
+        <div class="note" style="margin-top:54px;max-width:58ch">Data is making the same shift — now at scale. Many streams at once, read by agentic networks and kept legible by one shared notation, like a score. People decide what it plays.</div>
+      </div>
+    </section>
+
+    <!-- ============ NOISE -> MEANING (chaos resolves to the hexagon) ============ -->
+    <section class="slide dark netslide">
+      <canvas class="clarityfx" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div class="eyebrow">From noise to meaning</div>
+        <h2 class="title">The data that matters.</h2>
+        <div class="note netcap">A human, data-driven approach: meaningful, useful information for each actor in the network.</div>
+      </div>
+    </section>
+
+    <!-- ============ 5 · HUMILITY -> STRUCTURE ============ -->
+    <section class="slide light">
+      <div class="wrap">
+        <div class="eyebrow">Hybrid human–AI governance</div>
+        <h2 class="title" style="max-width:none">There are many ways to think about it.</h2>
+        <ul class="bullets sm" style="display:grid;grid-template-columns:repeat(3,1fr);gap:54px;max-width:1600px;margin-top:64px">
+          <li>Yes, it runs on technology — but what matters is how the information makes sense, to people and to machines.</li>
+          <li>Technology will only accelerate, so the approach has to stay <span class="kw">adaptive</span>.</li>
+          <li>Our job, as humans, is to imagine the future.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 6 · THE SIX DIMENSIONS (hexagon) ============ -->
+    <section class="slide light center">
+      <div class="wrap">
+        <div class="eyebrow">From our research at Tecnológico de Monterrey</div>
+        <h2 class="title">Six typed dimensions.</h2>
+        <div class="sub" style="text-align:center;max-width:62ch;margin:16px auto 0">What we found: for a complex endeavour under uncertainty, a good starting point is to understand these six dimensions — in a complex, multi-actor endeavour.</div>
+        <div class="diagram">
+          <svg viewBox="0 0 1520 720" style="max-width:1060px" role="img" aria-label="The six dimensions of Horizons Architecture arranged around a shared goal">
+            <!-- mesh hex -->
+            <polygon class="d-mesh" points="760,90 993.8,225 993.8,495 760,630 526.2,495 526.2,225"/>
+            <polygon class="d-line" points="760,120 967.8,240 967.8,480 760,600 552.2,480 552.2,240" style="opacity:.5" fill="none"/>
+            <!-- radials -->
+            <g class="d-line" style="opacity:.5">
+              <line x1="760" y1="360" x2="760" y2="120"/>
+              <line x1="760" y1="360" x2="967.8" y2="240"/>
+              <line x1="760" y1="360" x2="967.8" y2="480"/>
+              <line x1="760" y1="360" x2="760" y2="600"/>
+              <line x1="760" y1="360" x2="552.2" y2="480"/>
+              <line x1="760" y1="360" x2="552.2" y2="240"/>
+            </g>
+            <!-- core -->
+            <circle class="fractal-coreglow" cx="760" cy="360" r="46"/>
+            <circle class="d-fill" cx="760" cy="360" r="15"/>
+            <text class="d-lbl-dim" x="760" y="408" text-anchor="middle" font-size="20">shared goal</text>
+            <!-- vertex nodes -->
+            <circle class="d-box" cx="760" cy="120" r="13"/>
+            <circle class="d-box" cx="967.8" cy="240" r="13"/>
+            <circle class="d-box" cx="967.8" cy="480" r="13"/>
+            <circle class="d-box" cx="760" cy="600" r="13"/>
+            <circle class="d-box" cx="552.2" cy="480" r="13"/>
+            <circle class="d-box" cx="552.2" cy="240" r="13"/>
+            <!-- labels -->
+            <text class="d-lbl" x="760" y="70" text-anchor="middle" font-size="26">TELEOLOGICAL</text>
+            <text class="d-lbl-dim" x="760" y="98" text-anchor="middle" font-size="18">purpose &amp; ends · Legacy</text>
+            <text class="d-lbl" x="1014" y="230" text-anchor="start" font-size="26">RELATIONAL</text>
+            <text class="d-lbl-dim" x="1014" y="258" text-anchor="start" font-size="18">people &amp; ties · Community</text>
+            <text class="d-lbl" x="1014" y="486" text-anchor="start" font-size="26">EPISTEMIC</text>
+            <text class="d-lbl-dim" x="1014" y="514" text-anchor="start" font-size="18">knowledge · Learning</text>
+            <text class="d-lbl" x="760" y="662" text-anchor="middle" font-size="26">INFRASTRUCTURAL</text>
+            <text class="d-lbl-dim" x="760" y="690" text-anchor="middle" font-size="18">tools &amp; systems · Technology</text>
+            <text class="d-lbl" x="506" y="486" text-anchor="end" font-size="26">CONTEXTUAL</text>
+            <text class="d-lbl-dim" x="506" y="514" text-anchor="end" font-size="18">outside change · Context</text>
+            <text class="d-lbl" x="506" y="230" text-anchor="end" font-size="26">OPERATIONAL</text>
+            <text class="d-lbl-dim" x="506" y="258" text-anchor="end" font-size="18">execution · Projects</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 7 · COLLECTIVE INTELLIGENCE ============ -->
+    <section class="slide blue center">
+      <div class="wrap">
+        <div class="eyebrow">Collective intelligence, not replacement</div>
+        <h2 class="title" style="max-width:24ch">"Nobody knows everything, but everybody knows something."</h2>
+        <div class="src" style="font-size:27px;margin-top:22px">— Pierre Lévy, <em>Collective Intelligence</em> (1997)</div>
+        <div class="sub" style="margin-top:44px;max-width:40ch">People remain the brains; AI extends their reach. The structure is what lets many partial views — human and machine — add up without a single mind holding it all.</div>
+      </div>
+    </section>
+
+    <!-- ============ 8 · ALREADY INSIDE THE UPU (proof + demo) ============ -->
+    <section class="slide dark">
+      <div class="wrap">
+        <div class="eyebrow">Already inside the UPU</div>
+        <h2 class="title">The UPU already has agentic AI.</h2>
+        <div class="cards">
+          <div class="card"><div class="h">UDP</div><div class="b">The Unified Data Platform — the infrastructure beneath it all. On AWS today, built to be cloud-agnostic.</div></div>
+          <div class="card"><div class="h">Dubai agents</div><div class="b">The agent suite we presented in Dubai — text, voice, two in debate, on the UPU's own data.</div><a class="cardlink" href="https://agent.udp.post/" target="_blank" rel="noopener">agent.udp.post</a></div>
+          <div class="card"><div class="h"><a href="https://mira.horizonsarchitecture.ai" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-decoration-color:rgba(168,202,251,.5);text-underline-offset:4px">MIRA</a></div><div class="b">An early glimpse of the potential: parallel critics move a narrative toward consensus, with a full audit trail.</div></div>
+        </div>
+        <div style="margin-top:48px;font-size:38px;line-height:1.2;font-weight:600;letter-spacing:-.015em;max-width:42ch">Now it is time to connect the data across the other dimensions — and start making them <span style="color:var(--surface)">work together</span>.</div>
+      </div>
+    </section>
+
+    <!-- ============ 8b · THE HONEST PART — structures that evolve with technology ============ -->
+    <section class="slide light center">
+      <div class="wrap" style="max-width:1180px">
+        <div class="eyebrow">The honest part</div>
+        <h2 class="title" style="max-width:none">This will not be easy.</h2>
+        <div class="sub" style="text-align:center;max-width:50ch;margin:26px auto 0">It will take courage, determination, and a tolerance for uncertainty — we do not know how these technologies will evolve.</div>
+        <div style="margin:42px auto 0;font-size:42px;line-height:1.2;font-weight:600;letter-spacing:-.016em;max-width:30ch">That is why the structure itself has to evolve with them: a durable core, with <span class="kw">thin adapters</span> that change as the tools do.</div>
+        <div class="src" style="margin-top:36px">When a tool changes, you change an adapter — not the work. (Horizons Architecture, Tecnológico de Monterrey.)</div>
+      </div>
+    </section>
+
+    <!-- ============ 9 · PROMISE & PITFALLS ============ -->
+    <section class="slide light">
+      <div class="wrap">
+        <div class="eyebrow">Promise — and pitfalls</div>
+        <h2 class="title">Sharper evidence, faster decisions — said honestly.</h2>
+        <div class="cards">
+          <div class="card"><div class="h">The promise</div><div class="b">For operators, regulators and ministries: sharper evidence and faster decisions — with a trace of where each one came from.</div></div>
+          <div class="card"><div class="h">The pitfalls</div><div class="b">Autonomy without governance. Black boxes. Made-up answers. Real risks, named out loud.</div></div>
+          <div class="card"><div class="h">What bounds them</div><div class="b">Governance, transparency and human judgment — built in from the design, not bolted on. And the cost of waiting is real too.</div></div>
+        </div>
+        <div class="src">UPU webinar one-pager, takeaway 02; the compounding cost of the decoupling (UPU, 2026, pp. 13–14; UPU, 2025, p. 48).</div>
+      </div>
+    </section>
+
+    <!-- ============ 10 · THE WHOLE STRATEGY IN SIX DIMENSIONS ============ -->
+    <section class="slide light">
+      <div class="wrap">
+        <div class="eyebrow">From the top</div>
+        <h2 class="title">We can think of the UPU Strategy 2026–2029 as one structure.</h2>
+        <div class="cards" style="margin-top:40px">
+          <div class="card"><div class="h">Legacy</div><div class="b">Mission &amp; vision</div><div class="s">single postal territory; an interconnected, inclusive, sustainable society (p. 22)</div></div>
+          <div class="card"><div class="h">Community</div><div class="b">Hypercollaboration</div><div class="s">member ownership; no country left behind (pp. 17, 34)</div></div>
+          <div class="card"><div class="h">Learning</div><div class="b">Capacity · data</div><div class="s">capacity-building; a data-driven approach (p. 34)</div></div>
+          <div class="card"><div class="h">Technology</div><div class="b">AI &amp; data infra</div><div class="s">"leverage AI and automation" (p. 34)</div></div>
+          <div class="card"><div class="h">Context</div><div class="b">Three scenarios</div><div class="s">Regression / Resilience / Renaissance; the decoupling (pp. 12–14)</div></div>
+          <div class="card"><div class="h">Projects</div><div class="b">Three goals</div><div class="s">single territory · ecosystem by innovation · development by regionalization (pp. 4–5)</div></div>
+        </div>
+        <div class="src">UPU, 2026. It doesn't rewrite your strategy — it makes it legible and operable. The document becomes a function the system runs: text is code.</div>
+      </div>
+    </section>
+
+    <!-- ============ 12–16 · THE FRACTAL, BUILT STEP BY STEP ============ -->
+    <section class="slide dark netslide">
+      <canvas class="netbuild" data-level="1" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div class="eyebrow">Step 1 — The Union</div>
+        <h2 class="title">It starts with the UPU.</h2>
+        <div class="note netcap">One structure — six dimensions, filled by its mission, its strategy, and the legacy people built.</div>
+      </div>
+    </section>
+
+    <section class="slide dark netslide">
+      <canvas class="netbuild" data-level="2" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div class="eyebrow">Step 2 — The regions</div>
+        <h2 class="title">Six regions, each with its own character.</h2>
+        <div class="note netcap">The same six dimensions — a different emphasis in each.</div>
+      </div>
+    </section>
+
+    <section class="slide dark netslide">
+      <canvas class="netbuild" data-level="3" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div class="eyebrow">Step 3 — The countries</div>
+        <h2 class="title">Every country, an instance with its nuances.</h2>
+        <div class="note netcap">The same structure holds Estonia and Madagascar, Japan and Mexico — without flattening any of them.</div>
+      </div>
+    </section>
+
+    <section class="slide dark netslide">
+      <canvas class="netbuild" data-level="4" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div class="eyebrow">Step 4 — The operators</div>
+        <h2 class="title">All the way to each operator.</h2>
+        <div class="note netcap">India Post, Japan Post, Correos de México… the structure reaches the edge.</div>
+      </div>
+    </section>
+
+    <section class="slide dark netslide">
+      <canvas class="netbuild" data-level="5" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div class="eyebrow">Step 5 — Cooperation by choice</div>
+        <h2 class="title">Each shares what it wants. Each keeps what's theirs.</h2>
+        <div class="note netcap">Data flows where there is consent. Every instance decides its own degree of cooperation.</div>
+        <div class="flowkey">
+          <div class="k"><span class="ln"></span> shared</div>
+          <div class="k"><span class="ln pv"></span> kept private</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE FULL PICTURE — ALL 192 MEMBERS (dense) ============ -->
+    <section class="slide dark" style="justify-content:flex-start;padding-top:96px">
+      <canvas class="netfull" aria-hidden="true"></canvas>
+      <div class="wrap" style="position:relative;z-index:2">
+        <div class="eyebrow">The full picture</div>
+        <h2 class="title" style="text-shadow:0 2px 26px rgba(0,0,0,.75)">All 192 members. One structure.</h2>
+      </div>
+    </section>
+
+    <!-- ============ THE SAME STRUCTURE AT EVERY SCALE (nested fractal, live flow) ============ -->
+    <section class="slide dark netslide">
+      <canvas class="fractalfx" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div class="eyebrow">If the UPU had an HA</div>
+        <h2 class="title">The same structure, at every scale.</h2>
+        <div class="note netcap">The same six dimensions at every level — operator, country, region, the Union. The shared structure carries the data streams, because it gives humans and machines a common language.</div>
+      </div>
+    </section>
+
+    <!-- ============ HA IN ACTION — THE CARIBBEAN EXAMPLE ============ -->
+    <section class="slide dark netslide">
+      <canvas class="haflow" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div class="eyebrow">The Caribbean</div>
+        <h2 class="title">Let's think of a simple example.</h2>
+        <div class="hasteps">
+          <div class="hastep"><span class="dim">Learning</span><span>A shared gap surfaces: AI skills.</span></div>
+          <div class="hastep"><span class="dim">Community</span><span>Several Caribbean operators name the same need.</span></div>
+          <div class="hastep"><span class="dim">Legacy · Context</span><span>It rises to the Union — read against the universal-service mandate and the region's digital divide.</span></div>
+          <div class="hastep"><span class="dim">Technology · Projects</span><span>The Union returns a training platform, rolled out as a programme — a shared asset any member can adapt.</span></div>
+        </div>
+        <div class="hacap">A different kind of democracy: built on challenges and interactions, not only votes.</div>
+      </div>
+    </section>
+
+    <!-- ============ 12 · GENERATIVE ONTOLOGY — the structure spawns specialized agents ============ -->
+    <section class="slide dark" style="justify-content:flex-start;padding-top:78px">
+      <canvas class="gaofx" aria-hidden="true"></canvas>
+      <div class="wrap" style="position:relative;z-index:2">
+        <div class="eyebrow">From data to agents</div>
+        <h2 class="title" style="max-width:17ch">The structure spawns specialized agents.</h2>
+        <div class="note" style="max-width:31ch;margin-top:24px">The six dimensions stay fixed. From each, specialized AI agents emerge, collaborate, and retire as needs evolve — under human oversight.</div>
+      </div>
+    </section>
+
+    <!-- ============ 13 · CRESCENDO (with murmuration of people + agents toward the goal) ============ -->
+    <section class="slide dark bigq murmur-slide" style="justify-content:flex-start;padding-top:92px">
+      <canvas class="murmurfx" aria-hidden="true"></canvas>
+      <div class="wrap" style="position:relative;z-index:2">
+        <div class="eyebrow">Why this matters</div>
+        <div class="big">We are no longer alone.</div>
+        <div class="sub">We already know how to scale agents. What we want to scale is human <span class="kw">will</span> — toward one shared goal: the UPU's mission.</div>
+      </div>
+      <div class="murkey">
+        <span class="kitem"><i class="mk-h"></i> people</span>
+        <span class="kitem"><i class="mk-a"></i> AI agents</span>
+      </div>
+    </section>
+
+    <!-- ============ THE HA FRAMEWORK: simultaneous complexity × time (after the crescendo) ============ -->
+    <section class="slide dark" style="justify-content:flex-start;padding-top:74px">
+      <canvas class="gridfx" aria-hidden="true"></canvas>
+      <div class="wrap" style="position:relative;z-index:2">
+        <div class="eyebrow">The HA framework</div>
+        <h2 class="title">Simultaneous complexity, across time.</h2>
+      </div>
+    </section>
+
+    <!-- ============ 14 · THE ASK + CONTACT ============ -->
+    <section class="slide blue">
+      <div class="wrap" style="max-width:none">
+        <div class="eyebrow">Questions worth carrying home</div>
+        <h2 class="title" style="max-width:none">There are more questions than answers.</h2>
+        <div class="qgrid">
+          <div class="qcard"><span class="qn">01</span><span class="qt">Imagine your country as an instance of this structure — which dimension would you begin with?</span></div>
+          <div class="qcard"><span class="qn">02</span><span class="qt">What would you ask of any agentic system before adopting it — trace, governance, human judgment?</span></div>
+          <div class="qcard"><span class="qn">03</span><span class="qt">What should be coordinated centrally, and what should stay local?</span></div>
+          <div class="qcard"><span class="qn">04</span><span class="qt">What should every postal operator be able to do by 2030?</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 15 · THANK YOU ============ -->
+    <section class="slide black center">
+      <canvas class="fx" data-cx="960" data-cy="560" data-r="430" data-n="5200" aria-hidden="true"></canvas>
+      <div class="wrap" style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center">
+        <h1 class="cover-title" style="font-size:120px;text-align:center;max-width:none">Thank you.</h1>
+        <div style="margin-top:40px;font-size:38px;font-weight:600;color:var(--offset)">Edgar Barroso, Ph.D.</div>
+        <div style="margin-top:16px;font-size:29px;color:var(--ink-2)">horizonsarchitecture.ai</div>
+        <div style="margin-top:8px;font-size:26px;color:var(--ink-2)">edgar@horizonsarchitecture.ai &nbsp;·&nbsp; edgarbarroso@tec.mx</div>
+      </div>
+    </section>
+
+    <!-- ===== chrome ===== -->
+    <div id="pagenum" aria-hidden="true"><span class="pn-cur">01</span><span class="pn-sep">/</span><span class="pn-tot">00</span></div>
+    <div id="dots" role="tablist" aria-label="Slide navigation"></div>
+    <button id="fsbtn" aria-label="Fullscreen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/>
+      </svg>
+    </button>
+    <div class="navzone" id="prevz"></div>
+    <div class="navzone" id="nextz"></div>
+  </div>
+</div>
+
+<!-- ===== navigation engine (ported from Governor deck v0.5) ===== -->
+<script>
+(function(){
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var stage=document.getElementById("stage");
+  var fsbtn=document.getElementById("fsbtn");
+  var i=0, deck=document.getElementById("deck");
+
+  function chromeColorFor(slide){
+    var bg=getComputedStyle(slide).backgroundColor;
+    var m=bg.match(/\d+(\.\d+)?/g), darkBg;
+    if(m&&(m.length<4||parseFloat(m[3])!==0)){
+      var lum=0.299*+m[0]+0.587*+m[1]+0.114*+m[2]; darkBg=lum<128;
+    } else { darkBg=slide.classList.contains("dark"); }
+    return darkBg?"#f4f3f0":"#2b2d2a";
+  }
+
+  var pageNum=document.getElementById("pagenum");
+  var pnCur=pageNum?pageNum.querySelector(".pn-cur"):null;
+  var pnTot=pageNum?pageNum.querySelector(".pn-tot"):null;
+  function pad2(v){return (v<10?"0":"")+v;}
+  if(pnTot) pnTot.textContent=pad2(slides.length);
+
+  var dotsWrap=document.getElementById("dots"), dots=[];
+  slides.forEach(function(s,k){
+    var b=document.createElement("button");
+    b.className="dot"; b.setAttribute("role","tab");
+    b.setAttribute("aria-label","Go to slide "+(k+1));
+    b.addEventListener("click",function(e){e.stopPropagation();show(k);});
+    dotsWrap.appendChild(b); dots.push(b);
+  });
+
+  var prevIdx=-1, bgWrap=document.getElementById("bglayers"), bgls=[];
+  if(bgWrap&&deck){
+    slides.forEach(function(s){
+      var cs=getComputedStyle(s);
+      var bl=document.createElement("div"); bl.className="bgl";
+      bl.style.backgroundColor=cs.backgroundColor;
+      bl.style.backgroundImage=cs.backgroundImage;
+      bgWrap.appendChild(bl); bgls.push(bl);
+    });
+    deck.classList.add("bgmoved");
+  }
+  function setBgLayer(idx,dur){
+    bgls.forEach(function(bl,k){
+      if(k===idx){
+        if(prevIdx<0){ bl.style.transition="none"; bl.classList.add("on"); void bl.offsetWidth; bl.style.transition=""; }
+        else { bl.style.transitionDuration=dur+"s"; bl.classList.add("on"); }
+      } else { bl.classList.remove("on"); }
+    });
+  }
+
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){
+      s.classList.toggle("on",k===i);
+      s.classList.toggle("is-before",k<i);
+      s.classList.toggle("is-after",k>i);
+    });
+    dots.forEach(function(d,k){
+      d.classList.toggle("on",k===i);
+      if(k===i) d.setAttribute("aria-current","true"); else d.removeAttribute("aria-current");
+    });
+    if(bgls.length&&slides[i]) setBgLayer(i,0.55);
+    prevIdx=i;
+    if(pnCur) pnCur.textContent=pad2(i+1);
+    if(slides[i]){
+      var cc=chromeColorFor(slides[i]);
+      dotsWrap.style.color=cc;
+      if(fsbtn) fsbtn.style.color=cc;
+      if(pageNum) pageNum.style.color=cc;
+    }
+  }
+  function next(){show(i+1);}
+  function prev(){show(i-1);}
+
+  var lastDpr=window.devicePixelRatio||1;
+  function fit(){
+    var dpr=window.devicePixelRatio||1;
+    if(dpr!==lastDpr){ lastDpr=dpr; return; }
+    var s=Math.min(window.innerWidth/1920,window.innerHeight/1080);
+    var tx=(window.innerWidth-1920*s)/2, ty=(window.innerHeight-1080*s)/2;
+    stage.style.transform="translate("+tx+"px,"+ty+"px) scale("+s+")";
+  }
+  var fitRAF=0;
+  window.addEventListener("resize",function(){
+    if(fitRAF) return;
+    fitRAF=requestAnimationFrame(function(){fitRAF=0;fit();});
+  });
+  fit();
+  document.addEventListener("keydown",function(e){
+    if(["ArrowRight","PageDown"," ","Spacebar"].indexOf(e.key)>-1){e.preventDefault();next();}
+    else if(["ArrowLeft","PageUp"].indexOf(e.key)>-1){e.preventDefault();prev();}
+    else if(e.key==="Home") show(0);
+    else if(e.key==="End") show(slides.length-1);
+  });
+  document.getElementById("nextz").addEventListener("click",next);
+  document.getElementById("prevz").addEventListener("click",prev);
+  var x0=null;
+  document.addEventListener("touchstart",function(e){x0=e.touches[0].clientX;},{passive:true});
+  document.addEventListener("touchend",function(e){
+    if(x0===null) return;
+    var dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>50){ dx<0?next():prev(); }
+    x0=null;
+  },{passive:true});
+  if(fsbtn) fsbtn.addEventListener("click",function(e){
+    e.stopPropagation();
+    if(!document.fullscreenElement) (document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen());
+    else (document.exitFullscreen&&document.exitFullscreen());
+  });
+  // deep-link: open #6 to jump to slide 6 (handy for editing one slide / verifying)
+  window.addEventListener("hashchange",function(){var n=parseInt(location.hash.replace("#",""),10); if(!isNaN(n)) show(n-1);});
+  var start=parseInt(location.hash.replace("#",""),10);
+  show(isNaN(start)?0:start-1);
+})();
+</script>
+
+<!-- ===== fractal network, built step by step (canvas, per-slide data-level) ===== -->
+<script>
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var canvases=[].slice.call(document.querySelectorAll("canvas.netbuild"));
+  if(!canvases.length) return;
+  var CX=1300, CY=560, R1=180, R2=315, R3=430;
+  var regionNames=["Asia–Pacific","Europe & CIS","Industrialized","Latin America & Caribbean","Africa","Arab countries"];
+  var countryMap=[["India","Thailand"],["Estonia","Georgia"],["Japan","France"],["Mexico","Brazil"],["Kenya","Madagascar"],["Morocco","UAE"]];
+  var opMap={India:"India Post",Japan:"Japan Post",Mexico:"Correos de México",Estonia:"Omniva",France:"La Poste",Brazil:"Correios"};
+  var union={x:CX,y:CY,r:40,tier:0,label:"THE UPU",ang:-Math.PI/2};
+  var regions=[],countries=[],operators=[],edges=[];
+  for(var i=0;i<6;i++){
+    var a=-Math.PI/2+i*(Math.PI/3);
+    var rg={x:CX+Math.cos(a)*R1,y:CY+Math.sin(a)*R1,r:22,tier:1,label:regionNames[i],parent:union,ang:a};
+    regions.push(rg); edges.push({a:union,b:rg,t:1});
+    var cs=countryMap[i];
+    for(var j=0;j<cs.length;j++){
+      var ca=a+(j-(cs.length-1)/2)*0.34;
+      var c={x:CX+Math.cos(ca)*R2,y:CY+Math.sin(ca)*R2,r:13,tier:2,label:cs[j],parent:rg,ang:ca};
+      countries.push(c); edges.push({a:rg,b:c,t:2});
+      var on=opMap[cs[j]]||null;
+      var o={x:CX+Math.cos(ca)*R3,y:CY+Math.sin(ca)*R3,r:8,tier:3,label:on,parent:c,ang:ca,priv:((i+j)%4===0)};
+      operators.push(o); edges.push({a:c,b:o,t:3,priv:o.priv});
+    }
+  }
+  for(var i=0;i<6;i++){ edges.push({a:regions[i],b:regions[(i+1)%6],t:1,lateral:true}); }
+  var parts=[]; edges.forEach(function(e,ei){ if(e.priv) return; for(var k=0;k<2;k++){ parts.push({e:ei,p:(k+Math.random())/2,sp:0.004+Math.random()*0.004,dir:Math.random()<0.5?1:-1}); } });
+  function hex(ctx,cx,cy,r){ ctx.beginPath(); for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.closePath(); }
+  function ease(p){ return 1-Math.pow(1-p,3); }
+
+  canvases.forEach(function(cv){
+    var L=+cv.dataset.level, ctx,W,H,dpr,sized=false,p=0,raf=0;
+    var revealTier=(L>=5)?99:(L-1);
+    function maxTier(){ return (L>=5)?3:(L-1); }
+    function present(t){ return t<=maxTier(); }
+    function size(){ dpr=Math.min(window.devicePixelRatio||1,1.6); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
+    function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+    function pos(n){ if(n.tier===revealTier){ var ep=ease(p); if(n.parent) return {x:n.parent.x+(n.x-n.parent.x)*ep,y:n.parent.y+(n.y-n.parent.y)*ep,op:p}; return {x:n.x,y:n.y,op:p}; } return {x:n.x,y:n.y,op:1}; }
+    function lbl(n,txt,fs,bright){ if(!txt) return; var c=Math.cos(n.ang),s=Math.sin(n.ang); var lx=n._x+c*(n.r+13),ly=n._y+s*(n.r+13); ctx.textAlign=c<-0.25?"end":(c>0.25?"start":"center"); ctx.textBaseline=s>0.4?"top":(s<-0.4?"alphabetic":"middle"); ctx.font=(bright?"600 ":"500 ")+fs+"px 'Instrument Sans',sans-serif"; ctx.fillStyle=bright?"rgba(244,243,240,0.96)":"rgba(214,211,203,0.45)"; ctx.fillText(txt,lx,ly); }
+    function draw(){
+      var act=active();
+      if(!act){ p=0; raf=requestAnimationFrame(draw); return; }
+      if(!sized) size();
+      p=Math.min(1,p+(reduce?1:0.045));
+      ctx.clearRect(0,0,W,H);
+      edges.forEach(function(e){
+        if(!present(e.a.tier)||!present(e.b.tier)) return;
+        if(e.lateral && L<5) return;
+        var pa=pos(e.a),pb=pos(e.b),op=Math.min(pa.op,pb.op);
+        if(L>=5&&e.priv){ ctx.setLineDash([4,11]); ctx.strokeStyle="rgba(214,211,203,0.20)"; ctx.lineWidth=1.3; }
+        else { ctx.setLineDash([]); ctx.strokeStyle="rgba(168,202,251,"+(0.24*op)+")"; ctx.lineWidth=1.4; }
+        ctx.beginPath(); ctx.moveTo(pa.x,pa.y); ctx.lineTo(pb.x,pb.y); ctx.stroke();
+      });
+      ctx.setLineDash([]);
+      if(L>=5){ parts.forEach(function(pt){ var e=edges[pt.e]; if(!present(e.a.tier)||!present(e.b.tier)) return; pt.p+=pt.sp*pt.dir; if(pt.p>1)pt.p-=1; if(pt.p<0)pt.p+=1; var x=e.a.x+(e.b.x-e.a.x)*pt.p,y=e.a.y+(e.b.y-e.a.y)*pt.p; var g=ctx.createRadialGradient(x,y,0,x,y,6); g.addColorStop(0,"rgba(168,202,251,0.9)"); g.addColorStop(1,"rgba(168,202,251,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,6,0,6.28);ctx.fill(); ctx.fillStyle="rgba(235,243,255,0.95)"; ctx.beginPath();ctx.arc(x,y,1.6,0,6.28);ctx.fill(); }); }
+      function place(n){ var q=pos(n); n._x=q.x;n._y=q.y;n._op=q.op; }
+      function dn(n,lw,strokeOp){ ctx.globalAlpha=n._op; ctx.lineWidth=lw; ctx.strokeStyle="rgba(168,202,251,"+strokeOp+")"; hex(ctx,n._x,n._y,n.r); ctx.fillStyle="rgba(40,42,39,0.96)"; ctx.fill(); ctx.stroke(); if(L>=5){ ctx.fillStyle="rgba(120,140,170,0.55)"; ctx.beginPath();ctx.arc(n._x,n._y,Math.max(2,n.r*0.3),0,6.28);ctx.fill(); } else { ctx.fillStyle="rgba(168,202,251,"+(n.tier===0?1:0.8)+")"; ctx.beginPath();ctx.arc(n._x,n._y,n.tier===0?5:n.tier===1?3:2,0,6.28);ctx.fill(); } ctx.globalAlpha=1; }
+      if(present(3)) operators.forEach(function(o){ place(o); dn(o,1.5,0.6); });
+      if(present(2)) countries.forEach(function(c){ place(c); dn(c,1.7,0.7); });
+      if(present(1)) regions.forEach(function(r){ place(r); dn(r,2,0.9); });
+      place(union); dn(union,2.6,1);
+      ctx.textAlign="center";ctx.textBaseline="alphabetic"; ctx.globalAlpha=union._op; ctx.font="700 24px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(244,243,240,0.96)"; ctx.fillText(union.label,union._x,union._y-union.r-16); ctx.globalAlpha=1;
+      if(L===2) regions.forEach(function(r){ lbl(r,r.label,21,true); });
+      if(L===3) countries.forEach(function(c){ lbl(c,c.label,18,true); });
+      if(L===4) operators.forEach(function(o){ lbl(o,o.label,17,!!o.label); });
+      if(L>=5){ regions.forEach(function(r){ lbl(r,r.label,16,false); }); countries.forEach(function(c){ lbl(c,c.label,16,true); }); }
+      raf=requestAnimationFrame(draw);
+    }
+    window.addEventListener("resize",function(){ if(sized){ size(); } });
+    draw();
+  });
+})();
+</script>
+
+<!-- ===== noise -> meaning: chaos resolves into the HA hexagon (canvas) ===== -->
+<script>
+(function(){
+  var cv=document.querySelector("canvas.clarityfx"); if(!cv) return;
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var ctx,W,H,dpr,sized=false,raf=0,p=0,fc=0;
+  var rng=(function(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};})(99);
+  var cx=1170,cy=540,R=326,verts=[];
+  for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; verts.push([cx+Math.cos(a)*R,cy+Math.sin(a)*R]); }
+  var pts=[];
+  function addT(tx,ty){ pts.push({tx:tx,ty:ty,sx:rng()*1920,sy:rng()*1080,ph:rng()*6.283,sp:0.5+rng()*1.0}); }
+  for(var i=0;i<240;i++){ var a=rng()*6.283,r=rng()*22; addT(cx+Math.cos(a)*r,cy+Math.sin(a)*r); }
+  verts.forEach(function(v){ for(var i=0;i<288;i++){ var a=rng()*6.283,r=rng()*19; addT(v[0]+Math.cos(a)*r,v[1]+Math.sin(a)*r); } });
+  for(var i=0;i<6;i++){ var v1=verts[i],v2=verts[(i+1)%6]; for(var j=0;j<104;j++){ var t=(j+0.5)/104; addT(v1[0]+(v2[0]-v1[0])*t,v1[1]+(v2[1]-v1[1])*t); } }
+  verts.forEach(function(v){ for(var j=0;j<52;j++){ var t=(j+0.5)/52; addT(cx+(v[0]-cx)*t,cy+(v[1]-cy)*t); } });
+  var segs=[],ctr=[cx,cy];
+  for(var i=0;i<6;i++){ segs.push([verts[i],verts[(i+1)%6]]); }
+  for(var i=0;i<6;i++){ segs.push([ctr,verts[i]]); }
+  var flow=[]; segs.forEach(function(sg){ for(var k=0;k<4;k++){ flow.push({s:sg,t:rng(),sp:0.004+rng()*0.004,dir:rng()<0.5?1:-1}); } });
+  function size(){ dpr=Math.min(window.devicePixelRatio||1,1.6); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
+  function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+  function ease(t){ return 1-Math.pow(1-t,3); }
+  function draw(){
+    if(!active()){ p=0; raf=requestAnimationFrame(draw); return; }
+    if(!sized) size();
+    fc++; p=Math.min(1,p+(reduce?1:0.00225));
+    var e=ease(p), mess=(1-e);
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle="rgba(168,202,251,"+(0.20+e*0.5).toFixed(3)+")";
+    ctx.beginPath();
+    for(var i=0;i<pts.length;i++){ var pt=pts[i];
+      var x=pt.sx+(pt.tx-pt.sx)*e+Math.cos(pt.ph+fc*0.018*pt.sp)*mess*16;
+      var y=pt.sy+(pt.ty-pt.sy)*e+Math.sin(pt.ph+fc*0.018*pt.sp)*mess*16;
+      ctx.moveTo(x+1.3,y); ctx.arc(x,y,1.3,0,6.283);
+    }
+    ctx.fill();
+    var fa=Math.max(0,Math.min(1,(p-0.55)/0.45));
+    for(var i=0;i<flow.length;i++){ var fp=flow[i]; fp.t+=fp.sp*fp.dir; if(fp.t>1)fp.t-=1; if(fp.t<0)fp.t+=1;
+      if(fa<=0) continue;
+      var a=fp.s[0],b=fp.s[1],fx=a[0]+(b[0]-a[0])*fp.t,fy=a[1]+(b[1]-a[1])*fp.t;
+      var g=ctx.createRadialGradient(fx,fy,0,fx,fy,7); g.addColorStop(0,"rgba(168,202,251,"+(0.85*fa).toFixed(3)+")"); g.addColorStop(1,"rgba(168,202,251,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(fx,fy,7,0,6.283);ctx.fill();
+      ctx.fillStyle="rgba(235,243,255,"+(0.95*fa).toFixed(3)+")"; ctx.beginPath();ctx.arc(fx,fy,1.8,0,6.283);ctx.fill();
+    }
+    raf=requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize",function(){ if(sized){ size(); } });
+  draw();
+})();
+</script>
+
+<!-- ===== why: success follows decisions, not income (animated scatter, canvas) ===== -->
+<script>
+(function(){
+  var cv=document.querySelector("canvas.scatterfx"); if(!cv) return;
+  var ctx,W,H,dpr,sized=false,raf=0,p=0,fc=0;
+  var x0=1100,x1=1810,y0=320,y1=852;
+  function PX(fx){ return x0+fx*(x1-x0); }
+  function PY(fy){ return y1-fy*(y1-y0); }
+  var rng=(function(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};})(11);
+  var dots=[]; for(var i=0;i<20;i++){ var fx=0.08+rng()*0.86; var fy=Math.max(0.05,Math.min(0.97, fx+(rng()-0.5)*0.5)); dots.push({fx:fx,fy:fy,d:rng()*0.4}); }
+  var hi=[{fx:0.40,fy:0.86,n:"Estonia"},{fx:0.52,fy:0.81,n:"Thailand"},{fx:0.45,fy:0.74,n:"Mauritius"}];
+  function size(){ dpr=Math.min(window.devicePixelRatio||1,1.8); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
+  function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+  function ease(t){ return 1-Math.pow(1-t,3); }
+  function draw(){
+    if(!active()){ p=0; raf=requestAnimationFrame(draw); return; }
+    if(!sized) size();
+    fc++; p=Math.min(1,p+0.016); var e=ease(p);
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle="rgba(43,45,42,0.28)"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x0,y1); ctx.lineTo(x1,y1); ctx.stroke();
+    ctx.strokeStyle="rgba(43,45,42,0.3)"; ctx.setLineDash([6,8]); ctx.beginPath(); ctx.moveTo(PX(0),PY(0)); ctx.lineTo(PX(0.96),PY(0.96)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle="rgba(91,95,90,0.85)"; ctx.font="600 16px 'Instrument Sans',sans-serif"; ctx.textAlign="end"; ctx.textBaseline="alphabetic"; ctx.fillText("income →", x1, y1+34);
+    ctx.save(); ctx.translate(x0-26, y0+20); ctx.rotate(-Math.PI/2); ctx.textAlign="end"; ctx.fillText("postal performance →", 0,0); ctx.restore();
+    ctx.save(); ctx.translate(PX(0.68),PY(0.68)); ctx.rotate(Math.atan2(PY(0.96)-PY(0),PX(0.96)-PX(0))); ctx.fillStyle="rgba(91,95,90,0.6)"; ctx.font="500 14px 'Instrument Sans',sans-serif"; ctx.textAlign="center"; ctx.fillText("if outcomes followed income", 0,-12); ctx.restore();
+    dots.forEach(function(dd){ var tgt=PY(dd.fy), cy=y1+(tgt-y1)*Math.min(1,e/(1-dd.d)||e); ctx.fillStyle="rgba(43,45,42,"+(0.3*e)+")"; ctx.beginPath(); ctx.arc(PX(dd.fx), y1+(tgt-y1)*e, 6,0,6.28); ctx.fill(); });
+    hi.forEach(function(h,idx){ var tgt=PY(h.fy), px=PX(h.fx), py=y1+(tgt-y1)*e, pulse=1+0.12*Math.sin(fc*0.06+idx*1.6);
+      ctx.fillStyle="rgba(54,115,199,"+(0.18*e)+")"; ctx.beginPath(); ctx.arc(px,py,18*pulse,0,6.28); ctx.fill();
+      ctx.fillStyle="rgba(54,115,199,"+(0.97*e)+")"; ctx.beginPath(); ctx.arc(px,py,8.5,0,6.28); ctx.fill();
+      if(e>0.55){ var la=(e-0.55)/0.45; ctx.fillStyle="rgba(43,45,42,"+la+")"; ctx.font="600 19px 'Instrument Sans',sans-serif"; ctx.textAlign="start"; ctx.textBaseline="middle"; ctx.fillText(h.n, px+16, py); } });
+    raf=requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize",function(){ if(sized){ size(); } });
+  draw();
+})();
+</script>
+
+<!-- ===== the UDP: Unified Data Platform — all postal data unified, UPU as steward (canvas) ===== -->
+<script>
+(function(){
+  var cv=document.querySelector("canvas.udpfx"); if(!cv) return;
+  var ctx,W,H,dpr,sized=false,raf=0;
+  var rng=(function(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};})(2026);
+  var CX=960,CY=604;
+  var cats=["Mail & parcels","Revenue & finance","Network & workforce","Quality of service","Cross-border & customs","Development index","E-commerce & trade","Inclusion & sustainability"];
+  var hub={x:CX,y:CY};
+  var catHubs=[],dbs=[],edges=[];
+  for(var i=0;i<8;i++){ var a=-Math.PI/2+i*(Math.PI/4); var ch={x:CX+Math.cos(a)*238,y:CY+Math.sin(a)*238*0.9,a:a,name:cats[i]}; catHubs.push(ch); edges.push([ch,hub]);
+    var n=6+(rng()*3|0); for(var j=0;j<n;j++){ var aa=a+(rng()-0.5)*0.92,rr=68+rng()*56; dbs.push({x:ch.x+Math.cos(aa)*rr,y:ch.y+Math.sin(aa)*rr*0.9,ch:ch}); } }
+  dbs.forEach(function(d){ edges.push([d,d.ch]); });
+  var parts=[];
+  catHubs.forEach(function(ch){ for(var k=0;k<3;k++) parts.push({e:[ch,hub],t:rng(),sp:0.0038+rng()*0.0026}); });
+  dbs.forEach(function(d){ if(rng()<0.5) parts.push({e:[d,d.ch],t:rng(),sp:0.005+rng()*0.004}); });
+  function hexp(cx,cy,r){ ctx.beginPath(); for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.closePath(); }
+  function size(){ dpr=Math.min(window.devicePixelRatio||1,1.7); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
+  function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+  function draw(){
+    if(!active()){ raf=requestAnimationFrame(draw); return; }
+    if(!sized) size();
+    ctx.clearRect(0,0,W,H);
+    ctx.lineWidth=1;
+    edges.forEach(function(e){ ctx.strokeStyle= e[1]===hub?"rgba(168,202,251,0.18)":"rgba(168,202,251,0.10)"; ctx.beginPath(); ctx.moveTo(e[0].x,e[0].y); ctx.lineTo(e[1].x,e[1].y); ctx.stroke(); });
+    parts.forEach(function(p){ p.t+=p.sp; if(p.t>1)p.t-=1; var a=p.e[0],b=p.e[1]; var x=a.x+(b.x-a.x)*p.t,y=a.y+(b.y-a.y)*p.t; var g=ctx.createRadialGradient(x,y,0,x,y,5); g.addColorStop(0,"rgba(168,202,251,0.85)"); g.addColorStop(1,"rgba(168,202,251,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,5,0,6.28);ctx.fill(); ctx.fillStyle="rgba(235,243,255,0.92)"; ctx.beginPath();ctx.arc(x,y,1.4,0,6.28);ctx.fill(); });
+    // db nodes (tiny squares = databases)
+    ctx.lineWidth=1.2; dbs.forEach(function(d){ ctx.strokeStyle="rgba(168,202,251,0.5)"; ctx.fillStyle="rgba(40,42,39,0.95)"; ctx.fillRect(d.x-3.4,d.y-3.4,6.8,6.8); ctx.strokeRect(d.x-3.4,d.y-3.4,6.8,6.8); });
+    // category hubs
+    ctx.lineWidth=2; catHubs.forEach(function(ch){ ctx.strokeStyle="rgba(168,202,251,0.85)"; hexp(ch.x,ch.y,14); ctx.fillStyle="rgba(40,42,39,0.96)"; ctx.fill(); ctx.stroke(); ctx.fillStyle="rgba(168,202,251,0.85)"; ctx.beginPath();ctx.arc(ch.x,ch.y,3,0,6.28);ctx.fill(); });
+    // UDP hub
+    var hg=ctx.createRadialGradient(CX,CY,0,CX,CY,60); hg.addColorStop(0,"rgba(168,202,251,0.20)"); hg.addColorStop(1,"rgba(168,202,251,0)"); ctx.fillStyle=hg; ctx.beginPath();ctx.arc(CX,CY,60,0,6.28);ctx.fill();
+    ctx.lineWidth=2.8; ctx.strokeStyle="rgba(168,202,251,1)"; hexp(CX,CY,44); ctx.fillStyle="rgba(40,42,39,0.97)"; ctx.fill(); ctx.stroke();
+    ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillStyle="#a8cafb"; ctx.font="700 24px 'Instrument Sans',sans-serif"; ctx.fillText("UDP", CX, CY-4);
+    ctx.font="500 12px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(214,222,236,0.7)"; ctx.fillText("UPU steward", CX, CY+16);
+    // category labels (outward)
+    catHubs.forEach(function(ch){ var c2=Math.cos(ch.a),s2=Math.sin(ch.a); var lx=CX+c2*340, ly=CY+s2*330; ctx.textAlign=c2<-0.3?"end":(c2>0.3?"start":"center"); ctx.textBaseline=s2>0.4?"top":(s2<-0.4?"alphabetic":"middle"); ctx.font="600 18px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(244,243,240,0.9)"; ctx.fillText(ch.name, lx, ly); });
+    raf=requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize",function(){ if(sized){ size(); } });
+  draw();
+})();
+</script>
+
+<!-- ===== the HA framework: 6 dimensions × time, all interconnected, pulses flowing forward in time (canvas) ===== -->
+<script>
+(function(){
+  var cv=document.querySelector("canvas.gridfx"); if(!cv) return;
+  var ctx,W,H,dpr,sized=false,raf=0,fc=0;
+  var cols=7, rows=6, gx0=470, gx1=1600, gy0=424, gy1=908;
+  var dims=["LEGACY","COMMUNITY","LEARNING","TECHNOLOGY","CONTEXT","PROJECTS"];
+  var years=["2026","2034","2042","2050","2058","2067","2076"];
+  function cx(c){ return gx0+(gx1-gx0)*c/(cols-1); }
+  function cy(r){ return gy0+(gy1-gy0)*r/(rows-1); }
+  var edges=[];
+  for(var c=0;c<cols-1;c++){ for(var r1=0;r1<rows;r1++){ for(var r2=0;r2<rows;r2++){ edges.push([c,r1,c+1,r2]); } } }
+  for(var c=0;c<cols;c++){ for(var r=0;r<rows-1;r++){ edges.push([c,r,c,r+1]); } }
+  var pulses=[];
+  for(var i=0;i<edges.length;i++){ var e=edges[i]; if(e[0]!==e[2] && Math.random()<0.4){ pulses.push({e:e,t:Math.random(),sp:0.006+Math.random()*0.006,human:Math.random()<0.5,back:Math.random()<0.5,flip:210+Math.random()*230}); } }
+  function size(){ dpr=Math.min(window.devicePixelRatio||1,1.7); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
+  function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+  function draw(){
+    if(!active()){ raf=requestAnimationFrame(draw); return; }
+    if(!sized) size();
+    fc++;
+    ctx.clearRect(0,0,W,H);
+    ctx.lineWidth=1;
+    for(var i=0;i<edges.length;i++){ var e=edges[i]; ctx.strokeStyle=e[0]===e[2]?"rgba(168,202,251,0.20)":"rgba(120,150,225,0.17)"; ctx.beginPath(); ctx.moveTo(cx(e[0]),cy(e[1])); ctx.lineTo(cx(e[2]),cy(e[3])); ctx.stroke(); }
+    for(var i=0;i<pulses.length;i++){ var p=pulses[i]; var pd=(p.back&&fc>p.flip)?-1:1; p.t+=p.sp*pd; if(p.t>1)p.t-=1; if(p.t<0)p.t+=1; var e=p.e; var x=cx(e[0])+(cx(e[2])-cx(e[0]))*p.t, y=cy(e[1])+(cy(e[3])-cy(e[1]))*p.t;
+      var col=p.human?"240,232,214":"168,202,251";
+      var g=ctx.createRadialGradient(x,y,0,x,y,6); g.addColorStop(0,"rgba("+col+",0.85)"); g.addColorStop(1,"rgba("+col+",0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,6,0,6.28);ctx.fill();
+      ctx.fillStyle="rgba("+col+",0.98)";
+      if(p.human){ ctx.fillRect(x-2.6,y-2.6,5.2,5.2); }
+      else { ctx.beginPath(); ctx.moveTo(x,y-3.6); ctx.lineTo(x+3.2,y+2.7); ctx.lineTo(x-3.2,y+2.7); ctx.closePath(); ctx.fill(); }
+    }
+    for(var c=0;c<cols;c++){ for(var r=0;r<rows;r++){ var x=cx(c),y=cy(r); ctx.fillStyle="rgba(40,42,39,1)"; ctx.fillRect(x-4,y-4,8,8); ctx.strokeStyle="rgba(168,202,251,0.85)"; ctx.lineWidth=1.4; ctx.strokeRect(x-4,y-4,8,8); } }
+    ctx.textBaseline="middle";
+    for(var r=0;r<rows;r++){ ctx.textAlign="end"; ctx.font="600 18px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(244,243,240,0.92)"; ctx.fillText(dims[r], gx0-58, cy(r)); ctx.textAlign="start"; ctx.font="500 14px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(168,202,251,0.7)"; ctx.fillText("0"+(r+1), gx0-44, cy(r)); }
+    ctx.textAlign="start"; ctx.textBaseline="alphabetic"; ctx.fillStyle="rgba(214,211,203,0.6)"; ctx.font="600 16px 'Instrument Sans',sans-serif"; ctx.fillText(fc>440?"TIME ↔":"TIME →", gx1-92, gy0-44);
+    if(fc>440){ ctx.fillStyle="rgba(214,211,203,0.42)"; ctx.font="500 13px 'Instrument Sans',sans-serif"; ctx.fillText("the past informs the future", gx1-220, gy0-22); }
+    var renY=cy(3.6);
+    ctx.strokeStyle="rgba(168,202,251,0.22)"; ctx.lineWidth=1;
+    for(var r=0;r<rows;r++){ ctx.beginPath(); ctx.moveTo(cx(cols-1),cy(r)); ctx.lineTo(1678,renY); ctx.stroke(); }
+    ctx.fillStyle="#a8cafb"; ctx.beginPath(); ctx.arc(1678,renY,5,0,6.283); ctx.fill();
+    ctx.textAlign="end"; ctx.textBaseline="middle";
+    ctx.font="600 13px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(214,211,203,0.5)"; ctx.fillText("THE UPU'S THREE SCENARIOS", 1898, cy(0.45));
+    ctx.font="500 18px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(214,211,203,0.4)"; ctx.fillText("Regression", 1898, cy(1.6)); ctx.fillText("Resilience", 1898, cy(2.6));
+    ctx.font="700 23px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(168,202,251,0.98)"; ctx.fillText("Renaissance", 1898, renY);
+    ctx.font="500 13px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(214,211,203,0.42)"; ctx.fillText("UPU, 2026", 1898, renY+25);
+    ctx.fillStyle="rgba(214,211,203,0.5)"; ctx.font="600 14px 'Instrument Sans',sans-serif"; ctx.fillText("DIMENSIONS", gx0-58, gy0-44);
+    ctx.save(); ctx.translate(150, (gy0+gy1)/2); ctx.rotate(-Math.PI/2); ctx.textAlign="center"; ctx.fillStyle="rgba(214,211,203,0.5)"; ctx.font="600 15px 'Instrument Sans',sans-serif"; ctx.fillText("SIMULTANEOUS COMPLEXITY", 0,0); ctx.restore();
+    var ly2=gy1+50; ctx.textBaseline="middle"; ctx.textAlign="start"; ctx.font="500 18px 'Instrument Sans',sans-serif";
+    ctx.fillStyle="rgba(240,232,214,0.98)"; ctx.fillRect(812,ly2-6,12,12); ctx.fillStyle="rgba(214,211,203,0.78)"; ctx.fillText("people", 834, ly2);
+    ctx.fillStyle="rgba(168,202,251,0.98)"; ctx.beginPath(); ctx.moveTo(975,ly2-7); ctx.lineTo(982,ly2+5); ctx.lineTo(968,ly2+5); ctx.closePath(); ctx.fill(); ctx.fillStyle="rgba(214,211,203,0.78)"; ctx.fillText("AI agents", 994, ly2);
+    raf=requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize",function(){ if(sized){ size(); } });
+  draw();
+})();
+</script>
+
+<!-- ===== generative ontology: the fixed taxonomy spawns specialized subagents (canvas) ===== -->
+<script>
+(function(){
+  var cv=document.querySelector("canvas.gaofx"); if(!cv) return;
+  var ctx,W,H,dpr,sized=false,raf=0,fc=0;
+  var rng=(function(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};})(77);
+  var CX=1238,CY=566,RH=166;
+  var dims=["LEGACY","COMMUNITY","LEARNING","TECHNOLOGY","CONTEXT","PROJECTS"];
+  var examples=["compliance","stakeholder","training","ops","forecast","routing"];
+  var verts=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; verts.push({x:CX+Math.cos(a)*RH,y:CY+Math.sin(a)*RH,a:a,name:dims[i]}); }
+  var human={x:CX,y:CY-RH-178};
+  function spawn(i,k){ var v=verts[i]; return {vi:i,ang:v.a+(k-1)*0.42+(rng()-0.5)*0.1,rr:106+rng()*50,life:rng(),speed:0.0015+rng()*0.0013,labeled:(k===1)}; }
+  var agents=[]; for(var i=0;i<6;i++){ for(var k=0;k<3;k++){ agents.push(spawn(i,k)); } }
+  function apos(ag){ var v=verts[ag.vi]; return {x:v.x+Math.cos(ag.ang)*ag.rr,y:v.y+Math.sin(ag.ang)*ag.rr}; }
+  function tri(x,y,s){ ctx.beginPath(); ctx.moveTo(x,y-s); ctx.lineTo(x+s*0.9,y+s*0.72); ctx.lineTo(x-s*0.9,y+s*0.72); ctx.closePath(); }
+  function hexp(cx,cy,r){ ctx.beginPath(); for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.closePath(); }
+  function sstep(t){ return t<=0?0:t>=1?1:t*t*(3-2*t); }
+  function size(){ dpr=Math.min(window.devicePixelRatio||1,1.7); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
+  function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+  function draw(){
+    if(!active()){ raf=requestAnimationFrame(draw); return; }
+    if(!sized) size();
+    fc++;
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle="rgba(240,232,214,0.28)"; ctx.lineWidth=1.4; ctx.setLineDash([3,7]); ctx.beginPath(); ctx.moveTo(human.x,human.y+15); ctx.lineTo(CX,CY); ctx.stroke(); ctx.setLineDash([]);
+    ctx.lineWidth=1.6; ctx.strokeStyle="rgba(168,202,251,0.45)"; hexp(CX,CY,RH); ctx.stroke();
+    for(var i=0;i<agents.length;i++){ var ag=agents[i]; ag.life+=ag.speed; if(ag.life>=1){ agents[i]=spawn(ag.vi,i%3); continue; }
+      var sc=sstep(ag.life/0.16)*(1-sstep((ag.life-0.82)/0.18)); if(sc<=0.01) continue;
+      var v=verts[ag.vi],P=apos(ag);
+      ctx.strokeStyle="rgba(168,202,251,"+(0.22*sc)+")"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(v.x,v.y); ctx.lineTo(P.x,P.y); ctx.stroke();
+      var s=9*sc, g=ctx.createRadialGradient(P.x,P.y,0,P.x,P.y,s*2.4); g.addColorStop(0,"rgba(168,202,251,"+(0.5*sc)+")"); g.addColorStop(1,"rgba(168,202,251,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(P.x,P.y,s*2.4,0,6.28);ctx.fill();
+      ctx.fillStyle="rgba(150,190,250,"+(0.96*sc)+")"; tri(P.x,P.y,s); ctx.fill();
+      if(ag.labeled&&sc>0.62){ var la=(sc-0.62)/0.38*0.82, c=Math.cos(v.a); ctx.fillStyle="rgba(214,222,236,"+la+")"; ctx.font="500 14px 'Instrument Sans',sans-serif"; ctx.textAlign=c<-0.3?"end":(c>0.3?"start":"center"); ctx.textBaseline="middle"; ctx.fillText(examples[ag.vi], P.x+c*15, P.y+Math.sin(v.a)*15); }
+    }
+    for(var i=0;i<6;i++){ var v=verts[i]; ctx.lineWidth=2; ctx.strokeStyle="rgba(168,202,251,0.9)"; hexp(v.x,v.y,13); ctx.fillStyle="rgba(40,42,39,0.96)"; ctx.fill(); ctx.stroke(); ctx.fillStyle="rgba(168,202,251,0.9)"; ctx.beginPath();ctx.arc(v.x,v.y,3,0,6.28);ctx.fill();
+      var c=Math.cos(v.a),s2=Math.sin(v.a),lx=v.x-c*28,ly=v.y-s2*28; ctx.textAlign=c>0.3?"end":(c<-0.3?"start":"center"); ctx.textBaseline=s2<-0.4?"alphabetic":(s2>0.4?"top":"middle"); ctx.font="600 14px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(244,243,240,0.9)"; ctx.fillText(v.name,lx,ly); }
+    ctx.lineWidth=2.4; ctx.strokeStyle="rgba(168,202,251,0.98)"; hexp(CX,CY,29); ctx.fillStyle="rgba(40,42,39,0.97)"; ctx.fill(); ctx.stroke(); ctx.fillStyle="#a8cafb"; ctx.beginPath();ctx.arc(CX,CY,4.5,0,6.28);ctx.fill();
+    var hg=ctx.createRadialGradient(human.x,human.y,0,human.x,human.y,17); hg.addColorStop(0,"rgba(240,232,214,0.5)"); hg.addColorStop(1,"rgba(240,232,214,0)"); ctx.fillStyle=hg; ctx.beginPath();ctx.arc(human.x,human.y,17,0,6.28);ctx.fill(); ctx.fillStyle="rgba(240,232,214,0.96)"; ctx.beginPath();ctx.arc(human.x,human.y,6,0,6.28);ctx.fill();
+    ctx.textAlign="center"; ctx.textBaseline="alphabetic"; ctx.font="600 15px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(240,232,214,0.82)"; ctx.fillText("human oversight", human.x, human.y-18);
+    var ly2=CY+RH+188; ctx.textBaseline="middle"; ctx.textAlign="start"; ctx.font="500 16px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(168,202,251,0.98)"; tri(CX-176,ly2,7); ctx.fill(); ctx.fillStyle="rgba(214,211,203,0.7)"; ctx.fillText("specialized agents, spawned per dimension", CX-158, ly2);
+    raf=requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize",function(){ if(sized){ size(); } });
+  draw();
+})();
+</script>
+
+<!-- ===== crescendo: murmuration of people + AI agents converging on the shared goal (canvas) ===== -->
+<script>
+(function(){
+  var cv=document.querySelector("canvas.murmurfx"); if(!cv) return;
+  var ctx,W,H,dpr,sized=false,raf=0,fc=0;
+  var GX=960,GY=724,RA=244;
+  var anchors=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; anchors.push([GX+Math.cos(a)*RA,GY+Math.sin(a)*RA]); }
+  var N=200,P=[];
+  function pick(p){ if(Math.random()<0.45){ p.tx=GX; p.ty=GY; } else { var an=anchors[(Math.random()*6)|0]; p.tx=an[0]; p.ty=an[1]; } }
+  for(var i=0;i<N;i++){ var a=Math.random()*6.283,r=40+Math.random()*228; var p={x:GX+Math.cos(a)*r,y:GY+Math.sin(a)*r,vx:0,vy:0,human:(i%2===0),ph:Math.random()*6.283,sp:0.6+Math.random()*0.9}; pick(p); P.push(p); }
+  function size(){ dpr=Math.min(window.devicePixelRatio||1,1.7); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#2b2d2a"; ctx.fillRect(0,0,W,H); sized=true; }
+  function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+  function draw(){
+    if(!active()){ raf=requestAnimationFrame(draw); return; }
+    if(!sized) size();
+    fc++;
+    ctx.fillStyle="rgba(43,45,42,0.15)"; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle="rgba(168,202,251,0.10)"; ctx.lineWidth=1.4; ctx.beginPath(); for(var i=0;i<6;i++){ var pp=anchors[i]; i?ctx.lineTo(pp[0],pp[1]):ctx.moveTo(pp[0],pp[1]); } ctx.closePath(); ctx.stroke();
+    var g=ctx.createRadialGradient(GX,GY,0,GX,GY,52); g.addColorStop(0,"rgba(168,202,251,0.22)"); g.addColorStop(1,"rgba(168,202,251,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(GX,GY,52,0,6.283);ctx.fill();
+    ctx.fillStyle="#a8cafb"; ctx.beginPath();ctx.arc(GX,GY,7,0,6.283);ctx.fill();
+    for(var i=0;i<N;i++){ var p=P[i];
+      var dx=p.tx-p.x,dy=p.ty-p.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+      var ax=(dx/d)*1.7, ay=(dy/d)*1.7, px=-dy/d, py=dx/d, w=Math.sin(fc*0.03*p.sp+p.ph)*0.8;
+      p.vx+=(ax-p.vx)*0.05+px*w*0.07; p.vy+=(ay-p.vy)*0.05+py*w*0.07;
+      p.x+=p.vx; p.y+=p.vy;
+      if(d<26) pick(p);
+      if(p.human){ ctx.fillStyle="rgba(240,232,214,0.92)"; ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,6.283);ctx.fill(); }
+      else { ctx.fillStyle="rgba(150,190,250,0.95)"; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(0.785); ctx.fillRect(-2.1,-2.1,4.2,4.2); ctx.restore(); }
+    }
+    raf=requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize",function(){ if(sized){ size(); } });
+  draw();
+})();
+</script>
+
+<!-- ===== the same structure at every scale: nested fractal with live flow (canvas) ===== -->
+<script>
+(function(){
+  var cv=document.querySelector("canvas.fractalfx"); if(!cv) return;
+  var ctx,W,H,dpr,sized=false,raf=0,fc=0;
+  var CX=1200,CY=545;
+  var rings=[{r:290,nm:"THE UNION",sub:"sees the whole map",ph:0,sp:0.9,a:0.85},
+             {r:198,nm:"REGION",sub:"",ph:0.7,sp:1.1,a:0.72},
+             {r:116,nm:"COUNTRY",sub:"",ph:1.3,sp:1.3,a:0.6},
+             {r:50,nm:"OPERATOR",sub:"same six dimensions",ph:1.9,sp:1.6,a:0.95}];
+  function vtx(r,i){ var a=-Math.PI/2+i*Math.PI/3; return [CX+Math.cos(a)*r,CY+Math.sin(a)*r]; }
+  var ringP=[]; rings.forEach(function(rg,ri){ var n=[12,9,7,6][ri]; for(var k=0;k<n;k++){ ringP.push({ri:ri,u:(k/n)*6,sp:0.0055+ri*0.0012,dir:ri%2?-1:1}); } });
+  var radP=[]; for(var i=0;i<6;i++){ for(var k=0;k<2;k++){ radP.push({vi:i,t:(i*0.13+k*0.5)%1,sp:0.0045+0.0008*i,dir:k?-1:1}); } }
+  function glow(x,y,al){ var g=ctx.createRadialGradient(x,y,0,x,y,6.5); g.addColorStop(0,"rgba(168,202,251,"+(0.9*al)+")"); g.addColorStop(1,"rgba(168,202,251,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,6.5,0,6.283);ctx.fill(); ctx.fillStyle="rgba(235,243,255,"+(0.95*al)+")"; ctx.beginPath();ctx.arc(x,y,1.7,0,6.283);ctx.fill(); }
+  function size(){ dpr=Math.min(window.devicePixelRatio||1,1.8); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
+  function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+  function draw(){
+    if(!active()){ raf=requestAnimationFrame(draw); return; }
+    if(!sized) size();
+    fc++;
+    ctx.clearRect(0,0,W,H);
+    rings.forEach(function(rg){ rg._br=rg.r*(1+0.014*Math.sin(fc*0.02*rg.sp+rg.ph)); });
+    ctx.strokeStyle="rgba(168,202,251,0.16)"; ctx.lineWidth=1.2;
+    for(var i=0;i<6;i++){ var v=vtx(rings[0]._br,i); ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(v[0],v[1]); ctx.stroke(); }
+    rings.forEach(function(rg){ ctx.strokeStyle="rgba(168,202,251,"+rg.a+")"; ctx.lineWidth=rg.r>250?2.4:2; ctx.beginPath(); for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3,x=CX+Math.cos(a)*rg._br,y=CY+Math.sin(a)*rg._br; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.closePath(); ctx.stroke(); });
+    ringP.forEach(function(p){ p.u+=p.sp*p.dir; if(p.u>=6)p.u-=6; if(p.u<0)p.u+=6; var rg=rings[p.ri]; var seg=Math.floor(p.u),tt=p.u-seg; var a=vtx(rg._br,seg),b=vtx(rg._br,(seg+1)%6); glow(a[0]+(b[0]-a[0])*tt,a[1]+(b[1]-a[1])*tt,0.9); });
+    radP.forEach(function(p){ p.t+=p.sp*p.dir; if(p.t>1)p.t-=1; if(p.t<0)p.t+=1; var v=vtx(rings[0]._br,p.vi); glow(CX+(v[0]-CX)*p.t,CY+(v[1]-CY)*p.t,0.8); });
+    var cg=ctx.createRadialGradient(CX,CY,0,CX,CY,42); cg.addColorStop(0,"rgba(168,202,251,0.22)"); cg.addColorStop(1,"rgba(168,202,251,0)"); ctx.fillStyle=cg; ctx.beginPath();ctx.arc(CX,CY,42,0,6.283);ctx.fill();
+    ctx.fillStyle="#a8cafb"; ctx.beginPath();ctx.arc(CX,CY,9,0,6.283);ctx.fill();
+    ctx.textAlign="start"; ctx.textBaseline="middle";
+    var ly=[360,452,540,628];
+    rings.forEach(function(rg,ri){ var v=vtx(rg.r,1); ctx.strokeStyle="rgba(214,211,203,0.3)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(v[0],v[1]); ctx.lineTo(1545,ly[ri]); ctx.stroke();
+      ctx.font="600 "+(ri===0?24:22)+"px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(244,243,240,0.95)"; ctx.fillText(rg.nm,1558,ly[ri]);
+      if(rg.sub){ ctx.font="400 17px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(214,211,203,0.55)"; ctx.fillText(rg.sub,1558,ly[ri]+24); }
+    });
+    raf=requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize",function(){ if(sized){ size(); } });
+  draw();
+})();
+</script>
+
+<!-- ===== the full picture: all 192 members (dense canvas) ===== -->
+<script>
+(function(){
+  var cv=document.querySelector("canvas.netfull"); if(!cv) return;
+  var ctx,W,H,dpr,sized=false,raf=0;
+  var rng=(function(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};})(20260703);
+  var CX=960,CY=640,R1=152;
+  var counts=[56,34,30,33,22,17];
+  var regNames=["Africa","Asia–Pacific","Europe & CIS","Latin America & Caribbean","Arab countries","Industrialized"];
+  var upu={x:CX,y:CY};
+  var regions=[],countries=[],operators=[],edges=[];
+  for(var i=0;i<6;i++){ var a=-Math.PI/2+i*(Math.PI/3); var rg={x:CX+Math.cos(a)*R1,y:CY+Math.sin(a)*R1,name:regNames[i],a:a}; regions.push(rg); edges.push([upu,rg]);
+    for(var j=0;j<counts[i];j++){ var aa=a+(rng()-0.5)*1.05; var rr=168+rng()*150; var c={x:CX+Math.cos(aa)*rr,y:CY+Math.sin(aa)*rr*0.82}; countries.push(c); edges.push([rg,c]);
+      var orr=rr+9+rng()*9, oa=aa+(rng()-0.5)*0.05; operators.push({x:CX+Math.cos(oa)*orr,y:CY+Math.sin(oa)*orr*0.82}); }
+  }
+  var regEdges=[]; for(var i=0;i<6;i++){ regEdges.push([regions[i],regions[(i+1)%6]]); }
+  var parts=[];
+  for(var i=0;i<6;i++){ for(var k=0;k<3;k++) parts.push({e:[upu,regions[i]],t:rng(),sp:0.003+rng()*0.003,dir:rng()<0.5?1:-1}); }
+  for(var i=0;i<6;i++){ for(var k=0;k<2;k++) parts.push({e:regEdges[i],t:rng(),sp:0.004+rng()*0.003,dir:rng()<0.5?1:-1}); }
+  for(var i=0;i<edges.length;i++){ if(edges[i][0]!==upu && rng()<0.05){ parts.push({e:edges[i],t:rng(),sp:0.004+rng()*0.004,dir:rng()<0.5?1:-1}); } }
+  function hexp(cx,cy,r){ ctx.beginPath(); for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.closePath(); }
+  function size(){ dpr=Math.min(window.devicePixelRatio||1,1.6); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
+  function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+  function draw(){
+    if(!active()){ raf=requestAnimationFrame(draw); return; }
+    if(!sized) size();
+    ctx.clearRect(0,0,W,H);
+    ctx.lineWidth=0.8; ctx.strokeStyle="rgba(168,202,251,0.07)";
+    edges.forEach(function(e){ ctx.beginPath(); ctx.moveTo(e[0].x,e[0].y); ctx.lineTo(e[1].x,e[1].y); ctx.stroke(); });
+    ctx.lineWidth=1.4; ctx.strokeStyle="rgba(168,202,251,0.24)"; regEdges.forEach(function(e){ ctx.beginPath(); ctx.moveTo(e[0].x,e[0].y); ctx.lineTo(e[1].x,e[1].y); ctx.stroke(); });
+    parts.forEach(function(p){ p.t+=p.sp*p.dir; if(p.t>1)p.t-=1; if(p.t<0)p.t+=1; var a=p.e[0],b=p.e[1]; var x=a.x+(b.x-a.x)*p.t,y=a.y+(b.y-a.y)*p.t; ctx.fillStyle="rgba(200,222,255,0.85)"; ctx.beginPath();ctx.arc(x,y,1.5,0,6.28);ctx.fill(); });
+    ctx.fillStyle="rgba(168,202,251,0.32)"; operators.forEach(function(o){ ctx.beginPath();ctx.arc(o.x,o.y,1.8,0,6.28);ctx.fill(); });
+    ctx.lineWidth=1; ctx.strokeStyle="rgba(168,202,251,0.5)"; countries.forEach(function(c){ hexp(c.x,c.y,4.2); ctx.fillStyle="rgba(40,42,39,0.9)"; ctx.fill(); ctx.stroke(); });
+    ctx.lineWidth=2; regions.forEach(function(r){ ctx.strokeStyle="rgba(168,202,251,0.9)"; hexp(r.x,r.y,15); ctx.fillStyle="rgba(40,42,39,0.96)"; ctx.fill(); ctx.stroke(); ctx.fillStyle="rgba(168,202,251,0.9)"; ctx.beginPath();ctx.arc(r.x,r.y,3,0,6.28);ctx.fill(); });
+    ctx.lineWidth=2.6; ctx.strokeStyle="rgba(168,202,251,1)"; hexp(upu.x,upu.y,31); ctx.fillStyle="rgba(40,42,39,0.96)"; ctx.fill(); ctx.stroke(); ctx.fillStyle="#a8cafb"; ctx.beginPath();ctx.arc(upu.x,upu.y,5,0,6.28);ctx.fill();
+    ctx.font="600 16px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(220,226,236,0.6)"; ctx.textAlign="center"; ctx.textBaseline="middle";
+    regions.forEach(function(r){ var lx=CX+Math.cos(r.a)*420, ly=CY+Math.sin(r.a)*306; ctx.fillText(r.name,lx,ly); });
+    raf=requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize",function(){ if(sized){ size(); } });
+  draw();
+})();
+</script>
+
+<!-- ===== HA in action: Caribbean demand→solution→reuse flow (canvas) ===== -->
+<script>
+(function(){
+  var cv=document.querySelector("canvas.haflow"); if(!cv) return;
+  var ctx,W,H,dpr,sized=false,raf=0;
+  var upu={x:1150,y:210,r:42,label:"THE UPU",ang:-Math.PI/2};
+  var region={x:1150,y:470,r:26,label:"Caribbean region",ang:Math.PI};
+  var c=[{x:1000,y:735,r:15,label:"Jamaica",ang:Math.PI/2},{x:1150,y:772,r:15,label:"Barbados",ang:Math.PI/2},{x:1300,y:735,r:15,label:"Trinidad & Tobago",ang:Math.PI/2}];
+  var other=[{x:1500,y:255,r:18,label:"Africa",ang:0},{x:1585,y:400,r:18,label:"Asia–Pacific",ang:0}];
+  var spine=[[c[0],region],[c[1],region],[c[2],region],[region,upu]];
+  var reuse=[[upu,other[0]],[upu,other[1]]];
+  var P=[];
+  spine.forEach(function(e){ for(var k=0;k<2;k++){ P.push({e:e,t:Math.random(),sp:0.0045+Math.random()*0.0028,dir:1,kind:"up"}); P.push({e:e,t:Math.random(),sp:0.0045+Math.random()*0.0028,dir:-1,kind:"down"}); } });
+  reuse.forEach(function(e){ for(var k=0;k<2;k++){ P.push({e:e,t:Math.random(),sp:0.004+Math.random()*0.003,dir:1,kind:"reuse"}); } });
+  function hex(cx,cy,r){ ctx.beginPath(); for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.closePath(); }
+  function size(){ dpr=Math.min(window.devicePixelRatio||1,1.8); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
+  function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
+  function lbl(n,fs){ var c2=Math.cos(n.ang),s2=Math.sin(n.ang); var lx=n.x+c2*(n.r+14),ly=n.y+s2*(n.r+14); ctx.textAlign=c2<-0.3?"end":(c2>0.3?"start":"center"); ctx.textBaseline=s2>0.4?"top":(s2<-0.4?"alphabetic":"middle"); ctx.font="600 "+fs+"px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(244,243,240,0.95)"; ctx.fillText(n.label,lx,ly); }
+  function draw(){
+    if(!active()){ raf=requestAnimationFrame(draw); return; }
+    if(!sized) size();
+    ctx.clearRect(0,0,W,H);
+    ctx.lineWidth=1.4;
+    spine.concat(reuse).forEach(function(e){ ctx.strokeStyle="rgba(168,202,251,0.16)"; ctx.beginPath(); ctx.moveTo(e[0].x,e[0].y); ctx.lineTo(e[1].x,e[1].y); ctx.stroke(); });
+    P.forEach(function(p){ p.t+=p.sp*p.dir; if(p.t>1)p.t-=1; if(p.t<0)p.t+=1; var a=p.e[0],b=p.e[1]; var x=a.x+(b.x-a.x)*p.t,y=a.y+(b.y-a.y)*p.t; var col=p.kind==="up"?"232,236,240":"168,202,251"; var g=ctx.createRadialGradient(x,y,0,x,y,6); g.addColorStop(0,"rgba("+col+",0.9)"); g.addColorStop(1,"rgba("+col+",0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,6,0,6.28);ctx.fill(); ctx.fillStyle="rgba(245,248,252,0.95)"; ctx.beginPath();ctx.arc(x,y,1.6,0,6.28);ctx.fill(); });
+    function dn(n,lw,strokeOp,fillCore){ ctx.lineWidth=lw; ctx.strokeStyle="rgba(168,202,251,"+strokeOp+")"; hex(n.x,n.y,n.r); ctx.fillStyle="rgba(40,42,39,0.96)"; ctx.fill(); ctx.stroke(); ctx.fillStyle=fillCore; ctx.beginPath();ctx.arc(n.x,n.y,n.r>30?5:n.r>20?3.5:2.5,0,6.28);ctx.fill(); }
+    other.forEach(function(o){ dn(o,1.7,0.6,"rgba(168,202,251,0.7)"); });
+    c.forEach(function(x){ dn(x,1.7,0.75,"rgba(232,236,240,0.85)"); });
+    dn(region,2,0.9,"rgba(168,202,251,0.85)");
+    dn(upu,2.6,1,"#a8cafb");
+    lbl(upu,23); lbl(region,20); c.forEach(function(x){ lbl(x,18); }); other.forEach(function(o){ lbl(o,18); });
+    ctx.textBaseline="middle";
+    ctx.font="600 17px 'Instrument Sans',sans-serif"; ctx.textAlign="end"; ctx.fillStyle="rgba(232,236,240,0.62)"; ctx.fillText("AI skills ↑", region.x-42, 605);
+    ctx.textAlign="start"; ctx.fillStyle="rgba(168,202,251,0.72)"; ctx.fillText("↓ training platform", region.x+42, 335);
+    ctx.fillStyle="rgba(168,202,251,0.6)"; ctx.fillText("reused by others", 1500, 478);
+    raf=requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize",function(){ if(sized){ size(); } });
+  draw();
+})();
+</script>
+
+<!-- ===== cover particle sphere (compact, respects reduced-motion) ===== -->
+<script>
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  Array.prototype.slice.call(document.querySelectorAll("canvas.fx")).forEach(function(cv){
+    var CX=+cv.dataset.cx||960, CY=+cv.dataset.cy||540, R=+cv.dataset.r||430, N=+cv.dataset.n||5000;
+    var ctx,W,H,dpr,pts=[];
+    for(var k=0;k<N;k++){ var t=(k+0.5)/N; var phi=Math.acos(1-2*t); var th=Math.PI*(1+Math.sqrt(5))*k;
+      pts.push([Math.sin(phi)*Math.cos(th),Math.sin(phi)*Math.sin(th),Math.cos(phi)]); }
+    function size(){ dpr=Math.min(window.devicePixelRatio||1,2); W=cv.clientWidth; H=cv.clientHeight;
+      cv.width=W*dpr; cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); }
+    var ang=0,raf=0;
+    function frame(){
+      ang+=0.0016; ctx.clearRect(0,0,W,H);
+      var ca=Math.cos(ang),sa=Math.sin(ang);
+      for(var k=0;k<pts.length;k++){
+        var p=pts[k], x=p[0]*ca-p[2]*sa, z=p[0]*sa+p[2]*ca, y=p[1];
+        var depth=(z+1)/2, sx=CX+x*R, sy=CY+y*R, r=0.5+depth*1.7, a=0.06+depth*0.45;
+        ctx.fillStyle="rgba(54,115,199,"+a.toFixed(3)+")";
+        ctx.beginPath(); ctx.arc(sx,sy,r,0,6.2832); ctx.fill();
+      }
+      raf=requestAnimationFrame(frame);
+    }
+    size(); window.addEventListener("resize",size);
+    if(reduce){ frame(); cancelAnimationFrame(raf); } else frame();
+  });
+})();
+</script>
+</body>
+</html>
