@@ -1237,6 +1237,10 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
     }
     for(var i=0;i<pos.length;i++){ if(!pos[i]) continue; var sc=pos[i].sc,ag=pos[i].ag,v=verts[ag.vi],P=pos[i].P;
       ctx.strokeStyle="rgba(168,202,251,"+(0.2*sc)+")"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(v.x,v.y); ctx.lineTo(P.x,P.y); ctx.stroke();
+      var t1=((fc*0.013+ag.ph)%1+1)%1, t2=((fc*0.011+ag.ph*1.7)%1+1)%1;
+      var fx1=v.x+(P.x-v.x)*t1, fy1=v.y+(P.y-v.y)*t1, fx2=P.x+(v.x-P.x)*t2, fy2=P.y+(v.y-P.y)*t2;
+      ctx.fillStyle="rgba(168,202,251,"+(0.85*sc)+")"; ctx.beginPath();ctx.arc(fx1,fy1,2,0,6.28);ctx.fill();
+      ctx.fillStyle="rgba(235,243,255,"+(0.8*sc)+")"; ctx.beginPath();ctx.arc(fx2,fy2,1.7,0,6.28);ctx.fill();
       var s=9*sc, g=ctx.createRadialGradient(P.x,P.y,0,P.x,P.y,s*2.4); g.addColorStop(0,"rgba(168,202,251,"+(0.5*sc)+")"); g.addColorStop(1,"rgba(168,202,251,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(P.x,P.y,s*2.4,0,6.28);ctx.fill();
       ctx.fillStyle="rgba(150,190,250,"+(0.96*sc)+")"; tri(P.x,P.y,s); ctx.fill();
       var lo=sstep((sc-0.5)/0.38); if(lo>0.02){ var ox=P.x-CX,oy=P.y-CY,om=Math.sqrt(ox*ox+oy*oy)||1, lx=P.x+ox/om*14, ly=P.y+oy/om*9; ctx.textAlign=ox<-12?"end":(ox>12?"start":"center"); ctx.textBaseline="middle";
@@ -1261,7 +1265,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
 (function(){
   var cv=document.querySelector("canvas.layerfx"); if(!cv) return;
   var ctx,W,H,dpr,sized=false,raf=0,fc=0;
-  var cx=948, r=112, L=[442,612,782];
+  var cx=948, r=106, L=[440,608,776];
   var off=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; off.push([Math.cos(a)*r, Math.sin(a)*r]); }
   var fills=["rgba(43,45,42,0.05)","rgba(150,158,168,0.11)","rgba(54,115,199,0.12)"];
   var strokes=["#2b2d2a","#7f868f","#3673c7"];
@@ -1274,23 +1278,33 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
     if(!sized) size();
     fc++;
     ctx.clearRect(0,0,W,H);
-    ctx.lineWidth=1.2; ctx.strokeStyle="rgba(43,45,42,0.15)";
+    ctx.lineWidth=1.2; ctx.strokeStyle="rgba(43,45,42,0.14)";
     for(var i=0;i<6;i++){ var x=cx+off[i][0]; ctx.beginPath(); ctx.moveTo(x,L[0]+off[i][1]); ctx.lineTo(x,L[2]+off[i][1]); ctx.stroke(); }
     for(var p=0;p<parts.length;p++){ var pt=parts[p]; pt.t+=pt.sp*pt.dir; if(pt.t>1)pt.t-=1; if(pt.t<0)pt.t+=1; var x=cx+off[pt.v][0], y=(L[0]+off[pt.v][1])+(L[2]-L[0])*pt.t;
-      var g=ctx.createRadialGradient(x,y,0,x,y,5); g.addColorStop(0,"rgba(54,115,199,0.65)"); g.addColorStop(1,"rgba(54,115,199,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,5,0,6.28);ctx.fill(); ctx.fillStyle="rgba(43,45,42,0.75)"; ctx.beginPath();ctx.arc(x,y,1.7,0,6.28);ctx.fill(); }
-    for(var li=2;li>=0;li--){ hexpath(L[li]); ctx.fillStyle=fills[li]; ctx.fill(); ctx.lineWidth=2.2; ctx.strokeStyle=strokes[li]; ctx.stroke(); }
-    var lx=1232, labels=[["UPU","mission & governance"],["UDP · UPU IT","the data"],["Agentic AI","specialised agents"]];
+      var g=ctx.createRadialGradient(x,y,0,x,y,6); g.addColorStop(0,"rgba(54,115,199,0.7)"); g.addColorStop(1,"rgba(54,115,199,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,6,0,6.28);ctx.fill(); ctx.fillStyle="rgba(43,45,42,0.8)"; ctx.beginPath();ctx.arc(x,y,1.8,0,6.28);ctx.fill(); }
+    for(var li=2;li>=0;li--){ hexpath(L[li]); ctx.fillStyle=fills[li]; ctx.fill(); ctx.lineWidth=2.2; ctx.strokeStyle=strokes[li]; ctx.stroke();
+      var glow=(li===2?"rgba(54,115,199,0.5)":li===1?"rgba(120,130,140,0.4)":"rgba(43,45,42,0.32)");
+      for(var i=0;i<6;i++){ var vx=cx+off[i][0], vy=L[li]+off[i][1]; var gg=ctx.createRadialGradient(vx,vy,0,vx,vy,9); gg.addColorStop(0,glow); gg.addColorStop(1,"rgba(0,0,0,0)"); ctx.fillStyle=gg; ctx.beginPath();ctx.arc(vx,vy,9,0,6.28);ctx.fill(); ctx.fillStyle=strokes[li]; ctx.beginPath();ctx.arc(vx,vy,2.6,0,6.28);ctx.fill(); }
+    }
+    ctx.fillStyle="rgba(43,45,42,0.6)"; ctx.font="600 17px 'Instrument Sans',sans-serif"; var u=off[1];
+    ctx.textAlign="center"; ctx.textBaseline="alphabetic"; ctx.fillText("Legacy", cx, L[0]-r-20);
+    ctx.textBaseline="middle"; ctx.textAlign="start"; ctx.fillText("Community", cx+u[0]+14, L[0]+u[1]-2);
+    ctx.textAlign="end"; ctx.fillText("Projects", cx-u[0]-14, L[0]+u[1]-2);
+    ctx.textAlign="start"; ctx.fillText("Learning", cx+u[0]+14, L[2]-u[1]+2);
+    ctx.textAlign="end"; ctx.fillText("Context", cx-u[0]-14, L[2]-u[1]+2);
+    ctx.textAlign="center"; ctx.textBaseline="top"; ctx.fillText("Technology", cx, L[2]+r+18);
+    var lx=1306, labels=[["UPU","mission & governance"],["UDP · UPU IT","the data"],["Agentic AI","specialised agents"]];
     ctx.textAlign="start";
     for(var li=0;li<3;li++){ var ly=L[li];
       if(li===0){ ctx.fillStyle="#2b2d2a"; ctx.beginPath();ctx.arc(lx+8,ly,8,0,6.28);ctx.fill(); }
       else if(li===1){ ctx.fillStyle="#7f868f"; ctx.fillRect(lx,ly-8,16,16); }
       else { ctx.fillStyle="#3673c7"; ctx.beginPath(); ctx.moveTo(lx+8,ly-9); ctx.lineTo(lx+17,ly+7); ctx.lineTo(lx-1,ly+7); ctx.closePath(); ctx.fill(); }
-      ctx.textBaseline="alphabetic"; ctx.font="700 28px 'Instrument Sans',sans-serif"; ctx.fillStyle="#2b2d2a"; ctx.fillText(labels[li][0], lx+36, ly-2);
-      ctx.font="500 18px 'Instrument Sans',sans-serif"; ctx.fillStyle="#8a8d86"; ctx.fillText(labels[li][1], lx+36, ly+22);
+      ctx.textBaseline="alphabetic"; ctx.font="700 27px 'Instrument Sans',sans-serif"; ctx.fillStyle="#2b2d2a"; ctx.fillText(labels[li][0], lx+34, ly-2);
+      ctx.font="500 17px 'Instrument Sans',sans-serif"; ctx.fillStyle="#8a8d86"; ctx.fillText(labels[li][1], lx+34, ly+21);
     }
-    var bx=1572, by1=L[1]-32, by2=L[2]+32; ctx.strokeStyle="rgba(54,115,199,0.55)"; ctx.lineWidth=2;
+    var bx=1636, by1=L[1]-30, by2=L[2]+30; ctx.strokeStyle="rgba(54,115,199,0.55)"; ctx.lineWidth=2;
     ctx.beginPath(); ctx.moveTo(bx-11,by1); ctx.lineTo(bx,by1); ctx.lineTo(bx,by2); ctx.lineTo(bx-11,by2); ctx.stroke();
-    ctx.save(); ctx.translate(bx+28,(by1+by2)/2); ctx.rotate(-Math.PI/2); ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.font="700 22px 'Instrument Sans',sans-serif"; ctx.fillStyle="#3673c7"; ctx.fillText("Agents as a Service",0,0); ctx.restore();
+    ctx.save(); ctx.translate(bx+26,(by1+by2)/2); ctx.rotate(-Math.PI/2); ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.font="700 21px 'Instrument Sans',sans-serif"; ctx.fillStyle="#3673c7"; ctx.fillText("Agents as a Service",0,0); ctx.restore();
     raf=requestAnimationFrame(draw);
   }
   window.addEventListener("resize",function(){ if(sized){ size(); } });
