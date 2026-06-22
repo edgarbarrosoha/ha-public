@@ -151,6 +151,20 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
 .govcard{border-top:2px solid rgba(54,115,199,.42);padding-top:18px}
 .govcard .gh{font-size:27px;font-weight:700;letter-spacing:-.012em;color:var(--blue);margin-bottom:9px}
 .govcard .gb{font-size:23px;line-height:1.3;font-weight:500;color:var(--ink-2)}
+/* three layers in one structure */
+.stack{margin-top:46px;max-width:1480px;border-radius:18px;overflow:hidden;border:1.6px solid rgba(43,45,42,.16)}
+.band{display:flex;align-items:center;gap:30px;padding:30px 38px}
+.band+.band{border-top:1.5px solid rgba(43,45,42,.12)}
+.band.intent{background:rgba(201,166,99,.15)}
+.band.data{background:rgba(150,158,168,.13)}
+.band.agent{background:rgba(54,115,199,.13)}
+.band .bmk{width:18px;height:18px;flex:none}
+.band.intent .bmk{background:#b98e3e;border-radius:50%}
+.band.data .bmk{background:#7f868f;border-radius:3px}
+.band.agent .bmk{width:0;height:0;background:none;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:17px solid var(--blue)}
+.band .bl{font-size:30px;font-weight:700;letter-spacing:-.012em;width:206px;flex:none}
+.band .bk{font-size:18px;color:var(--ink-3);width:104px;flex:none}
+.band .bd{font-size:25px;font-weight:500;color:var(--ink-2)}
 /* ===== durable core + thin adapters (evolving structure) ===== */
 .core-adapters{position:absolute;right:130px;top:50%;transform:translateY(-50%);width:540px;height:540px;z-index:1}
 .ca-core{fill:var(--surface-subtle);stroke:var(--blue);stroke-width:2.6}
@@ -543,6 +557,20 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
         <div style="font-size:38px;line-height:1.22;font-weight:500;font-style:italic;max-width:26ch;margin:24px auto 0">"Nobody knows everything, but everybody knows something."</div>
         <div class="src" style="font-size:25px;margin-top:14px">— Pierre Lévy, <em>Collective Intelligence</em> (1997)</div>
         <div class="sub" style="margin:34px auto 0;max-width:42ch">People remain the brains; AI extends their reach. The structure is what lets many partial views — human and machine — add up without a single mind holding it all.</div>
+      </div>
+    </section>
+
+    <!-- ============ 7b · THREE LAYERS IN ONE STRUCTURE (intention · data · agents) ============ -->
+    <section class="slide light">
+      <div class="wrap" style="max-width:none">
+        <div class="eyebrow">Intention · data · agents</div>
+        <h2 class="title" style="max-width:24ch">The structure holds more than data.</h2>
+        <div class="stack">
+          <div class="band intent"><span class="bmk"></span><div class="bl">Intention</div><div class="bk">human</div><div class="bd">The goals we set — human will and judgment.</div></div>
+          <div class="band data"><span class="bmk"></span><div class="bl">Data</div><div class="bk">information</div><div class="bd">What the whole network knows.</div></div>
+          <div class="band agent"><span class="bmk"></span><div class="bl">Agents</div><div class="bk">AI</div><div class="bd">Specialised agents, born in the same structure to act on it.</div></div>
+        </div>
+        <div class="note" style="margin-top:26px">The agents are made in the same structure — that is why we are no longer alone.</div>
       </div>
     </section>
 
