@@ -1265,12 +1265,12 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
 (function(){
   var cv=document.querySelector("canvas.layerfx"); if(!cv) return;
   var ctx,W,H,dpr,sized=false,raf=0,fc=0;
-  var cx=898, cy=548, RH=160, dx=92, dy=46;
+  var cx=866, cy=548, RH=166, dx=92, dy=44;
   var dn=["LEGACY","COMMUNITY","LEARNING","TECHNOLOGY","CONTEXT","PROJECTS"];
-  var layers=[{x:cx+dx,y:cy-dy,c:"#2b2d2a",f:"rgba(43,45,42,0.05)",nm:"UPU",sub:"mission & governance"},
-              {x:cx,   y:cy,   c:"#7f868f",f:"rgba(150,158,168,0.09)",nm:"UDP · UPU IT",sub:"the data"},
-              {x:cx-dx,y:cy+dy,c:"#3673c7",f:"rgba(54,115,199,0.12)",nm:"Agentic AI",sub:"specialised agents"}];
-  function vat(c){ var arr=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; arr.push([c.x+Math.cos(a)*RH, c.y+Math.sin(a)*RH]); } return arr; }
+  var layers=[{x:cx+dx,y:cy-dy,rh:RH*0.6,c:"#2b2d2a",f:"rgba(43,45,42,0.05)",nm:"UPU",sub:"mission & governance"},
+              {x:cx,   y:cy,   rh:RH*0.8,c:"#7f868f",f:"rgba(150,158,168,0.09)",nm:"UDP · UPU IT",sub:"the data"},
+              {x:cx-dx,y:cy+dy,rh:RH,    c:"#3673c7",f:"rgba(54,115,199,0.12)",nm:"Agentic AI",sub:"specialised agents"}];
+  function vat(c){ var arr=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; arr.push([c.x+Math.cos(a)*c.rh, c.y+Math.sin(a)*c.rh]); } return arr; }
   var V=[vat(layers[0]),vat(layers[1]),vat(layers[2])];
   var parts=[]; for(var i=0;i<6;i++){ for(var k=0;k<2;k++){ parts.push({i:i,t:Math.random(),sp:0.0038+Math.random()*0.0038,dir:Math.random()<0.5?1:-1}); } }
   function hexFrom(pts){ ctx.beginPath(); for(var i=0;i<6;i++){ i?ctx.lineTo(pts[i][0],pts[i][1]):ctx.moveTo(pts[i][0],pts[i][1]); } ctx.closePath(); }
@@ -1289,11 +1289,11 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
       for(var i=0;i<6;i++){ var vx=V[li][i][0], vy=V[li][i][1]; if(li===2){ var gg=ctx.createRadialGradient(vx,vy,0,vx,vy,14); gg.addColorStop(0,"rgba(54,115,199,0.4)"); gg.addColorStop(1,"rgba(0,0,0,0)"); ctx.globalAlpha=1; ctx.fillStyle=gg; ctx.beginPath();ctx.arc(vx,vy,14,0,6.28);ctx.fill(); ctx.globalAlpha=1; } hexAt(vx,vy,li===2?11:8); ctx.fillStyle="#f4f3f0"; ctx.fill(); ctx.lineWidth=li===2?2:1.5; ctx.strokeStyle=L2.c; ctx.stroke(); ctx.fillStyle=L2.c; ctx.beginPath();ctx.arc(vx,vy,li===2?2.8:2,0,6.28);ctx.fill(); }
       ctx.globalAlpha=1;
     }
-    ctx.font="600 18px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(43,45,42,0.72)"; var f=layers[2];
-    for(var i=0;i<6;i++){ var vx=V[2][i][0], vy=V[2][i][1];
+    ctx.font="600 18px 'Instrument Sans',sans-serif"; var rx=1070;
+    for(var i=0;i<6;i++){ var vx=V[2][i][0], vy=V[2][i][1]; ctx.fillStyle="rgba(43,45,42,0.72)";
       if(i===0){ ctx.textAlign="center"; ctx.textBaseline="alphabetic"; ctx.fillText(dn[i], vx, vy-24); }
       else if(i===3){ ctx.textAlign="center"; ctx.textBaseline="top"; ctx.fillText(dn[i], vx, vy+24); }
-      else if(vx>f.x){ ctx.textAlign="start"; ctx.textBaseline="middle"; ctx.fillText(dn[i], vx+22, vy); }
+      else if(i===1||i===2){ ctx.strokeStyle="rgba(43,45,42,0.26)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(vx+13,vy); ctx.lineTo(rx-9,vy); ctx.stroke(); ctx.textAlign="start"; ctx.textBaseline="middle"; ctx.fillText(dn[i], rx, vy); }
       else { ctx.textAlign="end"; ctx.textBaseline="middle"; ctx.fillText(dn[i], vx-22, vy); }
     }
     var lx=1320, ly3=[464,562,660], lab=[["UPU","mission & governance"],["UDP · UPU IT","the data"],["Agentic AI","specialised agents"]], lc=["#2b2d2a","#7f868f","#3673c7"];
