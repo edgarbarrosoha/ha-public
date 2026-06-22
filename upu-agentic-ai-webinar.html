@@ -565,12 +565,28 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
       <div class="wrap" style="max-width:none">
         <div class="eyebrow">Intention · data · agents</div>
         <h2 class="title" style="max-width:24ch">The structure holds more than data.</h2>
-        <div class="stack">
-          <div class="band intent"><span class="bmk"></span><div class="bl">Intention</div><div class="bk">human</div><div class="bd">The goals we set — human will and judgment.</div></div>
-          <div class="band data"><span class="bmk"></span><div class="bl">Data</div><div class="bk">information</div><div class="bd">What the whole network knows.</div></div>
-          <div class="band agent"><span class="bmk"></span><div class="bl">Agents</div><div class="bk">AI</div><div class="bd">Specialised agents, born in the same structure to act on it.</div></div>
+        <div class="diagram" style="margin-top:24px">
+          <svg viewBox="0 0 980 500" style="max-width:1040px" role="img" aria-label="The same six-dimension hexagon, layered: human intention and governance, data, and agentic AI; the six dimensions run through every layer">
+            <g stroke="rgba(43,45,42,0.20)" stroke-width="1.4">
+              <line x1="470" y1="120" x2="470" y2="380"/><line x1="390" y1="189" x2="390" y2="449"/><line x1="230" y1="189" x2="230" y2="449"/><line x1="150" y1="120" x2="150" y2="380"/><line x1="230" y1="51" x2="230" y2="311"/><line x1="390" y1="51" x2="390" y2="311"/>
+            </g>
+            <polygon points="470,380 390,449 230,449 150,380 230,311 390,311" fill="rgba(54,115,199,0.15)" stroke="#3673c7" stroke-width="2"/>
+            <polygon points="470,250 390,319 230,319 150,250 230,181 390,181" fill="rgba(150,158,168,0.16)" stroke="#7f868f" stroke-width="2"/>
+            <polygon points="470,120 390,189 230,189 150,120 230,51 390,51" fill="rgba(201,166,99,0.20)" stroke="#b98e3e" stroke-width="2"/>
+            <g font-family="Instrument Sans">
+              <circle cx="556" cy="116" r="7" fill="#b98e3e"/>
+              <text x="578" y="111" font-size="27" font-weight="700" fill="#2b2d2a">Human intention &amp; governance</text>
+              <text x="578" y="139" font-size="18" font-weight="500" fill="#8a8d86">the goals and the rules we set</text>
+              <rect x="549" y="244" width="14" height="14" rx="2" fill="#7f868f"/>
+              <text x="578" y="246" font-size="27" font-weight="700" fill="#2b2d2a">Necessary data</text>
+              <text x="578" y="274" font-size="18" font-weight="500" fill="#8a8d86">what the network knows</text>
+              <polygon points="556,372 564,387 548,387" fill="#3673c7"/>
+              <text x="578" y="381" font-size="27" font-weight="700" fill="#2b2d2a">Agentic AI</text>
+              <text x="578" y="409" font-size="18" font-weight="500" fill="#8a8d86">born in the same structure to act</text>
+            </g>
+          </svg>
         </div>
-        <div class="note" style="margin-top:26px">The agents are made in the same structure — that is why we are no longer alone.</div>
+        <div class="note" style="margin-top:14px">The same six-dimension structure — so the agents are made here too. That is why we are no longer alone.</div>
       </div>
     </section>
 
@@ -1265,11 +1281,11 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
 (function(){
   var cv=document.querySelector("canvas.murmurfx"); if(!cv) return;
   var ctx,W,H,dpr,sized=false,raf=0,fc=0;
-  var GX=960,GY=724,RA=244;
+  var GX=960,GY=724,RA=222;
   var anchors=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; anchors.push([GX+Math.cos(a)*RA,GY+Math.sin(a)*RA]); }
   var N=200,P=[];
   function pick(p){ if(Math.random()<0.45){ p.tx=GX; p.ty=GY; } else { var an=anchors[(Math.random()*6)|0]; p.tx=an[0]; p.ty=an[1]; } }
-  for(var i=0;i<N;i++){ var a=Math.random()*6.283,r=40+Math.random()*228; var p={x:GX+Math.cos(a)*r,y:GY+Math.sin(a)*r,vx:0,vy:0,human:(i%2===0),ph:Math.random()*6.283,sp:0.6+Math.random()*0.9}; pick(p); P.push(p); }
+  for(var i=0;i<N;i++){ var a=Math.random()*6.283,r=36+Math.random()*204; var p={x:GX+Math.cos(a)*r,y:GY+Math.sin(a)*r,vx:0,vy:0,human:(i%2===0),ph:Math.random()*6.283,sp:0.6+Math.random()*0.9}; pick(p); P.push(p); }
   function size(){ dpr=Math.min(window.devicePixelRatio||1,1.7); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#2b2d2a"; ctx.fillRect(0,0,W,H); sized=true; }
   function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
   function draw(){
