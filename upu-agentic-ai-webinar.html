@@ -146,6 +146,11 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
 .pr:last-child{border-bottom:1.5px solid rgba(43,45,42,.13)}
 .prn{font-size:27px;font-weight:700;color:var(--blue);opacity:.5;flex:none;width:52px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .prt{font-size:41px;line-height:1.16;font-weight:600;letter-spacing:-.02em;color:var(--offset)}
+/* governance challenges grid */
+.govgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:36px 58px;max-width:1640px;margin-top:50px}
+.govcard{border-top:2px solid rgba(54,115,199,.42);padding-top:18px}
+.govcard .gh{font-size:27px;font-weight:700;letter-spacing:-.012em;color:var(--blue);margin-bottom:9px}
+.govcard .gb{font-size:23px;line-height:1.3;font-weight:500;color:var(--ink-2)}
 /* ===== durable core + thin adapters (evolving structure) ===== */
 .core-adapters{position:absolute;right:130px;top:50%;transform:translateY(-50%);width:540px;height:540px;z-index:1}
 .ca-core{fill:var(--surface-subtle);stroke:var(--blue);stroke-width:2.6}
@@ -373,25 +378,10 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
       </div>
     </section>
 
-    <!-- ============ 4 · THE AGENTIC TURN (definition) ============ -->
-    <section class="slide dark">
-      <div class="wrap">
-        <div class="eyebrow">The agentic turn</div>
-        <h2 class="title">A working definition of agentic AI.</h2>
-        <div class="defrow">
-          <div class="defcell"><div class="dk">Automation</div><div class="dv">Follows fixed rules.</div></div>
-          <div class="defcell"><div class="dk">Chatbot</div><div class="dv">Answers when asked.</div></div>
-          <div class="defcell is-agent"><div class="dk">Agentic AI</div><div class="dv">Sets a goal and <strong>reasons, decides, acts and learns</strong> — coordinating with other agents and with people, in real time.</div></div>
-        </div>
-        <div style="margin-top:44px;font-size:40px;line-height:1.18;font-weight:600;letter-spacing:-.018em;max-width:36ch">At scale, capability without a structure to govern it scatters into <span style="color:var(--surface)">noise</span>.</div>
-        <div class="note" style="margin-top:20px;max-width:52ch">A swarm of such machines, left ungoverned, can be counterproductive — even dangerous.</div>
-      </div>
-    </section>
-
     <!-- ============ 4b · SNAPSHOTS -> STREAMS ============ -->
     <section class="slide dark center">
       <div class="wrap">
-        <div class="eyebrow">The shift</div>
+        <div class="eyebrow">The Data Shift</div>
         <h2 class="title">From snapshots to streams.</h2>
         <div class="shift">
           <div class="stage">
@@ -452,6 +442,38 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
           <div class="pr"><span class="prn">02</span><div class="prt">Technology will only accelerate — so the approach has to stay <span class="kw">adaptive</span>.</div></div>
           <div class="pr"><span class="prn">03</span><div class="prt">Our job, as humans, is to <span class="kw">imagine the future</span>.</div></div>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ 4 · THE AGENTIC TURN (definition) ============ -->
+    <section class="slide dark">
+      <div class="wrap">
+        <div class="eyebrow">The agentic turn</div>
+        <h2 class="title">A working definition of agentic AI.</h2>
+        <div class="defrow">
+          <div class="defcell"><div class="dk">Automation</div><div class="dv">Follows fixed rules.</div></div>
+          <div class="defcell"><div class="dk">Chatbot</div><div class="dv">Answers when asked.</div></div>
+          <div class="defcell is-agent"><div class="dk">Agentic AI</div><div class="dv">Sets a goal and <strong>reasons, decides, acts and learns</strong> — coordinating with other agents and with people, in real time.</div></div>
+        </div>
+        <div style="margin-top:44px;font-size:40px;line-height:1.18;font-weight:600;letter-spacing:-.018em;max-width:36ch">At scale, capability without a structure to govern it scatters into <span style="color:var(--surface)">noise</span>.</div>
+        <div class="note" style="margin-top:20px;max-width:52ch">A swarm of such machines, left ungoverned, can be counterproductive — even dangerous.</div>
+      </div>
+    </section>
+
+    <!-- ============ 4b · GOVERNANCE — what agentic AI asks us to govern ============ -->
+    <section class="slide light">
+      <div class="wrap" style="max-width:none">
+        <div class="eyebrow">Governance</div>
+        <h2 class="title" style="max-width:22ch">What agentic AI asks us to govern.</h2>
+        <div class="govgrid">
+          <div class="govcard"><div class="gh">Human control</div><div class="gb">Agents set sub-goals and act — human judgment has to stay over the system.</div></div>
+          <div class="govcard"><div class="gh">Accountability</div><div class="gb">When an agent errs across borders, who answers for it?</div></div>
+          <div class="govcard"><div class="gh">Transparency</div><div class="gb">Opaque decisions — every action needs an auditable trace.</div></div>
+          <div class="govcard"><div class="gh">Data sovereignty</div><div class="gb">Cross-border data and consent, across 192 members.</div></div>
+          <div class="govcard"><div class="gh">Reliability</div><div class="gb">Confident but wrong answers, inside live operations.</div></div>
+          <div class="govcard"><div class="gh">Central vs local</div><div class="gb">What to coordinate centrally — and what each operator keeps.</div></div>
+        </div>
+        <div class="src">Echoes the questions raised by UPU members ahead of this session.</div>
       </div>
     </section>
 
