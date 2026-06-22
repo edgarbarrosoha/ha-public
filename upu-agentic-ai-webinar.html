@@ -1262,7 +1262,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
   var cv=document.querySelector("canvas.layerfx"); if(!cv) return;
   var ctx,W,H,dpr,sized=false,raf=0,fc=0;
   var cx=948, fy=0.5, r=205, L=[450,605,760];
-  var off=[]; for(var i=0;i<6;i++){ var a=i*Math.PI/3; off.push([Math.cos(a)*r, Math.sin(a)*r*fy]); }
+  var off=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; off.push([Math.cos(a)*r*0.92, Math.sin(a)*r*fy]); }
   var fills=["rgba(201,166,99,0.20)","rgba(150,158,168,0.16)","rgba(54,115,199,0.15)"];
   var strokes=["#b98e3e","#7f868f","#3673c7"];
   var parts=[]; for(var i=0;i<6;i++){ for(var k=0;k<4;k++){ parts.push({v:i,t:Math.random(),sp:0.0024+Math.random()*0.0028,dir:Math.random()<0.72?1:-1}); } }
