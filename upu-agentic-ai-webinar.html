@@ -732,7 +732,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
       <canvas class="gaofx" aria-hidden="true"></canvas>
       <div class="wrap" style="position:relative;z-index:2">
         <div class="eyebrow">From data to agents</div>
-        <h2 class="title" style="max-width:17ch">The structure spawns specialized agents.</h2>
+        <h2 class="title" style="max-width:17ch">The structure includes specialized agents.</h2>
         <div class="note" style="max-width:31ch;margin-top:24px">The six dimensions stay fixed. From each, specialized AI agents emerge, collaborate, and retire as needs evolve — under human oversight.</div>
       </div>
     </section>
@@ -1252,7 +1252,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
     ctx.lineWidth=2.4; ctx.strokeStyle="rgba(168,202,251,0.98)"; hexp(CX,CY,29); ctx.fillStyle="rgba(40,42,39,0.97)"; ctx.fill(); ctx.stroke(); ctx.fillStyle="#a8cafb"; ctx.beginPath();ctx.arc(CX,CY,4.5,0,6.28);ctx.fill();
     var hg=ctx.createRadialGradient(human.x,human.y,0,human.x,human.y,17); hg.addColorStop(0,"rgba(240,232,214,0.5)"); hg.addColorStop(1,"rgba(240,232,214,0)"); ctx.fillStyle=hg; ctx.beginPath();ctx.arc(human.x,human.y,17,0,6.28);ctx.fill(); ctx.fillStyle="rgba(240,232,214,0.96)"; ctx.beginPath();ctx.arc(human.x,human.y,6,0,6.28);ctx.fill();
     ctx.textAlign="center"; ctx.textBaseline="alphabetic"; ctx.font="600 15px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(240,232,214,0.82)"; ctx.fillText("human oversight", human.x, human.y-18);
-    var ly2=CY+RH+192; ctx.textBaseline="middle"; ctx.textAlign="start"; ctx.font="500 16px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(168,202,251,0.98)"; tri(CX-214,ly2,7); ctx.fill(); ctx.fillStyle="rgba(214,211,203,0.7)"; ctx.fillText("agents spawn, name their skills, collaborate, and retire", CX-196, ly2);
+    var ly2=CY+RH+192; ctx.textBaseline="middle"; ctx.textAlign="start"; ctx.font="500 16px 'Instrument Sans',sans-serif"; ctx.fillStyle="rgba(168,202,251,0.98)"; tri(CX-214,ly2,7); ctx.fill(); ctx.fillStyle="rgba(214,211,203,0.7)"; ctx.fillText("agents emerge, name their skills, collaborate, and retire", CX-196, ly2);
     raf=requestAnimationFrame(draw);
   }
   window.addEventListener("resize",function(){ if(sized){ size(); } });
@@ -1271,6 +1271,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
   var strokes=["#2b2d2a","#7f868f","#3673c7"];
   var parts=[]; for(var i=0;i<6;i++){ for(var k=0;k<4;k++){ parts.push({v:i,t:Math.random(),sp:0.0024+Math.random()*0.0028,dir:Math.random()<0.72?1:-1}); } }
   function hexpath(cy){ ctx.beginPath(); for(var i=0;i<6;i++){ var x=cx+off[i][0], y=cy+off[i][1]; i?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.closePath(); }
+  function hexAt(x,y,rr){ ctx.beginPath(); for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3,px=x+Math.cos(a)*rr,py=y+Math.sin(a)*rr; i?ctx.lineTo(px,py):ctx.moveTo(px,py);} ctx.closePath(); }
   function size(){ dpr=Math.min(window.devicePixelRatio||1,1.7); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
   function active(){ var s=cv.closest(".slide"); return !!(s&&s.classList.contains("on")); }
   function draw(){
@@ -1284,7 +1285,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
       var g=ctx.createRadialGradient(x,y,0,x,y,6); g.addColorStop(0,"rgba(54,115,199,0.7)"); g.addColorStop(1,"rgba(54,115,199,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,6,0,6.28);ctx.fill(); ctx.fillStyle="rgba(43,45,42,0.8)"; ctx.beginPath();ctx.arc(x,y,1.8,0,6.28);ctx.fill(); }
     for(var li=2;li>=0;li--){ hexpath(L[li]); ctx.fillStyle=fills[li]; ctx.fill(); ctx.lineWidth=2.2; ctx.strokeStyle=strokes[li]; ctx.stroke();
       var glow=(li===2?"rgba(54,115,199,0.5)":li===1?"rgba(120,130,140,0.4)":"rgba(43,45,42,0.32)");
-      for(var i=0;i<6;i++){ var vx=cx+off[i][0], vy=L[li]+off[i][1]; var gg=ctx.createRadialGradient(vx,vy,0,vx,vy,9); gg.addColorStop(0,glow); gg.addColorStop(1,"rgba(0,0,0,0)"); ctx.fillStyle=gg; ctx.beginPath();ctx.arc(vx,vy,9,0,6.28);ctx.fill(); ctx.fillStyle=strokes[li]; ctx.beginPath();ctx.arc(vx,vy,2.6,0,6.28);ctx.fill(); }
+      for(var i=0;i<6;i++){ var vx=cx+off[i][0], vy=L[li]+off[i][1]; var gg=ctx.createRadialGradient(vx,vy,0,vx,vy,14); gg.addColorStop(0,glow); gg.addColorStop(1,"rgba(0,0,0,0)"); ctx.fillStyle=gg; ctx.beginPath();ctx.arc(vx,vy,14,0,6.28);ctx.fill(); hexAt(vx,vy,9); ctx.fillStyle="#f4f3f0"; ctx.fill(); ctx.lineWidth=1.8; ctx.strokeStyle=strokes[li]; ctx.stroke(); ctx.fillStyle=strokes[li]; ctx.beginPath();ctx.arc(vx,vy,2.4,0,6.28);ctx.fill(); }
     }
     ctx.fillStyle="rgba(43,45,42,0.6)"; ctx.font="600 17px 'Instrument Sans',sans-serif"; var u=off[1];
     ctx.textAlign="center"; ctx.textBaseline="alphabetic"; ctx.fillText("Legacy", cx, L[0]-r-20);
