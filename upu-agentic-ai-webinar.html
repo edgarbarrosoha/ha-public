@@ -140,6 +140,12 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
 .ppbound .bt{font-size:25px;line-height:1.3;font-weight:600;letter-spacing:-.01em;color:var(--offwhite)}
 .ppbound .bt .kw{color:var(--surface)}
 .ppbound .bt small{display:block;font-size:18px;font-weight:500;color:rgba(244,243,240,.58);margin-top:5px}
+/* principles — big numbered rows */
+.principles{margin-top:50px;max-width:1580px;display:flex;flex-direction:column}
+.pr{display:flex;align-items:baseline;gap:40px;padding:32px 4px;border-top:1.5px solid rgba(43,45,42,.13)}
+.pr:last-child{border-bottom:1.5px solid rgba(43,45,42,.13)}
+.prn{font-size:27px;font-weight:700;color:var(--blue);opacity:.5;flex:none;width:52px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.prt{font-size:41px;line-height:1.16;font-weight:600;letter-spacing:-.02em;color:var(--offset)}
 /* ===== durable core + thin adapters (evolving structure) ===== */
 .core-adapters{position:absolute;right:130px;top:50%;transform:translateY(-50%);width:540px;height:540px;z-index:1}
 .ca-core{fill:var(--surface-subtle);stroke:var(--blue);stroke-width:2.6}
@@ -357,13 +363,13 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
       <canvas class="scatterfx" aria-hidden="true"></canvas>
       <div class="wrap" style="position:relative;z-index:2;max-width:860px">
         <div class="eyebrow">Why it happened</div>
-        <h2 class="title">The report rejects technological determinism — <span class="kw">outright</span>.</h2>
+        <h2 class="title">The report <span class="kw">challenges</span> technological determinism.</h2>
         <ul class="bullets">
           <li>Outcomes follow decisions — not geography or income.</li>
           <li>Estonia, Thailand, Mauritius: world class on middle incomes.</li>
           <li>The variable is judgment under complexity.</li>
         </ul>
-        <div class="src">Universal Postal Union, 2025, pp. 9, 13, 82.</div>
+        <div class="src">Universal Postal Union, <em>State of the Postal Sector 2025</em>, pp. 9, 13, 82.</div>
       </div>
     </section>
 
@@ -441,18 +447,27 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
       <div class="wrap">
         <div class="eyebrow">Hybrid human–AI governance</div>
         <h2 class="title" style="max-width:none">There are many ways to think about it.</h2>
-        <ul class="bullets sm" style="display:grid;grid-template-columns:repeat(3,1fr);gap:54px;max-width:1600px;margin-top:64px">
-          <li>Yes, it runs on technology — but what matters is how the information makes sense, to people and to machines.</li>
-          <li>Technology will only accelerate, so the approach has to stay <span class="kw">adaptive</span>.</li>
-          <li>Our job, as humans, is to imagine the future.</li>
-        </ul>
+        <div class="principles">
+          <div class="pr"><span class="prn">01</span><div class="prt">It runs on technology — but what matters is how information makes <span class="kw">sense</span>, to people and to machines.</div></div>
+          <div class="pr"><span class="prn">02</span><div class="prt">Technology will only accelerate — so the approach has to stay <span class="kw">adaptive</span>.</div></div>
+          <div class="pr"><span class="prn">03</span><div class="prt">Our job, as humans, is to <span class="kw">imagine the future</span>.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5b · THE RESEARCH (bridge to the dimensions) ============ -->
+    <section class="slide light">
+      <div class="wrap" style="max-width:1180px">
+        <div class="eyebrow">From our research at Tecnológico de Monterrey</div>
+        <h2 class="title">We went looking for a structure.</h2>
+        <div class="sub" style="max-width:62ch">How should people and AI think together under complexity and uncertainty? Across many public and private endeavours, the research kept converging on the same small set of dimensions — present in any complex effort, at any scale. We call it <span class="kw">Horizons Architecture</span>.</div>
       </div>
     </section>
 
     <!-- ============ 6 · THE SIX DIMENSIONS (hexagon) ============ -->
     <section class="slide light center">
       <div class="wrap">
-        <div class="eyebrow">From our research at Tecnológico de Monterrey</div>
+        <div class="eyebrow">Horizons Architecture</div>
         <h2 class="title">Six typed dimensions.</h2>
         <div class="sub" style="text-align:center;max-width:64ch;margin:16px auto 0">What we found: for a complex endeavour under uncertainty, a good starting point is to understand these six dimensions — in a complex, multi-actor endeavour where people and AI agents now work together.</div>
         <div class="diagram">
