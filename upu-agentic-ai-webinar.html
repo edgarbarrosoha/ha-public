@@ -1265,11 +1265,11 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
 (function(){
   var cv=document.querySelector("canvas.layerfx"); if(!cv) return;
   var ctx,W,H,dpr,sized=false,raf=0,fc=0;
-  var cx=902, cy=556, RH=168, dx=88, dy=58;
+  var cx=898, cy=548, RH=160, dx=92, dy=46;
   var dn=["LEGACY","COMMUNITY","LEARNING","TECHNOLOGY","CONTEXT","PROJECTS"];
-  var layers=[{x:cx-dx,y:cy-dy,c:"#2b2d2a",f:"rgba(43,45,42,0.05)",nm:"UPU",sub:"mission & governance"},
-              {x:cx,   y:cy,   c:"#7f868f",f:"rgba(150,158,168,0.10)",nm:"UDP · UPU IT",sub:"the data"},
-              {x:cx+dx,y:cy+dy,c:"#3673c7",f:"rgba(54,115,199,0.12)",nm:"Agentic AI",sub:"specialised agents"}];
+  var layers=[{x:cx+dx,y:cy-dy,c:"#2b2d2a",f:"rgba(43,45,42,0.05)",nm:"UPU",sub:"mission & governance"},
+              {x:cx,   y:cy,   c:"#7f868f",f:"rgba(150,158,168,0.09)",nm:"UDP · UPU IT",sub:"the data"},
+              {x:cx-dx,y:cy+dy,c:"#3673c7",f:"rgba(54,115,199,0.12)",nm:"Agentic AI",sub:"specialised agents"}];
   function vat(c){ var arr=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; arr.push([c.x+Math.cos(a)*RH, c.y+Math.sin(a)*RH]); } return arr; }
   var V=[vat(layers[0]),vat(layers[1]),vat(layers[2])];
   var parts=[]; for(var i=0;i<6;i++){ for(var k=0;k<2;k++){ parts.push({i:i,t:Math.random(),sp:0.0038+Math.random()*0.0038,dir:Math.random()<0.5?1:-1}); } }
@@ -1285,7 +1285,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
     ctx.lineWidth=1; ctx.strokeStyle="rgba(54,115,199,0.2)";
     for(var i=0;i<6;i++){ ctx.beginPath(); ctx.moveTo(V[0][i][0],V[0][i][1]); ctx.lineTo(V[2][i][0],V[2][i][1]); ctx.stroke(); }
     for(var p=0;p<parts.length;p++){ var pt=parts[p]; pt.t+=pt.sp*pt.dir; if(pt.t>1)pt.t-=1; if(pt.t<0)pt.t+=1; var a=V[0][pt.i],b=V[2][pt.i]; var x=a[0]+(b[0]-a[0])*pt.t, y=a[1]+(b[1]-a[1])*pt.t; var g=ctx.createRadialGradient(x,y,0,x,y,5); g.addColorStop(0,"rgba(54,115,199,0.75)"); g.addColorStop(1,"rgba(54,115,199,0)"); ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,5,0,6.28);ctx.fill(); ctx.fillStyle="rgba(43,45,42,0.78)"; ctx.beginPath();ctx.arc(x,y,1.7,0,6.28);ctx.fill(); }
-    for(var li=0;li<3;li++){ var L2=layers[li]; hexFrom(V[li]); ctx.fillStyle=L2.f; ctx.fill(); ctx.globalAlpha=(li===2?1:li===1?0.82:0.62); ctx.lineWidth=(li===2?2.4:1.8); ctx.strokeStyle=L2.c; ctx.stroke();
+    for(var li=0;li<3;li++){ var L2=layers[li]; hexFrom(V[li]); ctx.fillStyle=L2.f; ctx.fill(); ctx.globalAlpha=(li===2?1:li===1?0.5:0.32); ctx.lineWidth=(li===2?2.4:1.8); ctx.strokeStyle=L2.c; ctx.stroke();
       for(var i=0;i<6;i++){ var vx=V[li][i][0], vy=V[li][i][1]; if(li===2){ var gg=ctx.createRadialGradient(vx,vy,0,vx,vy,14); gg.addColorStop(0,"rgba(54,115,199,0.4)"); gg.addColorStop(1,"rgba(0,0,0,0)"); ctx.globalAlpha=1; ctx.fillStyle=gg; ctx.beginPath();ctx.arc(vx,vy,14,0,6.28);ctx.fill(); ctx.globalAlpha=1; } hexAt(vx,vy,li===2?11:8); ctx.fillStyle="#f4f3f0"; ctx.fill(); ctx.lineWidth=li===2?2:1.5; ctx.strokeStyle=L2.c; ctx.stroke(); ctx.fillStyle=L2.c; ctx.beginPath();ctx.arc(vx,vy,li===2?2.8:2,0,6.28);ctx.fill(); }
       ctx.globalAlpha=1;
     }
@@ -1293,8 +1293,8 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
     for(var i=0;i<6;i++){ var vx=V[2][i][0], vy=V[2][i][1];
       if(i===0){ ctx.textAlign="center"; ctx.textBaseline="alphabetic"; ctx.fillText(dn[i], vx, vy-24); }
       else if(i===3){ ctx.textAlign="center"; ctx.textBaseline="top"; ctx.fillText(dn[i], vx, vy+24); }
-      else if(vx>f.x){ ctx.textAlign="end"; ctx.textBaseline="middle"; ctx.fillText(dn[i], vx-22, vy); }
-      else { ctx.textAlign="start"; ctx.textBaseline="middle"; ctx.fillText(dn[i], vx+22, vy); }
+      else if(vx>f.x){ ctx.textAlign="start"; ctx.textBaseline="middle"; ctx.fillText(dn[i], vx+22, vy); }
+      else { ctx.textAlign="end"; ctx.textBaseline="middle"; ctx.fillText(dn[i], vx-22, vy); }
     }
     var lx=1320, ly3=[464,562,660], lab=[["UPU","mission & governance"],["UDP · UPU IT","the data"],["Agentic AI","specialised agents"]], lc=["#2b2d2a","#7f868f","#3673c7"];
     for(var li=0;li<3;li++){ var ly=ly3[li];
