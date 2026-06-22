@@ -1265,7 +1265,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
 (function(){
   var cv=document.querySelector("canvas.layerfx"); if(!cv) return;
   var ctx,W,H,dpr,sized=false,raf=0,fc=0;
-  var cx=866, cy=548, RH=166, dx=92, dy=44;
+  var cx=978, cy=628, RH=160, dx=86, dy=44;
   var dn=["LEGACY","COMMUNITY","LEARNING","TECHNOLOGY","CONTEXT","PROJECTS"];
   var layers=[{x:cx+dx,y:cy-dy,rh:RH*0.6,c:"#2b2d2a",f:"rgba(43,45,42,0.05)",nm:"UPU",sub:"mission & governance"},
               {x:cx,   y:cy,   rh:RH*0.8,c:"#7f868f",f:"rgba(150,158,168,0.09)",nm:"UDP · UPU IT",sub:"the data"},
@@ -1289,14 +1289,14 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
       for(var i=0;i<6;i++){ var vx=V[li][i][0], vy=V[li][i][1]; if(li===2){ var gg=ctx.createRadialGradient(vx,vy,0,vx,vy,14); gg.addColorStop(0,"rgba(54,115,199,0.4)"); gg.addColorStop(1,"rgba(0,0,0,0)"); ctx.globalAlpha=1; ctx.fillStyle=gg; ctx.beginPath();ctx.arc(vx,vy,14,0,6.28);ctx.fill(); ctx.globalAlpha=1; } hexAt(vx,vy,li===2?11:8); ctx.fillStyle="#f4f3f0"; ctx.fill(); ctx.lineWidth=li===2?2:1.5; ctx.strokeStyle=L2.c; ctx.stroke(); ctx.fillStyle=L2.c; ctx.beginPath();ctx.arc(vx,vy,li===2?2.8:2,0,6.28);ctx.fill(); }
       ctx.globalAlpha=1;
     }
-    ctx.font="600 18px 'Instrument Sans',sans-serif"; var rx=1070;
+    ctx.font="600 18px 'Instrument Sans',sans-serif"; var rx=1168;
     for(var i=0;i<6;i++){ var vx=V[2][i][0], vy=V[2][i][1]; ctx.fillStyle="rgba(43,45,42,0.72)";
       if(i===0){ ctx.textAlign="center"; ctx.textBaseline="alphabetic"; ctx.fillText(dn[i], vx, vy-24); }
       else if(i===3){ ctx.textAlign="center"; ctx.textBaseline="top"; ctx.fillText(dn[i], vx, vy+24); }
       else if(i===1||i===2){ ctx.strokeStyle="rgba(43,45,42,0.26)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(vx+13,vy); ctx.lineTo(rx-9,vy); ctx.stroke(); ctx.textAlign="start"; ctx.textBaseline="middle"; ctx.fillText(dn[i], rx, vy); }
       else { ctx.textAlign="end"; ctx.textBaseline="middle"; ctx.fillText(dn[i], vx-22, vy); }
     }
-    var lx=1320, ly3=[464,562,660], lab=[["UPU","mission & governance"],["UDP · UPU IT","the data"],["Agentic AI","specialised agents"]], lc=["#2b2d2a","#7f868f","#3673c7"];
+    var lx=1384, ly3=[cy-94,cy,cy+94], lab=[["UPU","mission & governance"],["UDP · UPU IT","the data"],["Agentic AI","specialised agents"]], lc=["#2b2d2a","#7f868f","#3673c7"];
     for(var li=0;li<3;li++){ var ly=ly3[li];
       if(li===0){ ctx.fillStyle=lc[li]; ctx.beginPath();ctx.arc(lx+8,ly,8,0,6.28);ctx.fill(); }
       else if(li===1){ ctx.fillStyle=lc[li]; ctx.fillRect(lx,ly-8,16,16); }
@@ -1304,7 +1304,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
       ctx.textAlign="start"; ctx.textBaseline="alphabetic"; ctx.font="700 26px 'Instrument Sans',sans-serif"; ctx.fillStyle="#2b2d2a"; ctx.fillText(lab[li][0], lx+34, ly-2);
       ctx.font="500 17px 'Instrument Sans',sans-serif"; ctx.fillStyle="#8a8d86"; ctx.fillText(lab[li][1], lx+34, ly+21);
     }
-    var bx=1656, by1=ly3[1]-30, by2=ly3[2]+30; ctx.strokeStyle="rgba(54,115,199,0.55)"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(bx-11,by1); ctx.lineTo(bx,by1); ctx.lineTo(bx,by2); ctx.lineTo(bx-11,by2); ctx.stroke();
+    var bx=1722, by1=ly3[1]-30, by2=ly3[2]+30; ctx.strokeStyle="rgba(54,115,199,0.55)"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(bx-11,by1); ctx.lineTo(bx,by1); ctx.lineTo(bx,by2); ctx.lineTo(bx-11,by2); ctx.stroke();
     ctx.save(); ctx.translate(bx+26,(by1+by2)/2); ctx.rotate(-Math.PI/2); ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.font="700 20px 'Instrument Sans',sans-serif"; ctx.fillStyle="#3673c7"; ctx.fillText("Agents as a Service",0,0); ctx.restore();
     raf=requestAnimationFrame(draw);
   }
