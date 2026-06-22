@@ -1261,10 +1261,10 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
 (function(){
   var cv=document.querySelector("canvas.layerfx"); if(!cv) return;
   var ctx,W,H,dpr,sized=false,raf=0,fc=0;
-  var cx=948, fy=0.5, r=205, L=[450,605,760];
-  var off=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; off.push([Math.cos(a)*r*0.92, Math.sin(a)*r*fy]); }
-  var fills=["rgba(201,166,99,0.20)","rgba(150,158,168,0.16)","rgba(54,115,199,0.15)"];
-  var strokes=["#b98e3e","#7f868f","#3673c7"];
+  var cx=948, r=112, L=[442,612,782];
+  var off=[]; for(var i=0;i<6;i++){ var a=-Math.PI/2+i*Math.PI/3; off.push([Math.cos(a)*r, Math.sin(a)*r]); }
+  var fills=["rgba(43,45,42,0.05)","rgba(150,158,168,0.11)","rgba(54,115,199,0.12)"];
+  var strokes=["#2b2d2a","#7f868f","#3673c7"];
   var parts=[]; for(var i=0;i<6;i++){ for(var k=0;k<4;k++){ parts.push({v:i,t:Math.random(),sp:0.0024+Math.random()*0.0028,dir:Math.random()<0.72?1:-1}); } }
   function hexpath(cy){ ctx.beginPath(); for(var i=0;i<6;i++){ var x=cx+off[i][0], y=cy+off[i][1]; i?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.closePath(); }
   function size(){ dpr=Math.min(window.devicePixelRatio||1,1.7); W=cv.clientWidth;H=cv.clientHeight; cv.width=W*dpr;cv.height=H*dpr; ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); sized=true; }
@@ -1282,7 +1282,7 @@ h2.title{font-weight:600;font-size:76px;line-height:1.06;letter-spacing:-.018em;
     var lx=1232, labels=[["UPU","mission & governance"],["UDP · UPU IT","the data"],["Agentic AI","specialised agents"]];
     ctx.textAlign="start";
     for(var li=0;li<3;li++){ var ly=L[li];
-      if(li===0){ ctx.fillStyle="#b98e3e"; ctx.beginPath();ctx.arc(lx+8,ly,8,0,6.28);ctx.fill(); }
+      if(li===0){ ctx.fillStyle="#2b2d2a"; ctx.beginPath();ctx.arc(lx+8,ly,8,0,6.28);ctx.fill(); }
       else if(li===1){ ctx.fillStyle="#7f868f"; ctx.fillRect(lx,ly-8,16,16); }
       else { ctx.fillStyle="#3673c7"; ctx.beginPath(); ctx.moveTo(lx+8,ly-9); ctx.lineTo(lx+17,ly+7); ctx.lineTo(lx-1,ly+7); ctx.closePath(); ctx.fill(); }
       ctx.textBaseline="alphabetic"; ctx.font="700 28px 'Instrument Sans',sans-serif"; ctx.fillStyle="#2b2d2a"; ctx.fillText(labels[li][0], lx+36, ly-2);
