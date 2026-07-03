@@ -666,7 +666,7 @@ function cuerpoPeticion(){
     if(i===hist.length-1){bloque.cache_control={type:'ephemeral'};}
     return {role:m.role,content:[bloque]};
   });
-  return {model:MODELO,max_tokens:1500,stream:true,
+  return {model:MODELO,max_tokens:1500,stream:false,
     system:[{type:'text',text:SYS,cache_control:{type:'ephemeral'}}],
     messages:mensajes};
 }
@@ -703,36 +703,19 @@ function fluir(){
         e.status=res.status;throw e;
       });
     }
-    var lector=res.body.getReader(), dec=new TextDecoder(), buf='';
-    function paso(){
-      return lector.read().then(function(r){
-        if(r.done){return;}
-        buf+=dec.decode(r.value,{stream:true});
-        var lineas=buf.split('\n');
-        buf=lineas.pop();
-        for(var i=0;i<lineas.length;i++){
-          var ln=lineas[i];
-          if(ln.indexOf('data:')!==0){continue;}
-          var datos=ln.slice(5).trim();
-          if(!datos){continue;}
-          var ev;
-          try{ev=JSON.parse(datos);}catch(e){continue;}
-          if(ev.type==='content_block_delta'&&ev.delta&&ev.delta.type==='text_delta'){
-            acumulado+=ev.delta.text;
-            cont.innerHTML=md(limpiarMarcas(acumulado).replace(/\[\[[^\]]*$/,''))+'<span class="cursor"></span>';
-            bajar(false);
-          }else if(ev.type==='message_delta'&&ev.delta&&ev.delta.stop_reason){
-            stopReason=ev.delta.stop_reason;
-          }else if(ev.type==='error'){
-            var e2=new Error((ev.error&&ev.error.message)||'error de stream');
-            e2.status=(ev.error&&ev.error.type==='overloaded_error')?529:0;
-            throw e2;
-          }
+    return res.json().then(function(j){
+      if(j&&j.type==='error'){
+        var e2=new Error((j.error&&j.error.message)||'error del servicio');
+        e2.status=(j.error&&j.error.type==='overloaded_error')?529:0;
+        throw e2;
+      }
+      if(j&&j.content){
+        for(var i=0;i<j.content.length;i++){
+          if(j.content[i]&&j.content[i].type==='text'){acumulado+=j.content[i].text;}
         }
-        return paso();
-      });
-    }
-    return paso();
+      }
+      if(j&&j.stop_reason){stopReason=j.stop_reason;}
+    });
   })
   .then(function(){
     var marca=leerMarca(acumulado);
