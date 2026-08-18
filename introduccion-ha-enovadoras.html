@@ -3728,24 +3728,75 @@
 <h2 class="title" style="font-size:62px">Los saltos grandes no fueron herramientas. Fueron notaciones.</h2>
 <p class="sub" style="font-size:29px;max-width:56ch">Hacia el año 1025, Guido d'Arezzo trazó cinco líneas y colocó las notas sobre ellas — y la complejidad se volvió disponible. La partida doble hizo lo mismo por la economía. <strong>Guido no inventó la música: le dio una manera de verse a sí misma.</strong></p>
 <div class="nv-score">
-  <svg viewBox="0 0 760 165" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pentagrama con notas">
+  <svg viewBox="0 0 760 185" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pentagrama con notación contemporánea">
+    <!-- líneas del pentagrama -->
     <g stroke="currentColor" stroke-opacity=".35" stroke-width="1">
-      <line x1="30" y1="35" x2="730" y2="35"/><line x1="30" y1="60" x2="730" y2="60"/>
-      <line x1="30" y1="85" x2="730" y2="85"/><line x1="30" y1="110" x2="730" y2="110"/>
-      <line x1="30" y1="135" x2="730" y2="135"/>
+      <line x1="30" y1="45" x2="716" y2="45"/><line x1="30" y1="70" x2="716" y2="70"/>
+      <line x1="30" y1="95" x2="716" y2="95"/><line x1="30" y1="120" x2="716" y2="120"/>
+      <line x1="30" y1="145" x2="716" y2="145"/>
     </g>
-    <g fill="#a8cafb">
-      <ellipse cx="150" cy="110" rx="9" ry="6.5" transform="rotate(-14 150 110)"/>
-      <ellipse cx="255" cy="85" rx="9" ry="6.5" transform="rotate(-14 255 85)"/>
-      <ellipse cx="360" cy="60" rx="9" ry="6.5" transform="rotate(-14 360 60)"/>
-      <ellipse cx="465" cy="85" rx="9" ry="6.5" transform="rotate(-14 465 85)"/>
-      <ellipse cx="570" cy="35" rx="9" ry="6.5" transform="rotate(-14 570 35)"/>
-      <ellipse cx="660" cy="110" rx="9" ry="6.5" transform="rotate(-14 660 110)"/>
-    </g>
-    <g stroke="#a8cafb" stroke-width="1.6">
-      <line x1="158" y1="108" x2="158" y2="68"/><line x1="263" y1="83" x2="263" y2="43"/>
-      <line x1="368" y1="58" x2="368" y2="18"/><line x1="473" y1="83" x2="473" y2="43"/>
-      <line x1="578" y1="33" x2="578" y2="73"/><line x1="668" y1="108" x2="668" y2="68"/>
+    <!-- doble barra final -->
+    <g stroke="#a8cafb"><line x1="700" y1="45" x2="700" y2="145" stroke-width="1.4"/><line x1="708" y1="45" x2="708" y2="145" stroke-width="4"/></g>
+    <g fill="#a8cafb" stroke="#a8cafb">
+      <!-- A · quintillo de semicorcheas, beam doble inclinado, bracket 5 -->
+      <g stroke-width="0">
+        <ellipse cx="70" cy="120" rx="6" ry="4.6" transform="rotate(-14 70 120)"/>
+        <ellipse cx="98" cy="107.5" rx="6" ry="4.6" transform="rotate(-14 98 107.5)"/>
+        <ellipse cx="126" cy="95" rx="6" ry="4.6" transform="rotate(-14 126 95)"/>
+        <ellipse cx="154" cy="82.5" rx="6" ry="4.6" transform="rotate(-14 154 82.5)"/>
+        <ellipse cx="182" cy="70" rx="6" ry="4.6" transform="rotate(-14 182 70)"/>
+      </g>
+      <g stroke-width="1.4">
+        <line x1="75.5" y1="118" x2="75.5" y2="66"/><line x1="103.5" y1="105.5" x2="103.5" y2="57"/>
+        <line x1="131.5" y1="93" x2="131.5" y2="48"/><line x1="159.5" y1="80.5" x2="159.5" y2="39"/>
+        <line x1="187.5" y1="68" x2="187.5" y2="30"/>
+      </g>
+      <path d="M74.8 66 L188.2 30 L188.2 35.5 L74.8 71.5 Z" stroke-width="0"/>
+      <path d="M74.8 75 L188.2 39 L188.2 44.5 L74.8 80.5 Z" stroke-width="0"/>
+      <g stroke-width="1" fill="none" stroke-opacity=".9">
+        <path d="M70 18 L70 12 L131 12"/><path d="M143 12 L188 12 L188 18"/>
+      </g>
+      <text x="137" y="16.5" font-size="12" font-family="Roboto Mono, monospace" font-style="italic" stroke-width="0" text-anchor="middle">5</text>
+      <!-- B · cluster (bloque) con plica -->
+      <rect x="228" y="70" width="13" height="50" rx="2" stroke-width="1" fill-opacity=".55"/>
+      <line x1="241" y1="70" x2="241" y2="32" stroke-width="1.4"/>
+      <!-- C · blancas ligadas + crescendo -->
+      <g fill="none" stroke-width="1.6">
+        <ellipse cx="296" cy="107.5" rx="6.4" ry="4.8" transform="rotate(-14 296 107.5)"/>
+        <ellipse cx="352" cy="82.5" rx="6.4" ry="4.8" transform="rotate(-14 352 82.5)"/>
+      </g>
+      <g stroke-width="1.4"><line x1="302" y1="105.5" x2="302" y2="62"/><line x1="358" y1="80.5" x2="358" y2="40"/></g>
+      <path d="M292 99 C 310 82, 336 70, 350 73" fill="none" stroke-width="1.3"/>
+      <g fill="none" stroke-width="1"><path d="M290 158 L 358 151 M290 158 L 358 165"/></g>
+      <!-- D · glissando a armónico (rombo) -->
+      <ellipse cx="402" cy="120" rx="6" ry="4.6" transform="rotate(-14 402 120)" stroke-width="0"/>
+      <line x1="407.5" y1="118" x2="407.5" y2="72" stroke-width="1.4"/>
+      <line x1="411" y1="113" x2="455" y2="62" stroke-width="1.2" stroke-dasharray="1 3"/>
+      <path d="M462 51.5 L469 57.5 L462 63.5 L455 57.5 Z" fill="none" stroke-width="1.5"/>
+      <line x1="469" y1="57" x2="469" y2="22" stroke-width="1.4"/>
+      <!-- E · tresillo percusivo (cabezas en cruz), beam, bracket 3 -->
+      <g stroke-width="1.8">
+        <path d="M508 90 L519 100 M508 100 L519 90"/>
+        <path d="M536 78 L547 88 M536 88 L547 78"/>
+        <path d="M564 90 L575 100 M564 100 L575 90"/>
+      </g>
+      <g stroke-width="1.4"><line x1="519" y1="93" x2="519" y2="50"/><line x1="547" y1="81" x2="547" y2="46"/><line x1="575" y1="93" x2="575" y2="42"/></g>
+      <path d="M518.3 50 L575.7 42 L575.7 47.5 L518.3 55.5 Z" stroke-width="0"/>
+      <g stroke-width="1" fill="none" stroke-opacity=".9">
+        <path d="M514 32 L514 26 L539 26"/><path d="M553 26 L578 26 L578 32"/>
+      </g>
+      <text x="546" y="30.5" font-size="12" font-family="Roboto Mono, monospace" font-style="italic" stroke-width="0" text-anchor="middle">3</text>
+      <!-- F · trémolo con fermata -->
+      <ellipse cx="642" cy="70" rx="6.4" ry="4.8" transform="rotate(-14 642 70)" fill="none" stroke-width="1.6"/>
+      <line x1="636" y1="72.5" x2="636" y2="126" stroke-width="1.4"/>
+      <g stroke-width="2.2"><line x1="629" y1="95" x2="643" y2="88"/><line x1="629" y1="104" x2="643" y2="97"/><line x1="629" y1="113" x2="643" y2="106"/></g>
+      <path d="M629 56 C 635 45, 650 45, 656 56" fill="none" stroke-width="1.4"/>
+      <circle cx="642.5" cy="52" r="2.2" stroke-width="0"/>
+      <!-- dinámicas -->
+      <g font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="15" stroke-width="0">
+        <text x="120" y="170">pp</text><text x="228" y="170">f</text><text x="398" y="170">mf</text><text x="634" y="170">fff</text>
+      </g>
+      
     </g>
   </svg>
   <div class="cap">LA ESTRUCTURA ES FIJA · LAS COMPOSICIONES SON INFINITAS</div>
@@ -4533,7 +4584,7 @@
                                         rx="16"
                                     ></rect>
                                     <text class="nttl" x="800" y="204">
-                                        Rendición de cuentas
+                                        Responsabilidad
                                     </text>
                                     <text class="ngl" x="800" y="234">
                                         quién responde
